@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Configure the parental control filter
+Comment=A graphical tool to configure the parental control filter
+Exec=parental-control-config
+Icon=/usr/share/pixmaps/control-center2.xpm
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Application;System;Settings;

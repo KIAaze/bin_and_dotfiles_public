@@ -1,0 +1,8 @@
+#!/bin/sh
+## Look up what it is running
+
+dir="/usr/local/apps/parental-control"
+
+cd $dir
+
+xterm -e ./ubuntu_parental_control_gui

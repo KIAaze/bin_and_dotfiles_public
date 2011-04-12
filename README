@@ -1,0 +1,19 @@
+This repository is mostly for personal use, but maybe some people might find some of the scripts useful.
+It still contains a lot of drafts, non-working scripts, temporary files, etc I need to clean up.
+
+I use it to sync my environments on the various GNU/Linux machines I have access too.
+
+Tip:
+If you need a free private git repository, have a look at assembla.com. :)
+
+Usage:
+Run bins/public_bin/setup_dotfiles.sh to set up the dotfiles and bin directory.
+(This requires another private repository in "~/bin_and_dotfiles_private" for it to work at the moment.)
+
+License:
+Unless otherwise specified inside a file or folder, everything is under GPLv3 (cf COPYING.txt).
+
+Note:
+To create a launcher requiring environment variables:
+Type: Application
+Command: xterm -e /bin/bash -l -c matlab

@@ -1,0 +1,16 @@
+//This macro loops checks a file for integrity
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream.h>
+//#include <algorithm>
+//#include <fstream>
+// #include "TFile.h"
+// #include "TKey.h"
+// #include "TTree.h"
+
+//using namespace std;
+
+int main (int argc, char *argv[])
+{
+  return(0);
+}

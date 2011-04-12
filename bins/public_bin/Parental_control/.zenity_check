@@ -1,0 +1,22 @@
+#!/bin/bash
+# License GPL, see LICENSE
+# Written by Nanomad [condellog_At_gmail_dot_com]
+
+function check {
+if (test -n `zenity --version);
+then exit;
+else install;
+fi
+}
+
+function check2nd {
+if (test -n `zenity --version);
+then exit;
+else echo $"Zenity could not be installed, please report this error message" &&  sleep 5 && exit 1;
+fi
+}
+
+function install {
+sudo aptitude -y install zenity
+check2nd
+}

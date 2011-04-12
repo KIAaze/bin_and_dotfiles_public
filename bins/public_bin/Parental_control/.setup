@@ -1,0 +1,99 @@
+#!/bin/bash
+# License GPL, see LICENSE
+# Written by Nanomad [condellog_At_gmail_dot_com]
+
+install_dir="/usr/local/apps/parental-control/"
+bin_dir="/usr/local/bin/"
+
+function update {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will update your apt repositories.\nPlease check your internet connection before proceeding"
+apt-get update | zenity --progress --pulsate --auto-close --title "Ubuntu Parental Contro setup" --text $"Updating repositories"
+}
+ 
+function download {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will download dansguardian, firehol and tinyproxy form Ubuntu repositories"
+aptitude -y install dansguardian firehol tinyproxy
+apt-get -y -f install
+}
+
+function download_gui {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will download gambas and the qt libs for the GUI"
+aptitude -y install gambas libqt3-mt
+apt-get -y -f install
+}
+
+function configure_dg {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will configure dansguardian"
+echo $"Configuring dansguardian"
+sed s/UNCONFIGURED/#CONFIGURED/ /etc/dansguardian/dansguardian.conf > .conf/dansguardian.conf
+mv .conf/dansguardian.conf /etc/dansguardian/dansguardian.conf
+LANGS=`cd /etc/dansguardian/languages/ && ls -d -A *`
+foo=`zenity --list --radiolist --title $"Language selector" --text $"Please select dansguardian's language.\nThis will be the language of the access denied page, not of the wordlist used by the filter." --column="" --column="Language" $LANGS`
+echo $foo > /etc/dansguardian/language
+sed s/"language = 'ukenglish'"/"language = '$foo'"/ /etc/dansguardian/dansguardian.conf > .conf/dansguardian.conf
+mv .conf/dansguardian.conf /etc/dansguardian/dansguardian.conf
+echo $"Done!"
+}
+
+function configure_fh {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will configure firehol"
+echo $"Configuring firehol"
+rm /etc/firehol/firehol.conf
+cp .conf/firehol.conf /etc/firehol/firehol.conf
+sed s/START_FIREHOL=NO/START_FIREHOL=YES/ /etc/default/firehol > .conf/firehol
+mv .conf/firehol /etc/default/firehol
+echo $"Done!"
+}
+
+function configure_tp {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will configure tinyproxy"
+echo $"Configuring tinyproxy"
+sed s/"User nobody"/"User root"/ /etc/tinyproxy/tinyproxy.conf > .conf/tinyproxy.conf
+mv .conf/tinyproxy.conf /etc/tinyproxy/tinyproxy.conf
+sed s/"Group nogroup"/"Group root"/ /etc/tinyproxy/tinyproxy.conf > .conf/tinyproxy.conf
+mv .conf/tinyproxy.conf /etc/tinyproxy/tinyproxy.conf
+sed s/"Port 8888"/"Port 3128"/ /etc/tinyproxy/tinyproxy.conf > .conf/tinyproxy.conf
+mv .conf/tinyproxy.conf /etc/tinyproxy/tinyproxy.conf
+echo $"Done!"
+}
+
+function install_gui {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will install the GUI"
+
+echo $"Installing GUI"
+if (test -d $install_dir);
+ then echo $"Install dir already exists";
+ else sudo mkdirhier $install_dir;
+fi
+
+if (test -d $bin_dir);
+ then echo $"Bin dir already exists. This is normal";
+ else sudo mkdirhier $bin_dir;
+fi
+
+sudo cp .bin1/* $install_dir
+sudo cp .bin2/* $bin_dir
+sudo cp .conf/parental-control-gui.desktop /usr/share/applications/
+sudo killall -HUP gnome-panel
+echo $"Done!"
+
+}
+
+function restart_sw {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will restart all the software installed"
+echo $"Restarting everything"
+sudo /etc/init.d/tinyproxy restart
+sudo /etc/init.d/firehol restart
+sudo /etc/init.d/dansguardian restart
+echo $"Done!"
+}
+
+update
+download
+download_gui
+configure_dg
+configure_fh
+configure_tp
+install_gui
+restart_sw
+zenity --info --title "Ubuntu Parental Control setup" --text $"All done, enjoy"
