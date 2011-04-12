@@ -1,0 +1,70 @@
+#!/bin/bash
+# License GPL, see LICENSE
+# Written by Nanomad [condellog_At_gmail_dot_com]
+
+function stop_all {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will stop the filter"
+echo $"Stopping everything"
+sudo /etc/init.d/tinyproxy stop
+sudo /etc/init.d/firehol stop
+sudo /etc/init.d/dansguardian stop
+echo $"Done!"
+}
+
+function rm_conf_dg {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will de-configure DansGuardian"
+echo $"De-configuring DansGuardian"
+sed s/#CONFIGURED/UNCONFIGURED/ /etc/dansguardian/dansguardian.conf > .rm/dansguardian.conf
+sudo mv -f .rm/dansguardian.conf /etc/dansguardian/dansguardian.conf
+foo=`cat /etc/dansguardian/language`
+sed s/"language = '$foo'"/"language = 'ukenglish'"/ /etc/dansguardian/dansguardian.conf > .rm/dansguardian.conf
+sudo mv -f .rm/dansguardian.conf /etc/dansguardian/dansguardian.conf
+echo $"Done!"
+}
+
+function rm_conf_fh {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will de-configure FireHol"
+echo $"De-configuring FireHol"
+sed s/START_FIREHOL=YES/START_FIREHOL=NO/ /etc/default/firehol > .rm/firehol
+sudo mv .rm/firehol /etc/default/firehol
+echo $"Done!"
+}
+
+function rm_conf_tp {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will de-configure TinyProxy"
+echo $"De-configuring TinyProxy"
+sed s/"User root"/"User nobody"/ /etc/tinyproxy/tinyproxy.conf > .rm/tinyproxy.conf
+mv .rm/tinyproxy.conf /etc/tinyproxy/tinyproxy.conf
+sed s/"Group root"/"Group nogroup"/ /etc/tinyproxy/tinyproxy.conf > .rm/tinyproxy.conf
+mv .rm/tinyproxy.conf /etc/tinyproxy/tinyproxy.conf
+sed s/"Port 3128"/"Port 8888"/ /etc/tinyproxy/tinyproxy.conf > .rm/tinyproxy.conf
+mv .rm/tinyproxy.conf /etc/tinyproxy/tinyproxy.conf
+echo $"Done!"
+}
+
+function rm_gui {
+zenity --info --title "Ubuntu Parental Control setup" --text $"Now i will remove the GUI"
+echo $"Removing GUI"
+sudo rm -r "/usr/local/apps/parental-control/"
+sudo rm "/usr/local/bin/parental-control-config"
+sudo rm "/usr/share/applications/parental-control-gui.desktop"
+echo $"Done!"
+}
+
+function rm_pkg {
+sudo aptitude --purge remove dansguardian tinyproxy firehol
+}
+
+stop_all
+rm_conf_dg
+rm_conf_fh
+rm_conf_tp
+rm_gui
+
+if `zenity --question --title "Ubuntu Parental Control setup" --text $"Dansguardian, TinyProxy and Firehol are probabily useless now\nDo you want to uninstall them?"`;
+ then rm_pkg ;
+ else `zenity --info --title "Ubuntu Parental Control setup" --text $"Ok. I'm not removing them"` ;
+fi
+
+sudo killall -HUP gnome-panel
+zenity --info --title "Ubuntu Parental Control setup" --text $"All done, enjoy"

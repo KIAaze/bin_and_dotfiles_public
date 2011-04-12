@@ -1,0 +1,20 @@
+
+Disk /dev/sda: 40.0 GB, 40007761920 bytes
+255 heads, 63 sectors/track, 4864 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0x2bc12bc0
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *           1        1305    10482381    7  HPFS/NTFS
+/dev/sda3            1306        2611    10490445   83  Linux
+/dev/sda4            2612        4864    18097222+   5  Extended
+/dev/sda5            2612        4733    17044933+  83  Linux
+/dev/sda6            4734        4864     1052226   82  Linux swap / Solaris
+
+Disk /dev/sdb: 8032 MB, 8032092160 bytes
+131 heads, 50 sectors/track, 2395 cylinders
+Units = cylinders of 6550 * 512 = 3353600 bytes
+Disk identifier: 0x00000000
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1               2        2396     7839744    b  W95 FAT32

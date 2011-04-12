@@ -1,0 +1,135 @@
+# ~/.bash_prompt
+
+#####################################################################################
+# PROMPT STYLING
+#####################################################################################
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+function funny_face {
+  _ret=$?; if test $_ret -ne 0; then echo "0_0->ret=$_ret"; set ?=$_ret; unset _ret; else echo "^_^"; fi
+}
+
+function set_command_sound {
+  export PLAY_COMMAND_SOUND=$1
+}
+
+play_command_sound()
+{
+  if [ $PLAY_COMMAND_SOUND -eq 1 ]
+  then
+    padsp aplay $CMDSOUND 1>/dev/null 2>&1 &
+  fi
+}
+
+function pre_prompt_short {
+  newRET=$(funny_face)
+}
+
+function pre_prompt {
+newRET=$(funny_face)
+newPWD=$(pwd | sed "s|$HOME|~|")
+user="whoami"
+host=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
+datenow=$(date "+%a, %d %b %y")
+
+# play_command_sound
+
+if [ $ANONYMOUS -eq 0 ]
+then
+  let promptsize=$(echo -n "┌($user@$host ddd., DD mmm YY)($newPWD)┐" | wc -c | tr -d " ")
+  let promptsize=$promptsize-3
+else
+  let promptsize=$(echo -n "┌($newPWD)┐" | wc -c | tr -d " ")
+  let promptsize=$promptsize
+fi
+
+# echo "<$newPWD>"
+# echo promptsize=$promptsize
+let fillsize=${COLUMNS}-${promptsize}
+# echo fillsize=$fillsize
+fill=""
+while [ "$fillsize" -gt "0" ]
+do 
+    fill="${fill}─"
+	let fillsize=${fillsize}-1
+done
+# echo fill=$fill
+if [ "$fillsize" -lt "0" ]
+then
+    echo "WTF"
+    let cutt=3-${fillsize}
+    newPWD="...$(echo -n $PWD | sed -e "s/\(^.\{$cutt\}\)\(.*\)/\2/")"
+fi
+
+}
+
+export black="\[\033[0;38;5;0m\]"
+export red="\[\033[0;38;5;1m\]"
+export orange="\[\033[0;38;5;130m\]"
+export green="\[\033[0;38;5;2m\]"
+export yellow="\[\033[0;38;5;3m\]"
+export blue="\[\033[0;38;5;4m\]"
+export bblue="\[\033[0;38;5;12m\]"
+export magenta="\[\033[0;38;5;55m\]"
+export cyan="\[\033[0;38;5;6m\]"
+export white="\[\033[0;38;5;7m\]"
+export coldblue="\[\033[0;38;5;33m\]"
+export smoothblue="\[\033[0;38;5;111m\]"
+export iceblue="\[\033[0;38;5;45m\]"
+export turqoise="\[\033[0;38;5;50m\]"
+export smoothgreen="\[\033[0;38;5;42m\]"
+export defaultcolor="\[\033[m\]"
+
+# echo $TERM
+load_prompt()
+{
+ if [ $1 -eq 0 ]
+ then
+    # non-anonymous prompt
+    export ANONYMOUS=0
+    PROMPT_COMMAND=pre_prompt
+    case "$TERM" in
+    xterm)
+        PS1="$bblue┌─($orange\$newPWD$bblue)─\${fill}─($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
+        ;;
+    screen)
+        PS1="$bblue┌─($orange\$newPWD$bblue)─\${fill}─($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
+        ;;    
+        *)
+        PS1="┌─(\$newPWD)─\${fill}─(\u@\h \$(date \"+%a, %d %b %y\"))─┐\n└─(\$newRET)(\#)(\$(date \"+%H:%M\") )─> "
+        ;;
+    esac
+  elif [ $1 -eq 1 ]
+  then
+    # anonymous prompt 1
+    export ANONYMOUS=1
+    PROMPT_COMMAND=pre_prompt
+    case "$TERM" in
+    xterm)
+        PS1="$bblue┌─($orange\$newPWD$bblue)─\${fill}──┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
+        ;;
+    screen)
+        PS1="$bblue┌─($orange\$newPWD$bblue)─\${fill}──┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
+        ;;
+        *)
+        PS1="┌─(\$newPWD)─\${fill}──┐\n└─(\$newRET)(\#)─> "
+        ;;
+    esac
+  elif [ $1 -eq 2 ]
+  then
+    # non-anonymous prompt 2
+    PROMPT_COMMAND=pre_prompt_short
+    PS1='\[\e[0;1;33;41m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
+  else
+    # anonymous prompt 3
+    PROMPT_COMMAND=pre_prompt_short
+    PS1='\[\e[0;1;33;41m\][$newRET][\#][\w]\$ \[\e[m\] '
+  fi
+  PS1="\$(play_command_sound)$PS1"
+}
+
+set_command_sound 0
+load_prompt 2

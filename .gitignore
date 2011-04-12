@@ -1,0 +1,10 @@
+time.txt
+*.pyc
+*~
+*.bak
+
+# binaries
+darwinia
+HJSplitLX
+# ignore FDTD binaries
+fdtd*

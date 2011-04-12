@@ -1,0 +1,33 @@
+syntax: glob
+*~
+*.aux
+*.dvi
+*.log
+*.ps
+*.pdf
+*.lof
+*.lot
+*.toc
+*.so
+*.nav
+*.out
+*.snm
+*.orig
+*.o
+*.tar.gz
+main
+*.d
+*.png
+.svn
+*.bmp
+gp2dtest
+temp
+data
+*.bak
+iteam
+*.kdevelop.pcs
+*.kdevses
+*.pyc
+
+syntax: regexp
+.*\#.*\#$

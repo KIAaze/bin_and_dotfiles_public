@@ -1,0 +1,2 @@
+echo "finished" | festival --tts
+
