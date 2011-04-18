@@ -4,10 +4,14 @@
 
 #~ echo "reading .bashrc"
 
+# echo $PATH
+
 # Source global definitions
 if [ -f /etc/bashrc ]; then
   source /etc/bashrc
 fi
+
+# echo $PATH
 
 # User specific aliases and functions
 if [ -f ~/.bash_env ]; then

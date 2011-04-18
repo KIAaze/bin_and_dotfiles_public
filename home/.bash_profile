@@ -6,7 +6,7 @@ source /etc/profile
 
 # Get the aliases and functions
 if [ -f ~/.bashrc ]; then
-	. ~/.bashrc
+  source ~/.bashrc
 fi
 
 # User specific environment and startup programs
@@ -14,7 +14,10 @@ fi
 #	. ~/.bash_env
 #fi
 
-PATH=$PATH:$HOME/bin
+# echo $PATH
+# PATH=$PATH:$HOME/bin
+# echo $PATH
 
-export PATH
-unset USERNAME
+# export PATH
+
+# unset USERNAME
