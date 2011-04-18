@@ -127,7 +127,7 @@ load_prompt()
   then
     # non-anonymous 1-line prompt
     PROMPT_COMMAND=pre_prompt_short
-    PS1='\[\e[0;1;33;41m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
+    PS1='\[\e[0;1;33;44m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
   elif [ $1 -eq 4 ]
   then
     # non-anonymous 1-line prompt
