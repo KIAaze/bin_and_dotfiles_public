@@ -88,7 +88,7 @@ load_prompt()
 {
  if [ $1 -eq 0 ]
  then
-    # non-anonymous prompt
+    # non-anonymous 2-line prompt
     export ANONYMOUS=0
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
@@ -104,7 +104,7 @@ load_prompt()
     esac
   elif [ $1 -eq 1 ]
   then
-    # anonymous prompt 1
+    # anonymous 2-line prompt
     export ANONYMOUS=1
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
@@ -120,13 +120,23 @@ load_prompt()
     esac
   elif [ $1 -eq 2 ]
   then
-    # non-anonymous prompt 2
+    # non-anonymous 1-line prompt
     PROMPT_COMMAND=pre_prompt_short
     PS1='\[\e[0;1;33;41m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
-  else
-    # anonymous prompt 3
+  elif [ $1 -eq 3 ]
+  then
+    # non-anonymous 1-line prompt
     PROMPT_COMMAND=pre_prompt_short
-    PS1='\[\e[0;1;33;41m\][$newRET][\#][\w]\$ \[\e[m\] '
+    PS1='\[\e[0;1;33;41m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
+  elif [ $1 -eq 4 ]
+  then
+    # non-anonymous 1-line prompt
+    PROMPT_COMMAND=pre_prompt_short
+    PS1='\[\e[0;1;31;44m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
+  else
+    # anonymous 1-line prompt
+    PROMPT_COMMAND=pre_prompt_short
+    PS1='\[\e[0;1;33;44m\][$newRET][\#][\w]\$ \[\e[m\] '
   fi
   PS1="\$(play_command_sound)$PS1"
 }
