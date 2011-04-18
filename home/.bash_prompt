@@ -132,4 +132,4 @@ load_prompt()
 }
 
 set_command_sound 0
-load_prompt 2
+load_prompt $PROMPTSTYLE
