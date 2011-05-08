@@ -40,6 +40,7 @@ safe_link_dir $HOME/bin_and_dotfiles_public/home/.bash_prompt $HOME
 safe_link_dir $HOME/bin_and_dotfiles_public/home/.bashrc $HOME
 safe_link_dir $HOME/bin_and_dotfiles_public/home/.pystartup $HOME
 safe_link_dir $HOME/bin_and_dotfiles_private/home/.gitconfig $HOME
+safe_link_dir $HOME/bin_and_dotfiles_private/home/todo.cfg $HOME
 
 safe_link_dir $HOME/bin_and_dotfiles_private/config $HOME/.ssh
 
