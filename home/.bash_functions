@@ -85,3 +85,12 @@ syncbindot()
   cd ~/bin_and_dotfiles_public/ && git pull && git push && git status; cd -;
 }
 
+rtm() {
+  echo '' | mail -s "$*" $EMAIL_RTM
+}
+
+rtm_file() {
+  cat "$1" | while read line; do
+    rtm "$line"
+  done
+}
