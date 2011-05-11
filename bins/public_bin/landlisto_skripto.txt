@@ -1,0 +1,5 @@
+http://www.un.org/News/Press/docs/2006/org1469.doc.htm
+
+sed -i '/^[ \t]*$/d' landlisto.txt 
+sed -i '/^[0-9]/d' landlisto.txt 
+sed -i 's/\[[0-9]*\]//' landlisto.txt 
