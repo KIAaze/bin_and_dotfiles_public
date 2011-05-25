@@ -105,17 +105,17 @@ smartmove()
   fi
 }
 
+if [ $# -lt 3 ]
+then
+  usage;
+fi
+
 FORMAT=$1
 NUM=$(($#-2))
 DESTDIR="${!#}"
 echo "FORMAT = $FORMAT"
 echo "NUM = $NUM"
 echo "DESTDIR = $DESTDIR"
-
-if [ $# -lt 3 ]
-then
-  usage;
-fi
 
 if [ "$FORMAT" != "0" ] && [ "$FORMAT" != "1" ]
 then
