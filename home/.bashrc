@@ -42,7 +42,9 @@ export HISTCONTROL=ignoredups
 
 #to stay in the directory visited with mc on exit. :)
 # echo '=====>mc.sh'
-source /usr/share/mc/bin/mc.sh
+if [ -f /usr/share/mc/bin/mc.sh ]; then
+  source /usr/share/mc/bin/mc.sh
+fi
 
 ##########################################################
 
