@@ -19,6 +19,7 @@ safe_link_dir()
     else
       echo "WARNING: $FILE already exists and is not a symbolic link."
       ls -l "$FILE"
+      cp -iv "$FILE" "$FILE.$(date +%Y%m%d_%H%M%S)"
       rm -iv "$FILE"
     fi
   fi
