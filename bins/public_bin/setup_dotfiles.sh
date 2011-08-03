@@ -1,12 +1,21 @@
 #!/bin/bash
 
-set -u
+# set -u
 
 safe_link_dir()
 {
+  if [[ ! $1 ]];then exit 2; fi
+  if [[ ! $2 ]];then exit 2; fi
+
   TARGET="$1"
   DEST="$2"
   FILE="$DEST/$(basename $TARGET)"
+
+  if [ ! -e $TARGET ]
+  then
+    echo "ERROR: Target $TARGET not found."
+    exit 1
+  fi
 
   # check if target already exists and remove eventually
   if [ -e $FILE ]
