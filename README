@@ -7,8 +7,9 @@ Tip:
 If you need a free private git repository, have a look at assembla.com. :)
 
 Usage:
-Run bins/public_bin/setup_dotfiles.sh to set up the dotfiles and bin directory.
-(This requires another private repository in "~/bin_and_dotfiles_private" for it to work at the moment.)
+1) Run bins/public_bin/setup_dotfiles.sh to set up the dotfiles and bin directory.
+2) Create a ~/.bash_env file containing:
+export PATH=$PATH:$HOME/bin/public_bin
 
 License:
 Unless otherwise specified inside a file or folder, everything is under GPLv3 (cf COPYING.txt).
