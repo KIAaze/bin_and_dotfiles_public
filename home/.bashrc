@@ -118,7 +118,7 @@ if [ "$TESTAGENT" = "" ]; then
       rm -f $HOME/agent.sh
    fi;
    # start a new agent
-   ssh-agent | grep -v echo >&$HOME/agent.sh
+   exec ssh-agent | grep -v echo >&$HOME/agent.sh
 fi;
 
 test -e $HOME/agent.sh && source $HOME/agent.sh
