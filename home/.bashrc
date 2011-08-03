@@ -105,3 +105,23 @@ fi
 if [ -f /etc/bash_completion ]; then
     source /etc/bash_completion
 fi
+
+##########################################
+# from http://drupal.star.bnl.gov/STAR/blog-entry/jeromel/2009/feb/06/how-safely-start-ssh-agent-bashrc
+# safely start ssh agent
+TESTAGENT=`/bin/ps -ef | /bin/grep ssh-agent | /bin/grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
+
+if [ "$TESTAGENT" = "" ]; then
+   # there is no agent running
+   if [ -e "$HOME/agent.sh" ]; then
+      # remove the old file
+      /bin/rm -f $HOME/agent.sh
+   fi;
+   # start a new agent
+   /usr/bin/ssh-agent | /usr/bin/grep -v echo >&$HOME/agent.sh
+fi;
+
+test -e $HOME/agent.sh && source $HOME/agent.sh
+
+alias kagent="kill -9 $SSH_AGENT_PID"
+##########################################
