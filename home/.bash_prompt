@@ -142,4 +142,10 @@ load_prompt()
 }
 
 set_command_sound 0
-load_prompt $PROMPTSTYLE
+
+if [[ $PROMPTSTYLE ]]
+then
+  load_prompt $PROMPTSTYLE
+else
+  echo "WARNING: PROMPTSTYLE not set. Skipping load_prompt."
+fi
