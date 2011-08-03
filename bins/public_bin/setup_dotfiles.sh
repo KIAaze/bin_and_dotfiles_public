@@ -52,6 +52,7 @@ safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bash_profile $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bash_prompt $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bashrc $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.pystartup $HOME
+safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.vimrc $HOME
 
 cd $BIN_AND_DOTFILES_PUBLIC
 git config user.name $GIT_USERNAME_JZ
