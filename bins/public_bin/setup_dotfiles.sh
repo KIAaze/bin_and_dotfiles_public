@@ -55,8 +55,13 @@ safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.pystartup $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.vimrc $HOME
 
 cd $BIN_AND_DOTFILES_PUBLIC
-git config user.name $GIT_USERNAME_JZ
-git config user.email $GIT_EMAIL_JZ
+if [[ $GIT_USERNAME_JZ && $GIT_EMAIL_JZ ]]
+then
+  git config user.name $GIT_USERNAME_JZ
+  git config user.email $GIT_EMAIL_JZ
+else
+  echo "WARNING: git identity not set. Skipping configuration."
+fi
 git config push.default matching
 cd -
 
@@ -74,8 +79,13 @@ then
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.config/geany/keybindings.conf $HOME/.config/geany
 
   cd $BIN_AND_DOTFILES_PRIVATE
-  git config user.name $GIT_USERNAME_JZ
-  git config user.email $GIT_EMAIL_JZ
+  if [[ $GIT_USERNAME_JZ && $GIT_EMAIL_JZ ]]
+  then
+    git config user.name $GIT_USERNAME_JZ
+    git config user.email $GIT_EMAIL_JZ
+  else
+    echo "WARNING: git identity not set. Skipping configuration."
+  fi
   git config push.default matching
   cd -
 
