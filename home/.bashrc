@@ -109,16 +109,16 @@ fi
 ##########################################
 # from http://drupal.star.bnl.gov/STAR/blog-entry/jeromel/2009/feb/06/how-safely-start-ssh-agent-bashrc
 # safely start ssh agent
-TESTAGENT=`/bin/ps -ef | /bin/grep ssh-agent | /bin/grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
+TESTAGENT=`/bin/ps -ef | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
 
 if [ "$TESTAGENT" = "" ]; then
    # there is no agent running
    if [ -e "$HOME/agent.sh" ]; then
       # remove the old file
-      /bin/rm -f $HOME/agent.sh
+      rm -f $HOME/agent.sh
    fi;
    # start a new agent
-   /usr/bin/ssh-agent | /usr/bin/grep -v echo >&$HOME/agent.sh
+   ssh-agent | grep -v echo >&$HOME/agent.sh
 fi;
 
 test -e $HOME/agent.sh && source $HOME/agent.sh
