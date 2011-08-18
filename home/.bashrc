@@ -24,15 +24,38 @@ if [ -f ~/.bash_local ]; then
 fi
 
 ##################
-#OTHER
+#BASH
 ##################
 
+# option that auto corrects the case for you
+# shopt -s nocaseglob
+# Makes sure that histories in multiple simultaneous shells don’t overwrite each other.
+shopt -s histappend
+# Corrects typos in your file/directory name.
+# shopt -s cdspell
+
+# make sure that bash does not store any command beginning with the space character
+# export HISTCONTROL=ignorespace
 # don't put duplicate lines in the history. See bash(1) for more options
 export HISTCONTROL=ignoredups
+# ignorespace+ignoredups
+# export HISTCONTROL=ignoreboth
 
-# bash_history settings: size and no duplicates and no lines w/ lead spaces
-#exportHISTCONTROL="ignoreboth"
-#export HISTSIZE=1024
+# The number of commands to remember in the command history
+# export HISTSIZE=20000
+# equivalent to HISTSIZE
+# export HISTFILESIZE=20000
+
+# for infinite bash history
+unset HISTSIZE
+unset HISTFILESIZE
+
+################
+#OTHER
+################
+
+#display a short random fortune :)
+#fortune -s
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
@@ -79,7 +102,7 @@ if [ -f ~/.bash_prompt ]; then
 fi
 ##########################################################
 
-# Modules for working on bluecrystal
+# Modules for working on BC
 if declare -f module >/dev/null
 then
 	module add shared torque moab 2>/dev/null
