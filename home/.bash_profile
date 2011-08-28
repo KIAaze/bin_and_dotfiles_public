@@ -9,7 +9,14 @@ if [ -f ~/.bashrc ]; then
   source ~/.bashrc
 fi
 
-xbindkeys
+if [ -f ~/.bash_functions ]; then
+    source ~/.bash_functions
+fi
+
+if [ -f /usr/bin/xbindkeys ]; then
+  /usr/bin/xbindkeys
+fi
+
 # User specific environment and startup programs
 #if [ -f ~/.bash_env ]; then
 #	. ~/.bash_env
