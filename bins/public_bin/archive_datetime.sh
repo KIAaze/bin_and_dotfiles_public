@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set -eux
+set -eux
 
 # Check if all parameters are present
 # If no, exit
@@ -14,10 +14,10 @@ then
         exit 1
 fi
 
-FULLDIR=$( readlink -f $2 )
+FULLDIR=$( readlink -f "$2" )
 
-BASE=$(basename $FULLDIR)
-DIR=$(dirname $FULLDIR)
+BASE=$(basename "$FULLDIR")
+DIR=$(dirname "$FULLDIR")
 ORIG=$(pwd)
 
 DATE=$(date +%Y%m%d_%H%M%S)
@@ -33,7 +33,7 @@ echo "DEST=$DEST"
 
 ARCHIVE=$DEST/$BASE\_$DATE.tar.gz
 
-tar -C $DIR -czvf $ARCHIVE $BASE
+tar -C "$DIR" -czvf $ARCHIVE $BASE
 
 if [ $? -eq 0 ]
 then
