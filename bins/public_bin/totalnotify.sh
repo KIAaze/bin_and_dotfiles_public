@@ -6,7 +6,8 @@
 say_func()
 {
   if which festival &> /dev/null; then
-    echo $* | festival --tts
+    #echo $* | festival --tts
+    echo $* | padsp festival --tts
   fi
 }
 
