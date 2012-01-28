@@ -12,11 +12,11 @@ fi
 
 for file in "$@"
 do
-    FULLPATH=$(readlink -f $file)
-    DIR=$(dirname $FULLPATH)
-    FILE=$(basename $FULLPATH)
+    FULLPATH=$(readlink -f "$file")
+    DIR=$(dirname "$FULLPATH")
+    FILE=$(basename "$FULLPATH")
     DATE=$(date +%Y%m%d_%H%M%S)
-    NEWNAME=$FULLPATH.$DATE
+    NEWNAME="$FULLPATH.$DATE"
     echo "cp -riv $FULLPATH $NEWNAME"
-    cp -riv $FULLPATH $NEWNAME
+    cp -riv "$FULLPATH" "$NEWNAME"
 done
