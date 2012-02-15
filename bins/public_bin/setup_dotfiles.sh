@@ -18,14 +18,14 @@ safe_link_dir()
   fi
 
   # check if target already exists and remove eventually
-  if [ -e $FILE ]
+  if [ -L "$FILE" ] # FILE exists and is a symbolic link (same as -h)
   then
-    if [ -L "$FILE" ] # FILE exists and is a symbolic link (same as -h)
-    then
       echo "WARNING: Removing symbolic link $FILE"
       ls -l "$FILE"
       rm -v "$FILE"
-    else
+  else
+    if [ -e $FILE ]
+    then
       echo "WARNING: $FILE already exists and is not a symbolic link."
       ls -l "$FILE"
       cp -iv "$FILE" "$FILE.$(date +%Y%m%d_%H%M%S)"
