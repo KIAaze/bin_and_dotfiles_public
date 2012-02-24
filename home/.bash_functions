@@ -94,3 +94,11 @@ rtm_file() {
     rtm "$line"
   done
 }
+
+# improve this, might require python
+qstatuserfull()
+{
+  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 1 Job_Name
+  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 5 JOBDIR
+  qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 2 JOBDIR
+}
