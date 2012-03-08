@@ -3,7 +3,7 @@ set -e -u
 
 # Check if all parameters are present
 # If no, exit
-if [ $# -lt 1 ]
+if [ $# -lt 2 ]
 then
         echo "usage :"
         echo "`basename MOVE? $0` FILE/DIR"
