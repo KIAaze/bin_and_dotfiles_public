@@ -32,3 +32,4 @@ atexit.register(save_history)
 del atexit, readline, rlcompleter, save_history, historyPath
 
 from bfdtd.bfdtd_parser import *
+from constants.constants import *
