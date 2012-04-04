@@ -33,7 +33,7 @@ echo "DEST=$DEST"
 
 ARCHIVE=$DEST/$BASE\_$DATE.tar.gz
 
-tar -C "$DIR" -czvf $ARCHIVE $BASE
+tar -C "$DIR" -czvf "$ARCHIVE" "$BASE"
 
 if [ $? -eq 0 ]
 then
