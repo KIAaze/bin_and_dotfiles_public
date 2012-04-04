@@ -17,6 +17,10 @@ if [ -f /usr/bin/xbindkeys ]; then
   /usr/bin/xbindkeys
 fi
 
+if [ -f ~/.bash_profile_local ]; then
+  source ~/.bash_profile_local
+fi
+
 # User specific environment and startup programs
 #if [ -f ~/.bash_env ]; then
 #	. ~/.bash_env
