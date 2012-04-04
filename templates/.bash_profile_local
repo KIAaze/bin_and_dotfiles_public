@@ -1,0 +1,30 @@
+# show quota
+showquota
+
+# show job stats
+jobstats.sh
+#RUNNING=$(qstat | grep $USER | grep " R " | wc -l)
+#QUEUED=$(qstat | grep $USER | grep " Q " | wc -l)
+#TOTAL=$(qstat | grep $USER | wc -l)
+#echo "job stats: running=$RUNNING queued=$QUEUED total=$TOTAL"
+
+# start ssh-agent
+##########################################
+# from http://drupal.star.bnl.gov/STAR/blog-entry/jeromel/2009/feb/06/how-safely-start-ssh-agent-bashrc
+# safely start ssh agent
+TESTAGENT=`/bin/ps -ef | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
+
+if [ "$TESTAGENT" = "" ]; then
+   # there is no agent running
+   if [ -e "$HOME/agent.sh" ]; then
+      # remove the old file
+      rm -f $HOME/agent.sh
+   fi;
+   # start a new agent
+   exec ssh-agent | grep -v echo >&$HOME/agent.sh
+fi;
+ 
+test -e $HOME/agent.sh && source $HOME/agent.sh
+ 
+alias kagent="kill -9 $SSH_AGENT_PID"
+##########################################
