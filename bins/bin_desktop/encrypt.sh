@@ -3,9 +3,12 @@
 # If no, exit
 if [ $# -ne 2 ]
 then
-        echo "usage :"
-	echo "`basename $0` e-mail file"
-        exit 0
+  echo "usage :"
+	echo "`basename $0` mail file"
+  exit 1
 fi
 
-gpg -c -e -r $1 $2
+MAIL=$1
+FILE=$2
+
+gpg -c -e -r $MAIL $FILE

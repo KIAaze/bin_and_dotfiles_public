@@ -2,6 +2,7 @@
 # different notifying methods
 
 # remember to define the EMAIL environment variable in your dotfiles
+EMAIL="USER@FOOBAR"
 
 say_func()
 {

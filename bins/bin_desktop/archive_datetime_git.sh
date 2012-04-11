@@ -1,19 +1,29 @@
 #!/bin/bash
 # set -x
+set -eu
 
 # Check if all parameters are present
 # If no, exit
-if [ $# -ne 1 ]
+if ( [ $# -ne 1 ] || [ $1 = "-f" ] ) && ( [ $# -ne 2 ] || [ $1 != "-f" ] )
 then
 	echo
 	echo 'archives a git repository as <dir>_$(date +%Y%m%d_%H%M%S).tar.gz'
 	echo "usage :"
 	echo "$0 <dir>"
+	echo "force archival:"
+	echo "$0 -f <dir>"
         echo
         exit 0
 fi
 
-DIR=$(readlink -f $1)
+# TODO Learn to use shift and use it
+if [ $1 = "-f" ]
+then
+  DIR=$(readlink -f $2)
+else
+  DIR=$(readlink -f $1)
+fi
+
 BASE=`basename $DIR`
 ORIG=`pwd`
 
@@ -38,14 +48,19 @@ fi
 
 if [ $( git status | wc -l ) -ne 2 ]
 then
-	echo "Please commit latest changes before archiving. ;)"
-	echo "Do you want to force archival anyway?(y/n)"
-	read ans
-	case $ans in
-	  y|Y|yes) echo "Archiving anyway...";;
-	  *) echo "Exiting"
-	     exit 2;;
-	esac
+  if [ $1 = "-f" ]
+  then
+    #force archival
+    echo "Warning: Forcing archival"
+  else
+    #do nothing
+    echo "Please commit latest changes before archiving. ;)"
+    echo "If you want to force archival, use:"
+    echo " cd $DIR"
+    echo " git archive --format=tar --prefix=$BASE/ HEAD | gzip >$ARCHIVE"
+    echo "...or the -f flag. :)"
+    exit 2
+  fi
 fi
 
 #hg archive -v -t"tgz" $ARCHIVE

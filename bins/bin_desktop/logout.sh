@@ -3,12 +3,14 @@
 
 if [ $# -eq 0 ]
 then
-skill -KILL -u $USER
+pkill -KILL -u $USER
+#skill -KILL -u $USER
 fi
 
 if [ $# -eq 1 ]
 then
-skill -KILL -u $1
+pkill -KILL -u $1
+#skill -KILL -u $1
 fi
 
 echo "usage : $0 [username]"

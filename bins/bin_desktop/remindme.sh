@@ -32,8 +32,13 @@ reminder="reminders/reminder-"$unique
 echo '#!/bin/bash' > ~/$reminder
 echo -n 'export DISPLAY=' >> ~/$reminder
 echo $THISDISPLAY >> ~/$reminder
-echo "echo \"$MESSAGE\" | osd_cat -s 2 -c green -p middle -A center \
--f -adobe-helvetica-bold-r-normal-*-*-240-*-*-p-*-*-* -d 5" >> ~/$reminder
+
+if which osd_cat &> /dev/null; then
+  echo "echo \"$MESSAGE\" | osd_cat -s 2 -c green -p middle -A center \
+  -f -adobe-helvetica-bold-r-normal-*-*-240-*-*-p-*-*-* -d 5" >> ~/$reminder
+else
+  echo "zenity --info --text=\"$MESSAGE\"" >> ~/$reminder
+fi
 
 #Make the reminder script executable
 chmod +x ~/$reminder

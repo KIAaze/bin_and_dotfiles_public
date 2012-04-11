@@ -1,11 +1,13 @@
 #!/bin/bash
 # different notifying methods
 
+# remember to define the EMAIL environment variable in your dotfiles
 EMAIL="USER@FOOBAR"
 
 say_func()
 {
   if which festival &> /dev/null; then
+    #echo $* | festival --tts
     echo $* | padsp festival --tts
   fi
 }
@@ -13,7 +15,7 @@ say_func()
 messagebox_func()
 {
   if which zenity &> /dev/null; then
-    zenity --info --text="$*"
+    zenity --info --text="$*" 2>/dev/null
   fi
 }
 

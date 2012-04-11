@@ -3,9 +3,9 @@
 # If no, exit
 if [ $# -ne 2 ]
 then
-        echo "usage :"
+  echo "usage :"
 	echo "`basename $0` mail file"
-        exit 1
+  exit 1
 fi
 
 MAIL=$1

@@ -18,9 +18,9 @@ shift
 
 #echo $@
 
-for file in "$@"
+for FILE in "$@"
 do
-    FULLPATH=$(readlink -f "$file")
+    FULLPATH=$(readlink -f "$FILE")
     DIR=$(dirname "$FULLPATH")
     FILE=$(basename "$FULLPATH")
     DATE=$(date +%Y%m%d_%H%M%S)
