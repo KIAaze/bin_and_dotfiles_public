@@ -7,6 +7,10 @@
 
 set -eux
 
+# For the greeter mod to work, you need to change the theme in /etc/lxdm/default.conf
+GREETER_UI="$HOME/Lubuntu2/greeter.ui"
+GREETER_UI_TEMPLATE="$HOME/Lubuntu2/greeter.ui.template"
+
 # input
 MISSION=$(zenity --entry --text="Mission description:" --entry-text="Get things done!")
 delta_T=$(zenity --entry --text="Estimated time of completion (HH:MM:SS):" --entry-text="00:15:00")
@@ -17,14 +21,19 @@ NOW=$(date +%H:%M:%S)
 END=$($HOME/bin/time_op.py "$NOW + d$delta_T" "%H:%M")
 END2=$($HOME/bin/time_op.py "$END:00 + d$delta_T2" "%H:%M")
 
-# # schedule logout time
+# add time to login screen :)
+sed s/LOGIN_TEXT/"Next login allowed at: $END2"/ $GREETER_UI_TEMPLATE > $GREETER_UI
+
+# schedule logout time
 # at $END -f $HOME/bin/logout.sh
-# 
-# # schedule out time
+
+# schedule out time
 # $HOME/bin/forcelogout.sh force-on $END2
 
 # schedule logout time
-echo "$HOME/bin/logout_until.sh $END2" | at $END
+#echo "$HOME/bin/logout_until.sh $END2" | at $END
+echo "$HOME/bin/logout_until.sh" | at $END
+echo "$HOME/bin/forcelogout.sh off" | at $END2
 
 ################
 # activate OSD

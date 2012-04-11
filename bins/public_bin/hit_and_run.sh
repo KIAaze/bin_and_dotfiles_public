@@ -31,6 +31,7 @@ sed s/LOGIN_TEXT/"Next login allowed at: $END2"/ $GREETER_UI_TEMPLATE > $GREETER
 # $HOME/bin/forcelogout.sh force-on $END2
 
 # schedule logout time
+#echo "$HOME/bin/logout_until.sh $END2" | at $END
 echo "$HOME/bin/logout_until.sh" | at $END
 echo "$HOME/bin/forcelogout.sh off" | at $END2
 
