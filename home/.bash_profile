@@ -13,7 +13,7 @@ if [ -f ~/.bash_functions ]; then
     source ~/.bash_functions
 fi
 
-if [ -f /usr/bin/xbindkeys ]; then
+if [ -f /usr/bin/xbindkeys ] && [ -f $HOME/.xbindkeysrc ]; then
   /usr/bin/xbindkeys
 fi
 
