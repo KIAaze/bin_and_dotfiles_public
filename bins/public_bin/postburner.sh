@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: Display MD5/SHA1 of both files with full path to make sure.
+
 # Check if all parameters are present
 # If no, exit
 if [ $# -ne 1 ]
@@ -11,11 +13,12 @@ fi
 
 set -eux
 
-CDPATH=/media/cdrom
-MD5=/tmp/md5.txt
+#CDPATH=/media/cdrom
+CHECKSUMFILE=/tmp/md5.txt
 
 SRC_DIR=$1
 # DST_DIR=$2
+DST_DIR=$(readlink -f .)
 
 # FULL=$(readlink -f $SRC)
 # DIR=$(dirname $SRC)
@@ -28,14 +31,21 @@ SRC_DIR=$1
 
 # md5sum $SRC >
 
-find . \( ! -name . -prune \) -type f -print0 | while read -d $'\0' FILE
+#find . \( ! -name . -prune \) -type f -print0 | while read -d $'\0' FILE
+
+CHECKSUMAPP=/usr/bin/sha1sum
+
+find . \( ! -name . \) -type f -print0 | while read -d $'\0' FILE
 do
   echo "Processing $FILE ..."
   SRC=$(readlink -f "$SRC_DIR/$FILE")
   if [ -f "$SRC" ]
   then
-    md5deep -b "$SRC" >$MD5
-    if md5sum -c $MD5
+    #md5deep -b "$SRC" >$CHECKSUMFILE
+    cd $SRC_DIR
+    ${CHECKSUMAPP} "$FILE" >$CHECKSUMFILE
+    cd $DST_DIR
+    if ${CHECKSUMAPP} -c $CHECKSUMFILE
     then
       echo "$FILE burned successfully. Removing it."
       beep
@@ -47,7 +57,7 @@ do
         echo "Keeping $SRC"
       fi
     else
-      echo "ERROR: MD5 sums differ for $FILE and $SRC"
+      echo "ERROR: checksums differ for $FILE and $SRC"
     fi
   else
     echo "ERROR: File $SRC not found."
