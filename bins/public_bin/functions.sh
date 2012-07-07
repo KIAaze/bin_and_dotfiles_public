@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sum()
 {
     ret=`expr $1 + $2`
