@@ -18,8 +18,6 @@ if [ "$TERM" != "dumb" ]; then
     alias vdir='ls --color=auto --format=long'
 fi
 
-alias addquote='editor $HOME/worksync/quotes.txt'
-
 # ls aliases
 # alias l='ls -CF'
 alias la='ls -aA'
@@ -98,3 +96,9 @@ alias modulegrep='module avail 2>&1 | grep '
 alias cdtemp='cd $(mktemp -d )'
 
 alias bashclean='env -i bash --noprofile --init-file /etc/profile'
+
+# Fun with a personal quote file :)
+alias addquote='editor $QUOTEFILE && strfile $QUOTEFILE'
+alias fortune_custom='fortune -c 50% /usr/share/games/fortunes/ 50% $QUOTEFILE'
+# hack para fortunas españolas :D (debería entregar un bug sobre el paquete) (con fortunes-fr, funciona simplement con "fortune fr")
+alias fortune_es='dpkg -L fortunes-es | grep dat | xargs -I{} basename {} .dat | xargs fortune'
