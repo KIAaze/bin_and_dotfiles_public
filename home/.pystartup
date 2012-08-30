@@ -34,3 +34,4 @@ del atexit, readline, rlcompleter, save_history, historyPath
 from bfdtd.bfdtd_parser import *
 from GWL.GWL_parser import *
 from constants.constants import *
+from utilities.brisFDTD_ID_info import *
