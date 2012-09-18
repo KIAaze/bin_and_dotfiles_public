@@ -9,11 +9,17 @@ jobstats.sh
 #echo "job stats: running=$RUNNING queued=$QUEUED total=$TOTAL"
 
 # start ssh-agent
+
 ##########################################
 # from http://drupal.star.bnl.gov/STAR/blog-entry/jeromel/2009/feb/06/how-safely-start-ssh-agent-bashrc
 # safely start ssh agent
-TESTAGENT=`/bin/ps -ef | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
+# Note: added --user in case other users are running their own agents
 
+TESTAGENT=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
+
+echo "ssh-agent processes before:"
+/bin/ps -f --user $USER | grep ssh-agent | grep -v grep
+ 
 if [ "$TESTAGENT" = "" ]; then
    # there is no agent running
    if [ -e "$HOME/agent.sh" ]; then
@@ -23,8 +29,14 @@ if [ "$TESTAGENT" = "" ]; then
    # start a new agent
    exec ssh-agent | grep -v echo >&$HOME/agent.sh
 fi;
- 
+
 test -e $HOME/agent.sh && source $HOME/agent.sh
- 
+
 alias kagent="kill -9 $SSH_AGENT_PID"
+
+echo "ssh-agent processes after:"
+/bin/ps -f --user $USER | grep ssh-agent | grep -v grep
+
+echo "SSH_AUTH_SOCK = $SSH_AUTH_SOCK"
+ls $SSH_AUTH_SOCK
 ##########################################
