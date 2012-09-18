@@ -15,35 +15,92 @@ jobstats.sh
 # safely start ssh agent
 # Note: added --user in case other users are running their own agents
 
-# TODO: Fix error in case agent.sh info does not correspond to running ssh-agent process... :/
+# TODO: Fix error in case AGENTFILE info does not correspond to running ssh-agent process... :/
 # ideas:
 # -get SSH_AUTH_SOCK from PID
 # -check for multiple ssh-agent agents running
-# -if agent.sh info does not correspond to ssh-agent process, kill it and start new one.
+# -if AGENTFILE info does not correspond to ssh-agent process, kill it and start new one.
+# NOTE: when connecting though 2 different shells, the PIDs are different, but SZ and RSS remain the same:
+# Using ps -eF
+#UID        PID  PPID  C    SZ   RSS PSR STIME TTY          TIME CMD
+#       rss       RSS    resident set size, the non-swapped physical memory that a task has used (in kiloBytes). (alias rssize, rsz).
+#       size      SZ     approximate amount of swap space that would be required if the process were to dirty all writable pages and then be swapped out. This
+#                        number is very rough!
+# ...useless...
+# REASON: different login nodes... Need to create per-node AGENTFILE file and check ssh-agents... Might as well just always kill it and create a new one...
 
-TESTAGENT=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
+ssh_agent_restart()
+{
+  AGENTPID=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
+  if [ -n "$AGENTPID" ]
+  then
+    echo "killing $AGENTPID"
+    # kill $AGENTPID
+    killall ssh-agent
+  end
+  ssh-agent >$AGENTFILE
+  if [ test -e $AGENTFILE ]
+  then
+    echo "$AGENTFILE exists"
+    source $AGENTFILE
+    if [ -e $SSH_AUTH_SOCK ]
+    then
+      echo "$SSH_AUTH_SOCK exists"
+    else
+      echo "ERROR: Failed to initialize working ssh-agent!"
+    fi
+  fi
+}
 
-echo "ssh-agent processes before:"
-/bin/ps -f --user $USER | grep ssh-agent | grep -v grep
-echo "TESTAGENT = $TESTAGENT"
- 
-if [ "$TESTAGENT" = "" ]; then
-  echo "there is no agent running"
-  if [ -e "$HOME/agent.sh" ]; then
-    echo "remove the old file"
-    rm -f $HOME/agent.sh
-  fi;
-  echo "start a new agent"
-  exec ssh-agent | grep -v echo >&$HOME/agent.sh
-fi;
+AGENTFILE="$HOME/agent.$(hostname).sh"
+if [ -e $AGENTFILE ]
+then
+  echo "$AGENTFILE exists"
+  source $AGENTFILE
+  if [ -e $SSH_AUTH_SOCK ]
+  then
+    echo "$SSH_AUTH_SOCK exists"
+    echo "ssh-agent running correctly!"
+  else
+    ssh_agent_restart()
+  fi
+else
+  echo "$AGENTFILE not found"
+  ssh_agent_restart()
+fi
 
-test -e $HOME/agent.sh && source $HOME/agent.sh
-
-alias kagent="kill -9 $SSH_AGENT_PID"
-
-echo "ssh-agent processes after:"
-/bin/ps -f --user $USER | grep ssh-agent | grep -v grep
-
-echo "SSH_AUTH_SOCK = $SSH_AUTH_SOCK"
-ls $SSH_AUTH_SOCK
-##########################################
+# ################
+# # kill all agents and start a new one
+# TESTAGENT=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
+# if [ -n "$TESTAGENT" ]; then
+#   killall ssh-agent
+# end
+# ssh-agent | grep -v echo >&$AGENTFILE
+# test -e $AGENTFILE && source $AGENTFILE
+# ################
+# 
+# 
+# echo "ssh-agent processes before:"
+# /bin/ps -f --user $USER | grep ssh-agent | grep -v grep
+# echo "TESTAGENT = $TESTAGENT"
+#  
+# if [ "$TESTAGENT" = "" ]; then
+#   echo "there is no agent running"
+#   if [ -e "$AGENTFILE" ]; then
+#     echo "remove the old file"
+#     rm -f $AGENTFILE
+#   fi;
+#   echo "start a new agent"
+#   exec ssh-agent | grep -v echo >&$AGENTFILE
+# fi;
+# 
+# test -e $AGENTFILE && source $AGENTFILE
+# 
+# alias kagent="kill -9 $SSH_AGENT_PID"
+# 
+# echo "ssh-agent processes after:"
+# /bin/ps -f --user $USER | grep ssh-agent | grep -v grep
+# 
+# echo "SSH_AUTH_SOCK = $SSH_AUTH_SOCK"
+# ls $SSH_AUTH_SOCK
+# ##########################################
