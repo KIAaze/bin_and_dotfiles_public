@@ -15,6 +15,12 @@ jobstats.sh
 # safely start ssh agent
 # Note: added --user in case other users are running their own agents
 
+# TODO: Fix error in case agent.sh info does not correspond to running ssh-agent process... :/
+# ideas:
+# -get SSH_AUTH_SOCK from PID
+# -check for multiple ssh-agent agents running
+# -if agent.sh info does not correspond to ssh-agent process, kill it and start new one.
+
 TESTAGENT=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
 
 echo "ssh-agent processes before:"
@@ -22,13 +28,13 @@ echo "ssh-agent processes before:"
 echo "TESTAGENT = $TESTAGENT"
  
 if [ "$TESTAGENT" = "" ]; then
-   echo "there is no agent running"
-   if [ -e "$HOME/agent.sh" ]; then
-      echo "remove the old file"
-      rm -f $HOME/agent.sh
-   fi;
-   echo "start a new agent"
-   exec ssh-agent | grep -v echo >&$HOME/agent.sh
+  echo "there is no agent running"
+  if [ -e "$HOME/agent.sh" ]; then
+    echo "remove the old file"
+    rm -f $HOME/agent.sh
+  fi;
+  echo "start a new agent"
+  exec ssh-agent | grep -v echo >&$HOME/agent.sh
 fi;
 
 test -e $HOME/agent.sh && source $HOME/agent.sh
