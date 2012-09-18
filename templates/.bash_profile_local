@@ -19,14 +19,15 @@ TESTAGENT=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{prin
 
 echo "ssh-agent processes before:"
 /bin/ps -f --user $USER | grep ssh-agent | grep -v grep
+echo "TESTAGENT = $TESTAGENT"
  
 if [ "$TESTAGENT" = "" ]; then
-   # there is no agent running
+   echo "there is no agent running"
    if [ -e "$HOME/agent.sh" ]; then
-      # remove the old file
+      echo "remove the old file"
       rm -f $HOME/agent.sh
    fi;
-   # start a new agent
+   echo "start a new agent"
    exec ssh-agent | grep -v echo >&$HOME/agent.sh
 fi;
 
