@@ -28,45 +28,54 @@ jobstats.sh
 #                        number is very rough!
 # ...useless...
 # REASON: different login nodes... Need to create per-node AGENTFILE file and check ssh-agents... Might as well just always kill it and create a new one...
+# NOTE: some processes might be defunct: [ssh-agent] <defunct>, but should not matter. We can still use killall without errors.
+
+AGENTFILE="$HOME/agent.$(hostname).sh"
 
 ssh_agent_restart()
 {
   AGENTPID=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
-  if [ -n "$AGENTPID" ]
-  then
+  if [ -n "$AGENTPID" ]; then
     echo "killing $AGENTPID"
     # kill $AGENTPID
     killall ssh-agent
-  end
+  fi
+#   echo "$LINENO: $AGENTFILE"
   ssh-agent >$AGENTFILE
-  if [ test -e $AGENTFILE ]
-  then
+#   echo "$LINENO: $AGENTFILE"
+  if [ -e "$AGENTFILE" ]; then
+#     echo "$LINENO: $AGENTFILE"
     echo "$AGENTFILE exists"
-    source $AGENTFILE
-    if [ -e $SSH_AUTH_SOCK ]
-    then
+    source "$AGENTFILE"
+    if [ -n "$SSH_AUTH_SOCK" ] && [ -e "$SSH_AUTH_SOCK" ]; then
       echo "$SSH_AUTH_SOCK exists"
     else
-      echo "ERROR: Failed to initialize working ssh-agent!"
+      echo "$SSH_AUTH_SOCK not found"
     fi
   fi
 }
 
-AGENTFILE="$HOME/agent.$(hostname).sh"
-if [ -e $AGENTFILE ]
-then
+if [ -e "$AGENTFILE" ]; then
   echo "$AGENTFILE exists"
-  source $AGENTFILE
-  if [ -e $SSH_AUTH_SOCK ]
-  then
+  source "$AGENTFILE"
+  if [ -n "$SSH_AUTH_SOCK" ] && [ -e "$SSH_AUTH_SOCK" ]; then
     echo "$SSH_AUTH_SOCK exists"
-    echo "ssh-agent running correctly!"
   else
-    ssh_agent_restart()
+    ssh_agent_restart
   fi
 else
   echo "$AGENTFILE not found"
-  ssh_agent_restart()
+  ssh_agent_restart
+fi
+
+# DIAGNOSTICS
+#      Exit status is 0 on success (found stored identities), 1 if the specified command fails (found no stored identities), and 2 if ssh-add is unable to contact the authentication agent.
+ssh-add -l
+if [ $? -ne 2 ]
+then
+  echo "ssh-agent running correctly!"
+else
+  echo "ERROR: Failed to initialize working ssh-agent!"
 fi
 
 # ################
