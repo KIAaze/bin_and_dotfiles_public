@@ -36,19 +36,15 @@ shopt -s histappend
 
 # make sure that bash does not store any command beginning with the space character
 # export HISTCONTROL=ignorespace
+
 # don't put duplicate lines in the history. See bash(1) for more options
-export HISTCONTROL=ignoredups
-# ignorespace+ignoredups
-# export HISTCONTROL=ignoreboth
+#ignoredups checks the old history, erasedups checks the current history, not yet written to HISTFILE
+export HISTCONTROL=ignoredups:erasedups
 
-# The number of commands to remember in the command history
-# export HISTSIZE=20000
-# equivalent to HISTSIZE
-# export HISTFILESIZE=20000
-
-# for infinite bash history
-unset HISTSIZE
-unset HISTFILESIZE
+# hack for infinite bash history (but it still only saves the last HISTSIZE commands from the currently running shell)
+# normally unsetting HISTFILESIZE should be enough, but for some strange reason bash keeps resetting it after finishing reading all the ~/.bash* files.
+export HISTSIZE=500
+export HISTFILESIZE=$(expr $(wc -l ~/.bash_history | awk '{print $1}') + $HISTSIZE)
 
 ################
 #OTHER
