@@ -44,7 +44,7 @@ export HISTCONTROL=ignoredups:erasedups
 # hack for infinite bash history (but it still only saves the last HISTSIZE commands from the currently running shell)
 # normally unsetting HISTFILESIZE should be enough, but for some strange reason bash keeps resetting it after finishing reading all the ~/.bash* files.
 export HISTSIZE=500
-export HISTFILESIZE=$(expr $(wc -l ~/.bash_history | awk '{print $1}') + $HISTSIZE)
+export HISTFILESIZE=$(expr $(wc -l $HOME/.bash_history | awk '{print $1}') + $HISTSIZE)
 
 ################
 #OTHER
