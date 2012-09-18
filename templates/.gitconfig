@@ -1,0 +1,6 @@
+[push]
+	default = matching
+[branch]
+	autosetupmerge = true
+[merge]
+	tool = meld
