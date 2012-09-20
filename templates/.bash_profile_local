@@ -36,35 +36,32 @@ ssh_agent_restart()
 {
   AGENTPID=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
   if [ -n "$AGENTPID" ]; then
-    echo "killing $AGENTPID"
+#     echo "killing $AGENTPID"
     # kill $AGENTPID
     killall ssh-agent
   fi
-#   echo "$LINENO: $AGENTFILE"
-  ssh-agent >$AGENTFILE
-#   echo "$LINENO: $AGENTFILE"
+  ssh-agent | grep -v echo >$AGENTFILE
   if [ -e "$AGENTFILE" ]; then
-#     echo "$LINENO: $AGENTFILE"
-    echo "$AGENTFILE exists"
+#     echo "$AGENTFILE exists"
     source "$AGENTFILE"
-    if [ -n "$SSH_AUTH_SOCK" ] && [ -e "$SSH_AUTH_SOCK" ]; then
-      echo "$SSH_AUTH_SOCK exists"
-    else
-      echo "$SSH_AUTH_SOCK not found"
-    fi
+#     if ! ( [ -n "$SSH_AUTH_SOCK" ] && [ -e "$SSH_AUTH_SOCK" ] ); then
+#       echo "$SSH_AUTH_SOCK not found"
+#     else
+#       echo "$SSH_AUTH_SOCK exists"
+#     fi
   fi
 }
 
 if [ -e "$AGENTFILE" ]; then
-  echo "$AGENTFILE exists"
+#   echo "$AGENTFILE exists"
   source "$AGENTFILE"
-  if [ -n "$SSH_AUTH_SOCK" ] && [ -e "$SSH_AUTH_SOCK" ]; then
-    echo "$SSH_AUTH_SOCK exists"
-  else
+  if ! ( [ -n "$SSH_AUTH_SOCK" ] && [ -e "$SSH_AUTH_SOCK" ] ); then
     ssh_agent_restart
+#   else
+#     echo "$SSH_AUTH_SOCK exists"
   fi
 else
-  echo "$AGENTFILE not found"
+#   echo "$AGENTFILE not found"
   ssh_agent_restart
 fi
 
