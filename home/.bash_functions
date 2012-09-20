@@ -77,12 +77,20 @@ vimbin()
   vim $HOME/bin/$1;
 }
 
+syncgitrepo()
+{
+  echo "=== Synching $1 ==="
+  if [ -d "$1" ]; then
+    cd "$1" && git pull && git push && git status; cd -;
+  else
+    echo "$1 does not exist or is not a directory."
+  fi
+}
+
 syncbindot()
 {
-  echo "=== Synching private repo ==="
-  cd ~/bin_and_dotfiles_private/ && git pull && git push && git status; cd -;
-  echo "=== Synching public repo ==="
-  cd ~/bin_and_dotfiles_public/ && git pull && git push && git status; cd -;
+  syncgitrepo ~/bin_and_dotfiles_private/
+  syncgitrepo ~/bin_and_dotfiles_public/
 }
 
 rtm() {
