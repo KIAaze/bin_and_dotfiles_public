@@ -110,3 +110,55 @@ qstatuserfull()
   #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 5 JOBDIR
   qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 2 JOBDIR
 }
+
+##########################################
+# ssh-agent stuff
+##########################################
+# ideas:
+# -get SSH_AUTH_SOCK from PID
+# -check for multiple ssh-agent agents running
+# -if AGENTFILE info does not correspond to ssh-agent process, kill it and start new one.
+# TODO: See if we can use Gnome or KDE keyring depending on environment. (ssh-add -D does not delete identities from the Gnome keyring)
+# TODO: Create script/function to auto-add all identities in ~/.ssh? Better to just have one key per system or one key per app?
+
+ssh_agent_restart()
+{
+  # depends on hostname to support systems with multiple login nodes and shared home directory
+  AGENTFILE="$HOME/agent.$(hostname).sh"
+  # Note: added --user in case other users are running their own agents
+  AGENTPID=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
+  if [ -n "$AGENTPID" ]; then
+    # better than killall to avoid error messages coming from trying to kill processes by other users
+    kill $AGENTPID
+  fi
+  ssh-agent | grep -v echo >$AGENTFILE
+  if [ -e "$AGENTFILE" ]; then
+    source "$AGENTFILE"
+  fi
+}
+
+ssh_agent_start()
+{
+  AGENTFILE="$HOME/agent.$(hostname).sh"
+  if [ -e "$AGENTFILE" ]; then
+    source "$AGENTFILE"
+    if ! ( [ -n "$SSH_AUTH_SOCK" ] && [ -e "$SSH_AUTH_SOCK" ] ); then
+      ssh_agent_restart
+    fi
+  else
+    ssh_agent_restart
+  fi
+}
+
+ssh_agent_check()
+{
+  # DIAGNOSTICS
+  #      Exit status is 0 on success (found stored identities), 1 if the specified command fails (found no stored identities), and 2 if ssh-add is unable to contact the authentication agent.
+  ssh-add -l
+  if [ $? -ne 2 ]
+  then
+    echo "ssh-agent running correctly!"
+  else
+    echo "ERROR: Failed to initialize working ssh-agent!"
+  fi
+}
