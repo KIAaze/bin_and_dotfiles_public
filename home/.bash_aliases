@@ -106,3 +106,5 @@ alias fortune_es='dpkg -L fortunes-es | grep dat | xargs -I{} basename {} .dat |
 alias secure_ssh='chmod 700 ~/.ssh/ && chmod 600 ~/.ssh/* && ls -ld ~/.ssh/ && ls -l ~/.ssh'
 
 alias list_network_apps='netstat -tuw | awk '\''{print $4}'\'' | grep -o -E ":[0-9]+" | xargs -n1 lsof -i'
+
+alias move_pictures='mv -iv *.gif *.png *.bmp *.jpg *.jpeg *.GIF *.PNG *.BMP *.JPG *.JPEG'
