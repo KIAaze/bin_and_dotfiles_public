@@ -107,3 +107,7 @@ alias secure_ssh='chmod 700 ~/.ssh/ && chmod 600 ~/.ssh/* && ls -ld ~/.ssh/ && l
 
 alias samba_start='sudo cp /etc/samba/smb.conf.on /etc/samba/smb.conf && sudo service smbd restart'
 alias samba_stop='sudo cp /etc/samba/smb.conf.off /etc/samba/smb.conf && sudo service smbd stop'
+
+alias list_network_apps='netstat -tuw | awk '\''{print $4}'\'' | grep -o -E ":[0-9]+" | xargs -n1 lsof -i'
+
+alias move_pictures='mv -iv *.gif *.png *.bmp *.jpg *.jpeg *.GIF *.PNG *.BMP *.JPG *.JPEG'
