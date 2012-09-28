@@ -104,3 +104,6 @@ alias fortune_custom='fortune -c 50% /usr/share/games/fortunes/ 50% $QUOTEFILE'
 alias fortune_es='dpkg -L fortunes-es | grep dat | xargs -I{} basename {} .dat | xargs fortune'
 
 alias secure_ssh='chmod 700 ~/.ssh/ && chmod 600 ~/.ssh/* && ls -ld ~/.ssh/ && ls -l ~/.ssh'
+
+alias samba_start='sudo cp /etc/samba/smb.conf.on /etc/samba/smb.conf && sudo service smbd restart'
+alias samba_stop='sudo cp /etc/samba/smb.conf.off /etc/samba/smb.conf && sudo service smbd stop'
