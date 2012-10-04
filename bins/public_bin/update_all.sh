@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# TODO: move into a config file read by sync_all.sh (requires work on sync_all.sh)
+
 update()
 {
 	cd gamepower
