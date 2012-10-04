@@ -1,11 +1,22 @@
 #!/bin/bash
 #script to add/start tasks in KArm corresponding to current KDev project :)
 
+########################
 #initialize variables
+########################
+#timestep for the while loop
 TIMESTEP=1
+#time after which it is considered that you are not active on the project anymore if the KDev window is inactive
+MaxInactiveTime=5
+#since KArm doesn't offer any way to know if a task is running or not:
+#0=stopped and 1=running
+CURRENT_PROJECT_STATUS=0
+PREVIOUS_PROJECT_STATUS=0
+#other variables
 PREVIOUS_PROJECT=NULL
 CURRENT_PROJECT=NULL
 KARM_DCOPID=
+#########################
 
 #make sure karm is running before continuing
 while [ ! $KARM_DCOPID ]
@@ -64,21 +75,44 @@ do
                     echo "project changed"
                     echo "stopping $PREVIOUS_PROJECT"
                     dcop $KARM_DCOPID KarmDCOPIface stoptimerfor $PREVIOUS_PROJECT
+                    PREVIOUS_PROJECT_STATUS=0
                     echo "starting $CURRENT_PROJECT"
                     dcop $KARM_DCOPID KarmDCOPIface starttimerfor $CURRENT_PROJECT
+                    CURRENT_PROJECT_STATUS=1
                 else
                     echo "project still the same"
+                    if $(dcop $KDEV_DCOPID SimpleMainWindow isActiveWindow)
+                    then
+                        if [ $CURRENT_PROJECT_STATUS = 0 ]
+                        then
+                            echo "starting $CURRENT_PROJECT"
+                            dcop $KARM_DCOPID KarmDCOPIface starttimerfor $CURRENT_PROJECT
+                            CURRENT_PROJECT_STATUS=1
+                        fi
+                        InactiveTime=0
+                    else
+                        InactiveTime=`expr $InactiveTime + 1`
+                    fi
+                    if [ $InactiveTime -gt $MaxInactiveTime ]
+                    then
+                        echo "you are not working on the project anymore"
+                        echo "stopping $CURRENT_PROJECT"
+                        dcop $KARM_DCOPID KarmDCOPIface stoptimerfor $CURRENT_PROJECT
+                        CURRENT_PROJECT_STATUS=0
+                    fi
                 fi
                 PREVIOUS_PROJECT=$CURRENT_PROJECT
             else
                 echo "no KDevProject open"
                 dcop $KARM_DCOPID KarmDCOPIface stoptimerfor $PREVIOUS_PROJECT
+                PREVIOUS_PROJECT_STATUS=0
                 PREVIOUS_PROJECT=NULL
                 CURRENT_PROJECT=NULL
             fi
         else
             echo "KDevelop not running"
             dcop $KARM_DCOPID KarmDCOPIface stoptimerfor $PREVIOUS_PROJECT
+            PREVIOUS_PROJECT_STATUS=0
             PREVIOUS_PROJECT=NULL
             CURRENT_PROJECT=NULL
         fi
