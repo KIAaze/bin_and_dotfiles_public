@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=logout
-Encoding=UTF-8
-Version=1.0
-Exec=$HOME/bin/logout.sh
-Terminal=false
-Type=Application
