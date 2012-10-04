@@ -1,5 +1,0 @@
-#! /bin/bash
-echo "==================" >>~/firefox.log
-date >>~/firefox.log
-echo "==================" >>~/firefox.log
-firefox 1>>~/firefox.log 2>&1
