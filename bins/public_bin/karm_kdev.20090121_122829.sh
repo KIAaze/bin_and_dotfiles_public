@@ -7,7 +7,7 @@
 #timestep for the while loop
 TIMESTEP=1
 #time after which it is considered that you are not active on the project anymore if the KDev window is inactive
-MaxInactiveTime=300
+MaxInactiveTime=120
 #since KArm doesn't offer any way to know if a task is running or not:
 #0=stopped and 1=running
 CURRENT_PROJECT_STATUS=0
@@ -96,7 +96,7 @@ do
                     if [ $InactiveTime -gt $MaxInactiveTime -a $CURRENT_PROJECT_STATUS = 1 ]
                     then
                         echo "You are not working on the project anymore"
-                        zenity --warning --title="KArm surveillance system" --text="You are not working on the project anymore." &
+                        #zenity --warning --title="KArm surveillance system" --text="You are not working on the project anymore." &
                         echo "stopping $CURRENT_PROJECT"
                         dcop $KARM_DCOPID KarmDCOPIface stoptimerfor $CURRENT_PROJECT
                         CURRENT_PROJECT_STATUS=0
