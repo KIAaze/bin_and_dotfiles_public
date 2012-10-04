@@ -5,9 +5,17 @@
 TIMESTEP=1
 PREVIOUS_PROJECT=NULL
 CURRENT_PROJECT=NULL
+KARM_DCOPID=
 
+#make sure karm is running before continuing
+while [ ! $KARM_DCOPID ]
+do
+    echo "KArm not running"
+    KARM_DCOPID=`dcop | grep karm`
+done
+echo "Karm running"
 
-#make sure karm is running, hidden and all tasks stopped before continuing
+#make sure karm is hidden and all tasks stopped
 KARM_DCOPID=`dcop | grep karm`
 if [ $KARM_DCOPID ]
 then
