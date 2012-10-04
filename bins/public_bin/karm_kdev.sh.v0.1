@@ -18,29 +18,54 @@ CURRENT_PROJECT=NULL
 KARM_DCOPID=
 #########################
 
-#make sure karm is running before continuing
-while [ ! $KARM_DCOPID ]
-do
-    echo "KArm not running"
-    KARM_DCOPID=`dcop | grep karm`
-done
-echo "Karm running"
+########################
+#functions
+########################
 
-#make sure karm is hidden and all tasks stopped
-KARM_DCOPID=`dcop | grep karm`
-if [ $KARM_DCOPID ]
-then
-    #hide karm window
-    dcop $KARM_DCOPID karm-mainwindow#1 hide
-    #export CSV file to ~/karm.log
-    dcop $KARM_DCOPID KarmDCOPIface exportcsvfile ~/karm.log "" "" 0 true true " " ""
-    #display all tasks :)
-    awk '{ FS=" " }{ print $1 }' ~/karm.log | sort -u
-    #stop all tasks just in case
-    awk '{ FS=" " }{ print $1 }' ~/karm.log | sort -u | xargs -n1 dcop $KARM_DCOPID KarmDCOPIface stoptimerfor
-else
-    echo "KArm not running"
-fi
+start_task()
+{
+    echo "starting $1"
+    dcop $KARM_DCOPID KarmDCOPIface starttimerfor $1
+    $1_STATUS=1
+}
+
+stop_task()
+{
+    echo "stopping $1"
+    dcop $KARM_DCOPID KarmDCOPIface stoptimerfor $1
+    $1_STATUS=0
+}
+
+initialize()
+{
+    #make sure karm is running before continuing
+    while [ ! $KARM_DCOPID ]
+    do
+        echo "KArm not running"
+        KARM_DCOPID=`dcop | grep karm`
+    done
+    echo "Karm running"
+    
+    #make sure karm is hidden and all tasks stopped
+    KARM_DCOPID=`dcop | grep karm`
+    if [ $KARM_DCOPID ]
+    then
+        #hide karm window
+        dcop $KARM_DCOPID karm-mainwindow#1 hide
+        #export CSV file to ~/karm.log
+        dcop $KARM_DCOPID KarmDCOPIface exportcsvfile ~/karm.log "" "" 0 true true " " ""
+        #display all tasks :)
+        awk '{ FS=" " }{ print $1 }' ~/karm.log | sort -u
+        #stop all tasks just in case
+        awk '{ FS=" " }{ print $1 }' ~/karm.log | sort -u | xargs -n1 stop_task
+    else
+        echo "KArm not running"
+    fi
+}
+
+########################
+
+initialize
 
 #start infinite loop to obtain daemon-like behaviour
 while true
