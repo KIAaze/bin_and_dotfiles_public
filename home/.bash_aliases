@@ -81,6 +81,7 @@ alias ducks='find . -maxdepth 1 -mindepth 1 -print0  | xargs -0 -n1 du -ks | sor
 # for fun
 alias iamcow='fortune | cowsay'
 alias iamsurprise='fortune | cowsay -f $(random_cow)'
+alias cow_xmessage='xmessage -center "Hello, `whoami`. I'\''m a talking cow.`fortune | cowsay` " -buttons "☠"'
 
 # get your external IP
 alias myip='echo My IP is && curl http://www.whatismyip.com/automation/n09230945.asp && echo'
