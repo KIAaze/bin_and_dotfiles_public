@@ -2,7 +2,12 @@
 
 mailme()
 {
-	echo "$@" | mail -s "$1" $WORKMAIL
+  echo "$@" | mail -s "$1" $WORKMAIL
+}
+
+gpgmailme()
+{
+  echo "$@" | gpg -as | mail -s "$1" $WORKMAIL
 }
 
 random_cow()

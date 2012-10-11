@@ -41,6 +41,9 @@ alias cp='cp -iv'
 alias checkcmd='totalnotify.sh "SUCCESS" || ( totalnotify.sh "FAILURE" && false )'
 alias mailcmd='mailme "SUCCESS" || mailme "FAILURE" '
 
+# CLI GPG-mailing (key to be used can be specified by using "gpg -u EMAIL...")
+alias gpgmail='gpg -as | mail'
+
 # other
 alias datefull='date +%Y%m%d_%H%M%S'
 alias pmake='make -j$(num_threads)'
