@@ -92,7 +92,9 @@ alias myip='echo My IP is && curl http://www.whatismyip.com/automation/n09230945
 # avoid segfault of zsnes
 alias zsnes='zsnes -ad sdl'
 
-alias qstatuser='qstat | grep $USER'
+alias qstatgrepuser='qstat | grep $USER'
+alias qstatuser='qstat -u $USER'
+
 #alias syncbindot='cd ~/bin_and_dotfiles_private/ && git pull && git push && git status; cd -; cd ~/bin_and_dotfiles_public/ && git pull && git push && git status; cd -'
 
 alias modulegrep='module avail 2>&1 | grep '
