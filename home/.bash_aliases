@@ -53,7 +53,9 @@ alias astyle_all='astyle *.h *.cpp */*.h */*.cpp'
 alias wc_all='wc -l *.h *.cpp */*.h */*.cpp | sort'
 
 # to be able to use aliases under sudo
-alias sudo='A=`alias` sudo  '
+# updated based on http://www.reddit.com/r/linux/comments/13s57s/make_your_bashrc_aliases_work_with_sudo/
+alias sudo='sudo '
+#alias sudo='A=`alias` sudo  '
 
 # rebuild aliases
 alias rebuild_all='qmake && make distclean && qmake && make -j$(num_threads) debug release && checkcmd'
