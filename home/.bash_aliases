@@ -119,3 +119,7 @@ alias samba_stop='sudo cp /etc/samba/smb.conf.off /etc/samba/smb.conf && sudo se
 alias list_network_apps='netstat -tuw | awk '\''{print $4}'\'' | grep -o -E ":[0-9]+" | xargs -n1 lsof -i'
 
 alias move_pictures='mv -iv *.gif *.png *.bmp *.jpg *.jpeg *.GIF *.PNG *.BMP *.JPG *.JPEG'
+
+# Usage: ssh_tunnel $PORT $HOST
+alias ssh_tunnel='ssh -q -C2TnN -D'
+
