@@ -167,3 +167,12 @@ ssh_agent_check()
     echo "ERROR: Failed to initialize working ssh-agent!"
   fi
 }
+
+move_to_writeonly()
+{
+  for f in "$@"
+  do
+    mv -iv "$f" "/opt/writeonly/$f.$RANDOM"
+  done
+}
+
