@@ -1,3 +1,4 @@
+#!/bin/bash
 # ~/.bash_aliases
 #echo "reading .bash_aliases"
 

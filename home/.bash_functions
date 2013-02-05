@@ -1,3 +1,4 @@
+#!/bin/bash
 # ~/.bash_functions
 
 mailme()
@@ -5,9 +6,62 @@ mailme()
   echo "$@" | mail -s "$1" $WORKMAIL
 }
 
+# gpg help:
+
+#--armor
+#
+#-a     Create ASCII armored output.  The default is to create the binary OpenPGP format.
+
+#--sign
+#
+#-s     Make a signature. This command may be combined with --encrypt (for a signed and encrypted message), --symmetric (for a signed and symmetri‐
+#      cally encrypted message), or --encrypt and --symmetric together (for a signed message  that  may  be  decrypted  via  a  secret  key  or  a
+#      passphrase).  The key to be used for signing is chosen by default or can be set with the --local-user and --default-key options.
+
+#--symmetric
+#
+#-c     Encrypt  with  a  symmetric cipher using a passphrase. The default symmetric cipher used is CAST5, but may be chosen with the --cipher-algo
+#      option. This option may be combined with --sign (for a signed and symmetrically encrypted message), --encrypt (for a message  that  may  be
+#      decrypted  via a secret key or a passphrase), or --sign and --encrypt together (for a signed message that may be decrypted via a secret key
+#      or a passphrase).
+
+#--encrypt
+#
+#-e     Encrypt  data.  This  option  may  be  combined  with  --sign  (for a signed and encrypted message), --symmetric (for a message that may be
+#      decrypted via a secret key or a passphrase), or --sign and --symmetric together (for a signed message that may be decrypted  via  a  secret
+#      key or a passphrase).
+
+#--recipient name
+#
+#-r     Encrypt  for  user id name. If this option or --hidden-recipient is not specified, GnuPG asks for the user-id unless --default-recipient is
+#      given.
+
+#--default-key name
+#      Use  name  as the default key to sign with. If this option is not used, the default key is the first key found in the secret keyring.  Note
+#      that -u or --local-user overrides this option.
+
+#--local-user name
+#
+#-u     Use name as the key to sign with. Note that this option overrides --default-key.
+
+# TODO: command to easily mail (in encrypted+signed form, sent from root for example, with user as recipient) input from stdin, or directly files as attachment
+# TODO: find out how to attach file(s) to a mail by command line.
+
 gpgmailme()
 {
-  echo "$@" | gpg -as | mail -s "$1" $WORKMAIL
+  # usage: gpgmailme SUBJECT CONTENT
+  echo "$@" | gpg --sign --armor | mail -s "$1" $WORKMAIL
+}
+
+gpgmailme_encrypted()
+{
+  # usage:
+  # echo CONTENT | gpgmailme_encrypted SUBJECT
+  # cat FILE | gpgmailme_encrypted SUBJECT
+  SRCMAIL=$WORKMAIL
+  DSTMAIL=$WORKMAIL
+  SUBJECT=$1
+  gpg --local-user "$SRCMAIL" --recipient "$DSTMAIL" --encrypt --sign --armor | mail -s "$SUBJECT" "$DSTMAIL"
 }
 
 random_cow()
