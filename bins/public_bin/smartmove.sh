@@ -5,6 +5,9 @@
 # Acts like standard move, except that if a file with the same name exists at the destination, it automatically renames the source file by adding "_#".
 # MEANT FOR SINGLE FILE MOVES ONLY!!!!
 
+# Alternate solution to this script:
+# mv --backup=numbered src/* ./dst/
+
 # set -eux
 set -eu
 
