@@ -11,8 +11,15 @@ outfile = sys.argv[1]
 message = raw_input("Enter message to encode: ")
 #message = 'ab.c.defghi.jklmnopqrstuvwxyzABCDmessage = raw_input("Enter message to encode:and points. OK'
 
-NBlocksX = 3
-NBlocksY = 3
+s=message
+snew=''
+for i in s:
+  snew += 3*i
+
+message=snew
+
+NBlocksX = 5
+NBlocksY = 5
 
 BlockHeight = 15
 BlockWidth = 15
