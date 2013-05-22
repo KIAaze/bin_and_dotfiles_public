@@ -1,0 +1,8 @@
+# For useful one-liners, with which I am not quite sure what to do yet:
+TODO: Put on command-line-fu? (might even already be there...)
+
+# locate files with multiple hard links + sort by increasing number of hard links
+find . -type f -printf "%n links=%n %p\n" | grep -v "links=1" | sort -n
+
+# same, but sort by file size
+find . -type f -printf "%s %n links=%n %p\n" | grep -v "links=1" | sort -n | less
