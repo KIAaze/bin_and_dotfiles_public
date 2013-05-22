@@ -67,7 +67,7 @@ gpgmailme_encrypted()
 random_cow()
 {
   files=(/usr/share/cowsay/cows/*)
-  printf "%s\n" "${files[RANDOM % ${#files}]}"
+  printf "%s\n" "${files[RANDOM % ${#files[*]}]}"
 }
 
 num_threads()
