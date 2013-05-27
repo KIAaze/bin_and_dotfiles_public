@@ -6,3 +6,12 @@ find . -type f -printf "%n links=%n %p\n" | grep -v "links=1" | sort -n
 
 # same, but sort by file size
 find . -type f -printf "%s %n links=%n %p\n" | grep -v "links=1" | sort -n | less
+
+# convert video to mp3 audio file
+ffmpeg -i StarCraft\ -\ OST.mp4 /tmp/lol.mp3
+
+# convert video to ogg audio file (failed with "theora_encode_init failed")
+ffmpeg -i StarCraft\ -\ OST.mp4 /tmp/lol.ogg
+
+# convert video to ogg audio file
+ffmpeg2theora --novideo -o /tmp/lol.ogg ./StarCraft\ -\ OST.mp4 
