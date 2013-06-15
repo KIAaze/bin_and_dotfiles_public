@@ -47,7 +47,7 @@ mailme()
 # TODO: command to easily mail (in encrypted+signed form, sent from root for example, with user as recipient) input from stdin, or directly files as attachment
 # TODO: find out how to attach file(s) to a mail by command line.
 
-gpgmailme()
+gpgmailme_signed()
 {
   # usage: gpgmailme SUBJECT CONTENT
   echo "$@" | gpg --sign --armor | mail -s "$1" $WORKMAIL
