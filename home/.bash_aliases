@@ -68,6 +68,9 @@ alias profile='valgrind --tool=callgrind --dump-instr=yes --simulate-cache=yes -
 alias git_checkall='git pull && git push && git status'
 alias bzr_checkall='bzr pull && bzr push && bzr status'
 
+# using the multiple repository manager with a custom pullpush function :)
+alias mr_checkall='mr -d ~ -s pullpush'
+
 # plugin testing
 # You must have the plugin stuff in a subdirectory named "designer" for this to work
 alias test_plugin='export QT_PLUGIN_PATH=$(pwd); designer'
