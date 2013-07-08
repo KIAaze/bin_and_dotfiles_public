@@ -100,7 +100,7 @@ then
   cd -
 
   chmod 700 $BIN_AND_DOTFILES_PRIVATE
-  chmod 700 $HOME/.bash_env
+  chmod 600 $HOME/.bash_env
 else
   echo "WARNING: $BIN_AND_DOTFILES_PRIVATE not found"
 fi
