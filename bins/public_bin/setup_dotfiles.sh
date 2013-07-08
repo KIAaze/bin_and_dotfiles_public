@@ -60,7 +60,7 @@ safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bash_logout $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bash_profile $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bash_prompt $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bashrc $HOME
-safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.pystartup $HOME
+#safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.pystartup $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.vimrc $HOME
 
 cd $BIN_AND_DOTFILES_PUBLIC
@@ -82,6 +82,7 @@ then
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.bash_env $HOME
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.gitconfig $HOME
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/todo.cfg $HOME
+  safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.mrconfig $HOME
 
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/config $HOME/.ssh
 
