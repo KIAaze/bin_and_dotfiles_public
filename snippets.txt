@@ -15,3 +15,6 @@ ffmpeg -i StarCraft\ -\ OST.mp4 /tmp/lol.ogg
 
 # convert video to ogg audio file
 ffmpeg2theora --novideo -o /tmp/lol.ogg ./StarCraft\ -\ OST.mp4 
+
+# vim: search&replace with confirmation
+%s/STRING1/STRING2/gc
