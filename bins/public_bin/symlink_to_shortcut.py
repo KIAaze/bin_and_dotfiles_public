@@ -6,6 +6,7 @@
 # TODO: Convert to real Windows shortcuts. And create a shortcut->symlink function. (Check for existing code online.)
 # TODO: hardlink to symlink converter...
 # TODO: fslint-gui like tool to take care of things like that? or fslint-gui extension/improvement?
+# TODO: Warn if -i and destination dir are specified together (try to make incompatible through argparse)
 
 # what we want to be able to do:
 # cp src dst
@@ -13,6 +14,9 @@
 # mv src src
 
 #if dst=src: remove src
+
+# example to convert all symlinks in current dir to "text shortcuts":
+# symlink_to_shortcut.py -v -d . -i
 
 import sys
 import os
@@ -53,7 +57,12 @@ def processFiles(arguments):
   for link_path in link_path_list:
     orig_dir = os.path.dirname(os.path.normpath(link_path))
     link_destination = os.path.realpath(link_path)
-    new_link_path = os.path.join(arguments.output_directory, os.path.relpath(link_path, start=arguments.tostrip))
+    
+    if arguments.in_place is None:
+      new_link_path = os.path.join(arguments.output_directory, os.path.relpath(link_path, start=arguments.tostrip))
+    else:
+      new_link_path = link_path
+    
     #print(os.path.relpath(link_destination, start=arguments.tostrip))
     #new_link_destination = arguments.output_directory + os.sep + os.path.relpath(link_destination, start=arguments.tostrip)
     new_link_destination = os.path.relpath(link_destination, start=orig_dir)
@@ -71,6 +80,14 @@ def processFiles(arguments):
       print('new_link_destination =', new_link_destination)
     if os.path.lexists(link_path):
       #if os.path.lexists(new_link_path) and arguments.force:
+      
+      if arguments.in_place:
+        if arguments.in_place[0] is None:
+          if (not arguments.no_act):
+            os.remove(link_path)
+        else:
+          if (not arguments.no_act):
+            os.rename(link_path, link_path + arguments.in_place[0])
       
       if (not os.path.lexists(new_link_path)): # or arguments.force: force disabled as if the destination file is a link, it might modify the contents of the file linked to!!!
         if (not arguments.no_act):
@@ -149,6 +166,12 @@ def get_argument_parser():
 
   parser.add_argument('--remove-source-files',action="store_true", default=False, help="remove source files?")
   parser.add_argument('--tostrip', default=os.curdir, help='string to lstrip from link_destination')
+
+  # Cool workaround to get an option similar to 'sed -i'. :)
+  # '' -> in_place=None
+  # '-i' ->  in_place=[None]
+  # '-i SUFFIX' ->  in_place=[SUFFIX]
+  parser.add_argument("-i", "--in-place", action='append', nargs='?', help="replace file in place (makes backup if extension supplied)",  metavar='SUFFIX')
 
   return parser
 
