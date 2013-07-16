@@ -18,3 +18,5 @@ ffmpeg2theora --novideo -o /tmp/lol.ogg ./StarCraft\ -\ OST.mp4
 
 # vim: search&replace with confirmation
 %s/STRING1/STRING2/gc
+
+press shift-H while in a manual to get help on less :)
