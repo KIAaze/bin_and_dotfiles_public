@@ -162,33 +162,149 @@ def organize(arguments):
 
   #os.renames(sys.argv[1],os.path.join(sys.argv[2],sys.argv[1]))
 
+# automagically rename data folders...
+def rename(arguments):
+  
+  if len(set(arguments.pattern))!=len(arguments.pattern):
+    print('ERROR: Some of the specified patterns are identical.', file=sys.stderr)
+    sys.exit(-1)
+  
+  for src in arguments.folders:
+    
+    if not os.path.exists(src):
+      print('WARNING:',src,'does not exist. Skipping.', file=sys.stderr)
+      continue
+
+    #print('renaming')
+    match_dict = {}
+    for p in arguments.pattern:
+      #match_list.append(set())
+      match_dict[p] = set()
+    #print(match_dict)
+
+
+    if arguments.verbose > 1:
+      print('==>Processing', src)
+    for root, dirnames, filenames in os.walk(src):
+      #print('dirnames',dirnames)
+      #print('filenames',filenames)
+      if arguments.verbose > 3: print('dirnames+filenames :', dirnames+filenames)
+      for p in arguments.pattern:
+        #print('Matching',p)
+        #match_dict[p].add()
+        #print(fnmatch.filter(dirnames, p))
+        #print(fnmatch.filter(filenames, p))
+        if arguments.verbose > 3: print('Matches for ',p,' :',fnmatch.filter(dirnames+filenames, p))
+        for match in fnmatch.filter(dirnames+filenames, p):
+          match_dict[p].add(match)
+          if arguments.verbose > 2:
+            print('adding',match,'for',p)
+        if arguments.verbose > 3: print('--> match_dict:', match_dict)
+      #local_sha1sum_set = set()
+      #for filename in fnmatch.filter(filenames, arguments.pattern):
+        #if not arguments.exclude_pattern or not ( filename in fnmatch.filter(filenames, arguments.exclude_pattern) ):
+    #print(match_dict)
+    
+    if arguments.verbose > 2: 
+      print('==> final match_dict:', match_dict)
+      print('=========================')
+    matches_ok = True
+
+    path_elements = []
+    #for k in match_dict.keys():
+    for k in arguments.pattern:
+      if len(match_dict[k]) == 1:
+        path_elements.append(match_dict[k].pop())
+      else:
+        matches_ok = False
+    
+    if matches_ok:
+      if arguments.verbose > 1:
+        print(path_elements)
+
+      #dst = os.path.join(*path_elements)
+      
+      dst = ''
+      for i in range(len(path_elements)):
+        if i==0:
+          dst += path_elements[i]
+        else:
+          dst += '.' + path_elements[i]
+        
+      dst = os.path.join(os.path.dirname(os.path.normpath(src)), dst)
+
+      if arguments.verbose > 1:
+        print('dst :',dst)
+      
+      if os.path.exists(dst):
+        if os.path.samefile(src, dst):
+          print('WARNING: Source == Destination ==', os.path.normpath(dst), 'Skipping.', file=sys.stderr)
+          continue
+        else:
+          if arguments.add_suffix_if_dest_exists:
+            suffix = 0
+            dst_orig = dst
+            while os.path.exists(dst):
+              dst = dst_orig + '_' + str(suffix)
+              suffix += 1
+      
+      if not os.path.exists(dst):
+        if arguments.verbose:
+          print(src,'->',dst)
+        if not arguments.no_act:
+          os.rename(src, dst)
+      else:
+        print('WARNING: Destination exists:', dst, 'Skipping.', file=sys.stderr)
+        continue
+        
+    else:
+      print('WARNING: Some patterns did not produce exactly one match. Skipping', src, file=sys.stderr)
+      #print('match_dict :',match_dict, file=sys.stderr)
+      continue
+    
+  return
 
 def get_argument_parser():
   # command-line option handling
-  parser = argparse.ArgumentParser(description = 'Sort folders containing specific files into folders named after the sha1sums of those files.', fromfile_prefix_chars='@')
+  parser = argparse.ArgumentParser(description = 'Tools to organize files and folders.', fromfile_prefix_chars='@')
 
-  parser.add_argument("-v", "--verbose", action="store_true", default=False, help="Be verbose")
-  parser.add_argument('-s','--srcdir', help='source directory to scan for .EXT files', required=True)
-  parser.add_argument('-d','--dstdir', help='destination directory into which to sort folders', required=True)
-  parser.add_argument('-p','--pattern', help='patterns the files should match', required=True)
-  parser.add_argument('--exclude-pattern', help='patterns the files should not match')
+  #parser.add_argument("-v", "--verbose", action="store_true", default=False, help="Be verbose")
+  parser.add_argument('-v','--verbose', action="count", default=0, help='verbosity level')
   parser.add_argument("-n", "--no-act", action="store_true", default=False, help="Do not actually rename/move files. Just simulate.")
+  #parser.set_defaults(func=None)
+
+  subparsers = parser.add_subparsers(title='subcommands', description='valid subcommands', help='available operations', dest='operation')
+  parser_organize = subparsers.add_parser('organize', help='Sort folders containing specific files into folders named after the sha1sums of those files.')
+  parser_organize.add_argument('-s','--srcdir', help='source directory to scan for .EXT files', required=True)
+  parser_organize.add_argument('-d','--dstdir', help='destination directory into which to sort folders', required=True)
+  parser_organize.add_argument('-p','--pattern', help='patterns the files should match', required=True)
+  parser_organize.add_argument('--exclude-pattern', help='patterns the files should not match')
+  parser_organize.set_defaults(func=organize)
+
+  parser_rename = subparsers.add_parser('rename', help='rename folders based on contents matching patterns')
+  parser_rename.add_argument('folders', action="store", nargs='+', help='folders to rename')
+  parser_rename.add_argument('-p','--pattern', action="append", help='pattern to match', required=True)
+  parser_rename.add_argument("--add-suffix-if-dest-exists", action="store_true", default=False, help="Add a suffix if a destination with the same name already exists.")
+  parser_rename.set_defaults(func=rename)
 
   return parser
 
 def main(args=None):
   parser = get_argument_parser()
   arguments = parser.parse_args() if args is None else parser.parse_args(args) # This is just to enable calling the main function with arguments from another script for example.
+
+  if arguments.verbose:
+    print('---------')
+    print(arguments)
+    print('---------')
   
-  if not len(sys.argv) > 1:
+  if not len(sys.argv) > 1 or arguments.operation is None:
+    #parser.print_usage()
     parser.print_help()
   else:
-    if arguments.verbose:
-      print('---------')
-      print(arguments)
-      print('---------')
-
-    organize(arguments)
+    #organize(arguments)
+    arguments.func(arguments)
+  
   return(0)
 
 if __name__ == "__main__":
