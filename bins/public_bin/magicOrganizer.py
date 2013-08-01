@@ -268,12 +268,11 @@ def get_argument_parser():
   # command-line option handling
   parser = argparse.ArgumentParser(description = 'Tools to organize files and folders.', fromfile_prefix_chars='@')
 
-  #parser.add_argument("-v", "--verbose", action="store_true", default=False, help="Be verbose")
   parser.add_argument('-v','--verbose', action="count", default=0, help='verbosity level')
   parser.add_argument("-n", "--no-act", action="store_true", default=False, help="Do not actually rename/move files. Just simulate.")
-  #parser.set_defaults(func=None)
 
   subparsers = parser.add_subparsers(title='subcommands', description='valid subcommands', help='available operations', dest='operation')
+  
   parser_organize = subparsers.add_parser('organize', help='Sort folders containing specific files into folders named after the sha1sums of those files.')
   parser_organize.add_argument('-s','--srcdir', help='source directory to scan for .EXT files', required=True)
   parser_organize.add_argument('-d','--dstdir', help='destination directory into which to sort folders', required=True)
@@ -299,14 +298,11 @@ def main(args=None):
     print('---------')
   
   if not len(sys.argv) > 1 or arguments.operation is None:
-    #parser.print_usage()
     parser.print_help()
   else:
-    #organize(arguments)
     arguments.func(arguments)
   
   return(0)
 
 if __name__ == "__main__":
-  #moveContents(sys.argv[1], sys.argv[2])
   sys.exit(main())
