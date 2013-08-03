@@ -1,6 +1,6 @@
 # ~/.bash_profile
 # set -x
-echo "reading .bash_profile"
+#echo "reading .bash_profile"
 
 source /etc/profile
 
