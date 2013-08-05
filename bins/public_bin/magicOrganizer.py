@@ -84,6 +84,7 @@ def organize(arguments):
   # first we analyze the directory structure for any potential problems
   for root, dirnames, filenames in os.walk(arguments.srcdir, topdown=False):
     local_sha1sum_set = set()
+    local_fileAndSha1sum_list = []
     for filename in fnmatch.filter(filenames, arguments.pattern):
       if not arguments.exclude_pattern or not ( filename in fnmatch.filter(filenames, arguments.exclude_pattern) ):
       
@@ -97,11 +98,14 @@ def organize(arguments):
           print((sha1sum, fullpath))
         
         fileAndSha1sum_list.append( (sha1sum, fullpath) )
+        local_fileAndSha1sum_list.append( (sha1sum, fullpath) )
         local_sha1sum_set.add(sha1sum)
     
     if(len(local_sha1sum_set)>1):
-      print('ERROR:',root,'contains more than one matching file with the same sha1sum.')
+      print('ERROR:',root,'contains more than one matching file, but not with the same sha1sum.')
       sys.exit(-1)
+  
+  fileAndSha1sum_list = []
   
   if arguments.verbose:
     print('=== PROCESSING ===')
@@ -112,6 +116,11 @@ def organize(arguments):
       
         # build the pathname
         fullpath = os.path.join(root, filename)
+
+        if not os.path.exists(fullpath):
+          # TODO: Directory moving should be handled in a nicer way. You can only move a dir once after all. i.e. Should check all files in dir and then process it, also avoidig need for pre-processing. -> process dirnames instead of filenames.
+          print('WARNING:',fullpath,'does not exist anymore. Probably already moved do to other matching file with same sha1sum. Skipping.', file=sys.stderr)
+          continue
         
         # get their sha1sums
         sha1sum = getSha1sumOfUnixVersion(fullpath)
