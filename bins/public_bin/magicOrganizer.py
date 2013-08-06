@@ -57,6 +57,11 @@ def getSha1sumOfUnixVersion(filename):
     sha1sum = hashlib.sha1(f.read().replace(b'\r\n',b'\n')).hexdigest()      
     return(sha1sum)
 
+def getSha1sum(filename):
+  with open(filename, 'rb') as f:
+    sha1sum = hashlib.sha1(f.read()).hexdigest()
+    return(sha1sum)
+
 # move contents of srcdir into dstdir
 def moveContents(srcdir,dstdir):
   contents = os.listdir(srcdir)
@@ -273,6 +278,67 @@ def rename(arguments):
     
   return
 
+def removeDuplicatesMain(arguments):
+  
+  # sanity check
+  if os.path.samefile(arguments.origdir,arguments.dupdir):
+    print('ERROR:',arguments.origdir,'and',arguments.dupdir,'refer to the same path!!!', file=sys.stderr)    
+    return(-1)
+  
+  if arguments.remove_only_if_all_duplicates:
+    
+    #backup original arguments
+    no_act_orig = arguments.no_act
+    #verbose_orig = arguments.verbose
+    
+    arguments.no_act = True
+    notRemoved = removeDuplicates(arguments)
+    
+    if notRemoved == 0:
+      arguments.no_act = no_act_orig
+      arguments.verbose = 0 # second run is silent for convenience
+      notRemoved = removeDuplicates(arguments)
+    else:
+      print('WARNING: No files were actually removed because not all would be removed.', file=sys.stderr)
+    
+  else:
+    notRemoved = removeDuplicates(arguments)
+  
+  return(notRemoved)
+
+def removeDuplicates(arguments):
+  notRemoved = 0
+  for f in os.listdir(arguments.dupdir):
+    if arguments.verbose>2:
+      print('=== Processing',f,'===')
+    fullpath_orig = os.path.join(arguments.origdir,f)
+    fullpath_dup = os.path.join(arguments.dupdir,f)
+    if os.path.isfile(fullpath_dup):
+      if os.path.isfile(fullpath_orig):
+        sha1sum_dup = getSha1sum(fullpath_dup)
+        sha1sum_orig = getSha1sum(fullpath_orig)
+        if arguments.verbose>2:
+          print(sha1sum_dup,fullpath_dup)
+          print(sha1sum_orig,fullpath_orig)
+        if sha1sum_dup == sha1sum_orig:
+          if arguments.verbose:
+            print('Removing',fullpath_dup,'which is a duplicate of',fullpath_orig)
+          if not arguments.no_act:
+            os.remove(fullpath_dup)
+        else:
+          notRemoved += 1
+          if arguments.verbose>1:
+            print('NOT removing',fullpath_dup,'which is NOT a duplicate of',fullpath_orig)
+      else:
+        notRemoved += 1
+        if arguments.verbose>1:
+          print('NOT removing',fullpath_dup,': There is no such file in the original directory.')
+    else:
+      notRemoved += 1
+      if arguments.verbose>1:
+        print('NOT removing',fullpath_dup,': It is not a file.')
+  return(notRemoved)
+
 def get_argument_parser():
   # command-line option handling
   parser = argparse.ArgumentParser(description = 'Tools to organize files and folders.', fromfile_prefix_chars='@')
@@ -295,6 +361,12 @@ def get_argument_parser():
   parser_rename.add_argument("--add-suffix-if-dest-exists", action="store_true", default=False, help="Add a suffix if a destination with the same name already exists.")
   parser_rename.set_defaults(func=rename)
 
+  parser_removeDuplicates = subparsers.add_parser('removeDuplicates', help='remove duplicates from another directory')
+  parser_removeDuplicates.add_argument('-o','--origdir', help='original directory to which files will be compared and from which nothing is deleted', required=True)
+  parser_removeDuplicates.add_argument('-d','--dupdir', help='directory with potential duplicate files', required=True)
+  parser_removeDuplicates.add_argument("--remove-only-if-all-duplicates", action="store_true", default=False, help="Remove duplicates only if all files are duplicates, i.e. if the directory would be emptied on a normal run.")
+  parser_removeDuplicates.set_defaults(func=removeDuplicatesMain)
+
   return parser
 
 def main(args=None):
@@ -309,7 +381,7 @@ def main(args=None):
   if not len(sys.argv) > 1 or arguments.operation is None:
     parser.print_help()
   else:
-    arguments.func(arguments)
+    return(arguments.func(arguments))
   
   return(0)
 
