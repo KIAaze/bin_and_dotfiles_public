@@ -279,11 +279,11 @@ def rename(arguments):
   return
 
 def removeDuplicatesMain(arguments):
-  
+
   # sanity check
   if os.path.samefile(arguments.origdir,arguments.dupdir):
     print('ERROR:',arguments.origdir,'and',arguments.dupdir,'refer to the same path!!!', file=sys.stderr)    
-    return(-1)
+    sys.exit(-1)
   
   if arguments.remove_only_if_all_duplicates:
     
@@ -307,6 +307,12 @@ def removeDuplicatesMain(arguments):
   return(notRemoved)
 
 def removeDuplicates(arguments):
+
+  # sanity check
+  if os.path.samefile(arguments.origdir,arguments.dupdir):
+    print('ERROR:',arguments.origdir,'and',arguments.dupdir,'refer to the same path!!!', file=sys.stderr)    
+    sys.exit(-1)
+
   notRemoved = 0
   for f in os.listdir(arguments.dupdir):
     if arguments.verbose>2:
@@ -315,6 +321,12 @@ def removeDuplicates(arguments):
     fullpath_dup = os.path.join(arguments.dupdir,f)
     if os.path.isfile(fullpath_dup):
       if os.path.isfile(fullpath_orig):
+        
+        # sanity check
+        if os.path.samefile(fullpath_dup,fullpath_orig):
+          print('ERROR:',fullpath_dup,'and',fullpath_orig,'refer to the same path!!!', file=sys.stderr)    
+          sys.exit(-1)
+        
         sha1sum_dup = getSha1sum(fullpath_dup)
         sha1sum_orig = getSha1sum(fullpath_orig)
         if arguments.verbose>2:
