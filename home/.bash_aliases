@@ -132,3 +132,7 @@ alias ssh_tunnel='ssh -q -C2TnN -D'
 # SIZE NLINKS INODE FILENAME
 # TODO: Create fslint-gui like script/interface, to make processing easier
 alias findHardLinkedFiles='find . -type f -links +1 -printf "%s=size nlinks=%n inode=%i file=%p \n" | sort -n'
+
+# rsync aliases
+alias rsync_to_Windows='rsync --archive --compress --no-perms --no-group --no-links --chmod=ugo=rwX'
+alias rsync_to_GNULinux='rsync --archive --compress --hard-links'
