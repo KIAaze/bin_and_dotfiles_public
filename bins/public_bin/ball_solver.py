@@ -8,11 +8,9 @@
 N = 12
 alpha = 1.5
 N_known = 0
-N_unknown = (N-1) - N_known
-
-#global relative_weight
 relative_weight = 0 # -1: lighter, 0: unknown, +1: heavier
 
+N_unknown = (N-1) - N_known
 all_balls = [[1,True] for i in range(N_known)] + [[1,False] for i in range(N_unknown)] + [[alpha,False]]
 
 def getComplementaryIndices(idx_list):
@@ -107,7 +105,10 @@ def compare(left_balls, right_balls):
   (N_known, N_unknown) = countAllBalls()
   return (N_known, N_unknown)
 
-#for K in range(1,6+1):
+left_balls = []
+right_balls = []
+for K in range(1,N//2+1):
+  print(K)
   #for k_left in range(1,K):
     
 #print(__globals__)
