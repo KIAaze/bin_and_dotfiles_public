@@ -20,3 +20,6 @@ ffmpeg2theora --novideo -o /tmp/lol.ogg ./StarCraft\ -\ OST.mp4
 %s/STRING1/STRING2/gc
 
 press shift-H while in a manual to get help on less :)
+
+# print out third line in a file
+sed -n -e'3p' file.txt
