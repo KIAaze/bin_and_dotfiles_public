@@ -111,8 +111,10 @@ alias bashclean='env -i bash --noprofile --init-file /etc/profile'
 
 # Fun with a personal quote file :)
 alias addquote='editor $QUOTEFILE && strfile $QUOTEFILE'
+# TODO: todo files or use todo.sh
+
 alias fortune_custom='fortune -c 50% /usr/share/games/fortunes/ 50% $QUOTEFILE'
-# hack para fortunas españolas :D (debería entregar un bug sobre el paquete) (con fortunes-fr, funciona simplement con "fortune fr")
+# hack para "fortunas" españolas :D (debería entregar un bug sobre el paquete) (con fortunes-fr, funciona simplemente con "fortune fr")
 alias fortune_es='dpkg -L fortunes-es | grep dat | xargs -I{} basename {} .dat | xargs fortune'
 
 alias secure_ssh='chmod 700 ~/.ssh/ && chmod 600 ~/.ssh/* && ls -ld ~/.ssh/ && ls -l ~/.ssh'
