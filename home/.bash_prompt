@@ -59,7 +59,6 @@ done
 # echo fill=$fill
 if [ "$fillsize" -lt "0" ]
 then
-    echo "WTF"
     let cutt=3-${fillsize}
     newPWD="...$(echo -n $PWD | sed -e "s/\(^.\{$cutt\}\)\(.*\)/\2/")"
 fi
