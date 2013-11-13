@@ -3,13 +3,70 @@
 #####################################################################################
 # PROMPT STYLING
 #####################################################################################
+# bash prompt quick reference
+#        PROMPT_COMMAND
+#               If set, the value is executed as a command prior to issuing each primary prompt.
+
+# PROMPTING
+#        When executing interactively, bash displays the primary prompt PS1 when it is ready to read a command, and the secondary prompt PS2 when it needs more input to complete a command.  Bash allows these prompt strings to be cus‐
+#        tomized by inserting a number of backslash-escaped special characters that are decoded as follows:
+#               \a     an ASCII bell character (07)
+#               \d     the date in "Weekday Month Date" format (e.g., "Tue May 26")
+#               \D{format}
+#                      the format is passed to strftime(3) and the result is inserted into the prompt string; an empty format results in a locale-specific time representation.  The braces are required
+#               \e     an ASCII escape character (033)
+#               \h     the hostname up to the first `.'
+#               \H     the hostname
+#               \j     the number of jobs currently managed by the shell
+#               \l     the basename of the shell's terminal device name
+#               \n     newline
+#               \r     carriage return
+#               \s     the name of the shell, the basename of $0 (the portion following the final slash)
+#               \t     the current time in 24-hour HH:MM:SS format
+#               \T     the current time in 12-hour HH:MM:SS format
+#               \@     the current time in 12-hour am/pm format
+#               \A     the current time in 24-hour HH:MM format
+#               \u     the username of the current user
+#               \v     the version of bash (e.g., 2.00)
+#               \V     the release of bash, version + patch level (e.g., 2.00.0)
+#               \w     the current working directory, with $HOME abbreviated with a tilde (uses the value of the PROMPT_DIRTRIM variable)
+#               \W     the basename of the current working directory, with $HOME abbreviated with a tilde
+#               \!     the history number of this command
+#               \#     the command number of this command
+#               \$     if the effective UID is 0, a #, otherwise a $
+#               \nnn   the character corresponding to the octal number nnn
+#               \\     a backslash
+#               \[     begin a sequence of non-printing characters, which could be used to embed a terminal control sequence into the prompt
+#               \]     end a sequence of non-printing characters
+# 
+#        The command number and the history number are usually different: the history number of a command is its position in the history list, which may include commands restored from the history file (see HISTORY below),  while  the
+#        command  number  is  the  position  in the sequence of commands executed during the current shell session.  After the string is decoded, it is expanded via parameter expansion, command substitution, arithmetic expansion, and
+#        quote removal, subject to the value of the promptvars shell option (see the description of the shopt command under SHELL BUILTIN COMMANDS below).
+
+#####################################################################################
+
+# TODO: Split prompt into different parts which can be enabled/disabled separately. :)
+# TODO: Fix carriage return breaking (can apparently be done by enclosing all escape sequences with "\[" and "\]")
+# TODO: Fix multi-line prompt broken alignement (happens in some terminals)
+# TODO: Store/show previous command?
+# TODO: Store/show time of previous command? (or even the time it took to run!)
+# TODO: Limit length of prompt (i.e. limit path length)
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
 function funny_face {
-  _ret=$?; if test $_ret -ne 0; then echo "0_0->ret=$_ret"; set ?=$_ret; unset _ret; else echo "^_^"; fi
+  # shows a happy face if there is no error and a sad face + error number if the previous command returned an error
+  _ret=$?;
+  if test $_ret -ne 0;
+  then
+    echo "0_0->ret=$_ret";
+  else
+    echo "^_^";
+  fi
+  set ?=$_ret; # this is so the user can reuse $? later
+  unset _ret; # unset the temporary variable
 }
 
 function set_command_sound {
@@ -28,41 +85,60 @@ function pre_prompt_short {
   newRET=$(funny_face)
 }
 
+function get_length()
+{
+  echo -n $1 | wc -m
+}
+
+# TODO: Improve by passing PROMPTBASE as argument or something like that.
 function pre_prompt {
-newRET=$(funny_face)
-newPWD=$(pwd | sed "s|$HOME|~|")
-user="whoami"
-host=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
-datenow=$(date "+%a, %d %b %y")
+  newRET=$(funny_face)
+  newPWD=$(pwd | sed "s|$HOME|~|")
+  user="whoami"
+  host=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
+  datenow=$(date "+%a, %d %b %y")
 
-# play_command_sound
+  # play_command_sound
 
-if [ $ANONYMOUS -eq 0 ]
-then
-  let promptsize=$(echo -n "┌($user@$host ddd., DD mmm YY)($newPWD)┐" | wc -c | tr -d " ")
-  let promptsize=$promptsize-3
-else
-  let promptsize=$(echo -n "┌($newPWD)┐" | wc -c | tr -d " ")
-  let promptsize=$promptsize
-fi
+  if [ $ANONYMOUS -eq 0 ]
+  then
+    PROMPTBASE="┌─($user@$host ddd., DD mmm YY)($newPWD)─┐"
+#     let promptsize=$(echo -n "┌─($user@$host ddd., DD mmm YY)($newPWD)─┐" | wc -m | tr -d " ")
+#     let promptsize=$promptsize-3
+  else
+    PROMPTBASE="┌─($newPWD)─┐"
+#     let promptsize=$(echo -n "┌─($newPWD)─┐" | wc -m | tr -d " ")
+#     let promptsize=$promptsize
+  fi
 
-# echo "<$newPWD>"
-# echo promptsize=$promptsize
-let fillsize=${COLUMNS}-${promptsize}
-# echo fillsize=$fillsize
-fill=""
-while [ "$fillsize" -gt "0" ]
-do 
+#   echo PROMPTBASE = $PROMPTBASE
+
+  let promptsize=$(echo -n $PROMPTBASE | wc -m | tr -d " ")
+
+  # echo "<$newPWD>"
+
+#   echo COLUMNS = $COLUMNS
+#   echo promptsize = $promptsize
+
+  let fillsize=${COLUMNS}-${promptsize}
+
+#   echo fillsize = $fillsize
+
+  fill=""
+  while [ "$fillsize" -gt "0" ]
+  do
     fill="${fill}─"
-	let fillsize=${fillsize}-1
-done
-# echo fill=$fill
-if [ "$fillsize" -lt "0" ]
-then
-    let cutt=3-${fillsize}
-    newPWD="...$(echo -n $PWD | sed -e "s/\(^.\{$cutt\}\)\(.*\)/\2/")"
-fi
+#     fill="${fill}+"
+    let fillsize=${fillsize}-1
+  done
 
+#   echo fill length = $(get_length $fill)
+
+  if [ "$fillsize" -lt "0" ]
+  then
+      let cutt=3-${fillsize}
+      newPWD="...$(echo -n $PWD | sed -e "s/\(^.\{$cutt\}\)\(.*\)/\2/")"
+  fi
 }
 
 export black="\[\033[0;38;5;0m\]"
@@ -91,15 +167,15 @@ load_prompt()
     export ANONYMOUS=0
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
-    xterm)
-        PS1="$bblue┌─($orange\$newPWD$bblue)─\${fill}─($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
-        ;;
-    screen)
-        PS1="$bblue┌─($orange\$newPWD$bblue)─\${fill}─($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
-        ;;    
-        *)
-        PS1="┌─(\$newPWD)─\${fill}─(\u@\h \$(date \"+%a, %d %b %y\"))─┐\n└─(\$newRET)(\#)(\$(date \"+%H:%M\") )─> "
-        ;;
+      xterm)
+          PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
+          ;;
+      screen)
+          PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
+          ;;
+          *)
+          PS1="┌─(\$newPWD)\${fill}(\u@\h \$(date \"+%a, %d %b %y\"))─┐\n└─(\$newRET)(\#)(\$(date \"+%H:%M\") )─> "
+          ;;
     esac
   elif [ $1 -eq 1 ]
   then
@@ -108,20 +184,20 @@ load_prompt()
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
     xterm)
-        PS1="$bblue┌─($orange\$newPWD$bblue)─\${fill}──┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
+        PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}─┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
         ;;
     screen)
-        PS1="$bblue┌─($orange\$newPWD$bblue)─\${fill}──┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
+        PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}─┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
         ;;
         *)
-        PS1="┌─(\$newPWD)─\${fill}──┐\n└─(\$newRET)(\#)─> "
+        PS1="┌─(\$newPWD)\${fill}─┐\n└─(\$newRET)(\#)─> "
         ;;
     esac
   elif [ $1 -eq 2 ]
   then
     # non-anonymous 1-line prompt
     PROMPT_COMMAND=pre_prompt_short
-    PS1='\[\e[0;1;33;41m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
+    PS1='\[\e[0;1;33;41m\][$newRET][\#][\t][\u@\h][\w]\$ \[\e[m\] '
   elif [ $1 -eq 3 ]
   then
     # non-anonymous 1-line prompt
@@ -138,6 +214,22 @@ load_prompt()
     PS1='\[\e[0;1;33;44m\][$newRET][\#][\w]\$ \[\e[m\] '
   fi
   PS1="\$(play_command_sound)$PS1"
+}
+
+prompt_update()
+{
+  # WIP/prototype
+  # elements:
+  #   -> 1-line/2-line prompt:
+  #   -> path: \w
+  #   -> user@host: \u@\h
+  #   -> date: \D{%Y-%m-%d}
+  #   -> funny face: \$newRET
+  #   -> command number: \#
+  #   -> time: \t
+  #   -> text color:
+  #   -> highlight color:
+  PS1="$a$b$c"
 }
 
 set_command_sound 0
