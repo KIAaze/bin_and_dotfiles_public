@@ -229,4 +229,3 @@ move_to_writeonly()
     mv -iv "$f" "/opt/writeonly/$f.$RANDOM"
   done
 }
-
