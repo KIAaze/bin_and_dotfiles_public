@@ -21,7 +21,7 @@ sleep 2
 echo 'Which country would you like to attack?'
 echo 'Loading Countries...'
 touch countries
-bar -E -c 'mv countries country && sleep 1 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
+bar.sh -E -c 'mv countries country && sleep 1 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
 
 echo ''
 echo 'Iran......[1]'
@@ -35,11 +35,11 @@ read COUNTRY
 
 echo '' 
 echo "Preparing to attack country #$COUNTRY..."
-bar -E -c 'mv countries country && sleep 1 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
+bar.sh -E -c 'mv countries country && sleep 1 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
 echo ''
 echo 'Please choose your prefered method of destruction:'
 echo 'Loading weapons...'
-bar -E -c 'mv countries country && sleep 1 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
+bar.sh -E -c 'mv countries country && sleep 1 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
 
 echo ''
 echo 'Nuclear Bomb.....[1]'
@@ -55,7 +55,7 @@ read GO
 case $GO in
 	y | Y)
 	echo 'Preparing to launch attack...'
-	bar -E -c 'mv countries country && sleep 2 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
+	bar.sh -E -c 'mv countries country && sleep 2 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
 	sleep 2
 	echo '[ERROR] Power Grid Failure.'
 	sleep 1
