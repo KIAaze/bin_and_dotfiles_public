@@ -86,6 +86,7 @@ then
 
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/config $HOME/.ssh
 
+  mkdir -p $HOME/.config/geany
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.config/geany/keybindings.conf $HOME/.config/geany
 
   cd $BIN_AND_DOTFILES_PRIVATE
