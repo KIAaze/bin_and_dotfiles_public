@@ -229,3 +229,18 @@ move_to_writeonly()
     mv -iv "$f" "/opt/writeonly/$f.$RANDOM"
   done
 }
+
+# convert video to ogg audio file
+# Tip: Use the following options of youtube-dl instead:
+# -x, --extract-audio        convert video files to audio-only files (requires
+#                                          ffmpeg or avconv and ffprobe or avprobe)
+# --audio-format FORMAT      "best", "aac", "vorbis", "mp3", "m4a", "opus", or
+#                                          "wav"; best by default
+mp4_to_ogg()
+{
+  for i in "$@"
+  do
+    echo "=== Converting $i ==="
+    ffmpeg2theora --novideo -o "${i%.mp4}.ogg" "$i"
+  done
+}
