@@ -142,3 +142,5 @@ alias rsync_to_Windows='rsync --archive --compress --no-perms --no-group --no-li
 alias rsync_to_GNULinux='rsync --archive --compress --hard-links'
 
 alias commit-todo='cd $HOME/Desktop/TODO/ && git commit -am "todo"; cd -'
+
+alias path='echo $PATH | tr ":" "\n"'
