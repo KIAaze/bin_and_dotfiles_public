@@ -23,3 +23,6 @@ press shift-H while in a manual to get help on less :)
 
 # print out third line in a file
 sed -n -e'3p' file.txt
+
+# add/remove user from group
+gpasswd -a/-d USER GROUP
