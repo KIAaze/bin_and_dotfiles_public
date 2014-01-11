@@ -244,3 +244,13 @@ mp4_to_ogg()
     ffmpeg2theora --novideo -o "${i%.mp4}.ogg" "$i"
   done
 }
+
+# extract and delete a zip
+zip2dir()
+{
+  for i in "$@"
+  do
+    echo "=== Processing $i ==="
+    atool -x "$i" && rm -iv "$i"
+  done
+}
