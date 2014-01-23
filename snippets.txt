@@ -1,3 +1,6 @@
+######################
+# bash
+
 # For useful one-liners, with which I am not quite sure what to do yet:
 TODO: Put on command-line-fu? (might even already be there...)
 
@@ -26,3 +29,23 @@ sed -n -e'3p' file.txt
 
 # add/remove user from group
 gpasswd -a/-d USER GROUP
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%Matlab:
+%%% extracting data from figure:
+
+% "plot" (2D) plot:
+  h = gcf; %current figure handle
+  axesObjs = get(h, 'Children');  %axes handles
+  dataObjs = get(axesObjs, 'Children'); %handles to low-level graphics objects in axes
+  objTypes = get(dataObjs, 'Type');  %type of low-level graphics object
+  xdata = get(dataObjs, 'XData');  %data from low-level grahics objects
+  ydata = get(dataObjs, 'YData');
+  zdata = get(dataObjs, 'ZData');
+
+% "imagesc" plot:
+  objTypes1 = get(dataObjs{1}, 'Type');
+  objTypes2 = get(dataObjs{2}, 'Type');
+  cdata1 = get(dataObjs{1}, 'CData');
+  cdata2 = get(dataObjs{2}, 'CData');
+  imagesc(cdata2)
