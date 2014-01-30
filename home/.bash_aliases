@@ -133,7 +133,8 @@ alias ssh_tunnel='ssh -q -C2TnN -D'
 # listing them in the form:
 # SIZE NLINKS INODE FILENAME
 # TODO: Create fslint-gui like script/interface, to make processing easier
-alias findHardLinkedFiles='find . -type f -links +1 -printf "%s=size nlinks=%n inode=%i file=%p \n" | sort -n'
+alias findHardLinkedFiles_SortBySize='find . -type f -links +1 -printf "%s=size nlinks=%n inode=%i file=%p \n" | sort -n'
+alias findHardLinkedFiles_SortByInode='find . -type f -links +1 -printf "inode=%i %s=size nlinks=%n file=%p \n" | sort -n'
 # TODO: Understand why '\'' works... Easier method?
 alias countHardLinkedFiles='find . -type f -links +1 -printf "inode=%i file=%p \n" | awk '\''{print $1}'\'' | sort -u | wc -l'
 
