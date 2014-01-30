@@ -32,3 +32,6 @@ do
         sleep 0.4s
 done
 ) | zenity --progress
+
+# osd_cat progress bar example
+for ((i=0;i<=100;i++)); do ( osd_cat -b percentage -c green -p middle -A center -f -adobe-helvetica-bold-r-normal-*-*-240-*-*-p-*-*-* -d 1 -P $i & ) ; sleep 0.1; done;
