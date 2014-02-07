@@ -30,6 +30,9 @@ sed -n -e'3p' file.txt
 # add/remove user from group
 gpasswd -a/-d USER GROUP
 
+# .msi installation
+wine msiexec /i FOO.msi
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
 %%% extracting data from figure:
