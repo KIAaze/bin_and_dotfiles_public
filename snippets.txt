@@ -33,6 +33,9 @@ gpasswd -a/-d USER GROUP
 # .msi installation
 wine msiexec /i FOO.msi
 
+# fill terminal with "=". From http://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window
+yes = | head -n$(($LINES * $COLUMNS)) | tr -d '\n'
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
 %%% extracting data from figure:
