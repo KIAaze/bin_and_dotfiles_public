@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Based originally on a script by Dr Small: http://ubuntuforums.org/showthread.php?t=452850&page=12&p=6245737#post6245737
+
 MAXTIME=15
 MAXSTEPS=200
 
