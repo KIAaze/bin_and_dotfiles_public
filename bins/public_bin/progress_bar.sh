@@ -4,6 +4,9 @@
 
 set -eu
 
+# To prevent problems in locales where the decimal separator is not a dot.
+LC_ALL=C
+
 SECONDS=$1
 NMAX=$2
 SLEEPTIME=$(echo "scale=3; $SECONDS/$NMAX" | bc)

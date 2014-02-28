@@ -5,6 +5,11 @@
 MAXTIME=15
 MAXSTEPS=200
 
+random_progress_bar()
+{
+  progress_bar.sh $(($MAXTIME*($RANDOM+1)/32768)) $(($MAXSTEPS*($RANDOM+1)/32768))
+}
+
 clear
 echo ''
 echo 'Trying 127.0.0.1...'
@@ -25,7 +30,7 @@ echo "Goodmorning $LOGIN"
 echo 'Welcome back to the [U.S.] Department of Defense'
 sleep 2
 echo 'Loading Countries...'
-progress_bar.sh $(($MAXTIME*$RANDOM/32767)) $(($MAXSTEPS*$RANDOM/32767))
+random_progress_bar
 echo 'Which country would you like to attack?'
 
 echo ''
@@ -40,10 +45,10 @@ read COUNTRY
 
 echo '' 
 echo "Preparing to attack country #$COUNTRY..."
-progress_bar.sh $(($MAXTIME*$RANDOM/32767)) $(($MAXSTEPS*$RANDOM/32767))
+random_progress_bar
 echo ''
 echo 'Loading weapons...'
-progress_bar.sh $(($MAXTIME*$RANDOM/32767)) $(($MAXSTEPS*$RANDOM/32767))
+random_progress_bar
 echo 'Please choose your prefered method of destruction:'
 
 echo ''
@@ -60,7 +65,7 @@ read GO
 case $GO in
 	y | Y)
 	echo 'Preparing to launch attack...'
-	progress_bar.sh $(($MAXTIME*$RANDOM/32767)) $(($MAXSTEPS*$RANDOM/32767))
+	random_progress_bar
 	sleep 2
 	echo '[ERROR] Power Grid Failure.'
 	sleep 1
