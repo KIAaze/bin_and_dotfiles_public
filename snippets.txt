@@ -36,6 +36,13 @@ wine msiexec /i FOO.msi
 # fill terminal with "=". From http://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window
 yes = | head -n$(($LINES * $COLUMNS)) | tr -d '\n'
 
+# Change Skype mood text! :)
+sqlite3 ~/.Skype/USER/main.db "UPDATE Accounts SET mood_text='$(fortune -s)';"
+Fails on some fortunes. Use bins/public_bin/setSkypeMoodText.py for pythonic string cleansing. :)
+
+# Print skype mood text
+sqlite3 ~/.Skype/USER/main.db "select mood_text from Accounts;"
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
 %%% extracting data from figure:
