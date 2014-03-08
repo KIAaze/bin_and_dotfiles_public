@@ -73,7 +73,7 @@ alias mr_checkall='mr --directory ${HOME} --stats pullpush'
 alias mr_checkall_rsync='mr --directory ${RSYNCDIR} --stats --config ${RSYNCDIR}/.mrconfig.rsync status'
 
 # sync all, unmount USB stick and check it was unmounted
-alias goodbye='mr_checkall && mr_checkall_rsync && umount ${SYNCSTICK} && test -d ${SYNCSTICK} && echo "Goodbye"'
+alias goodbye='mr_checkall && mr_checkall_rsync && umount ${SYNCSTICK} && ( ! test -d ${SYNCSTICK} ) && checkcmd'
 
 # plugin testing
 # You must have the plugin stuff in a subdirectory named "designer" for this to work
