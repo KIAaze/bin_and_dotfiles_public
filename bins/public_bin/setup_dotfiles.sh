@@ -63,6 +63,7 @@ safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bashrc $HOME
 #safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.pystartup $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.vimrc $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.ackrc $HOME
+safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.ackrc $HOME
 
 cd $BIN_AND_DOTFILES_PUBLIC
 if [[ $GIT_USERNAME_JZ && $GIT_EMAIL_JZ ]]
@@ -84,6 +85,9 @@ then
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.gitconfig $HOME
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/todo.cfg $HOME
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.mrconfig $HOME
+  safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.mrtrust $HOME
+
+  safe_link_dir $BIN_AND_DOTFILES_PRIVATE/dotfiles/.mrconfig.rsync ${RSYNCDIR}
 
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/config $HOME/.ssh
 

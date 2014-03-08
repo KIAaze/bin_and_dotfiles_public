@@ -69,7 +69,11 @@ alias git_checkall='git pull && git push && git status'
 alias bzr_checkall='bzr pull && bzr push && bzr status'
 
 # using the multiple repository manager with a custom pullpush function :)
-alias mr_checkall='mr -d ~ -s pullpush'
+alias mr_checkall='mr --directory ${HOME} --stats pullpush'
+alias mr_checkall_rsync='mr --directory ${RSYNCDIR} --stats --config ${RSYNCDIR}/.mrconfig.rsync status'
+
+# sync all, unmount USB stick and check it was unmounted
+alias goodbye='mr_checkall && mr_checkall_rsync && umount ${SYNCSTICK} && test -d ${SYNCSTICK} && echo "Goodbye"'
 
 # plugin testing
 # You must have the plugin stuff in a subdirectory named "designer" for this to work
@@ -90,7 +94,10 @@ alias ducks='find . -maxdepth 1 -mindepth 1 -print0  | xargs -0 -n1 du -ks | sor
 # for fun
 alias iamcow='fortune | cowsay'
 alias iamsurprise='fortune | cowsay -f $(random_cow)'
-alias cow_xmessage='xmessage -center "Hello, `whoami`. I'\''m a talking cow.`fortune | cowsay` " -buttons "☠"'
+
+# The solution to put single-quotes within single-quotes: '\''
+# Functions are probably a better idea of course. :)
+alias cow_xmessage='xmessage -buttons MOO:0 -default MOO -center Hello, "$(whoami)". I$'\''\'\'''\''m a talking cow.$'\''\n'\''"$(fortune | cowsay)"'
 
 # get your external IP
 alias myip='echo My IP is && curl http://www.whatismyip.com/automation/n09230945.asp && echo'
