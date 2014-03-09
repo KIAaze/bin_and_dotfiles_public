@@ -70,7 +70,8 @@ alias bzr_checkall='bzr pull && bzr push && bzr status'
 
 # using the multiple repository manager with a custom pullpush function :)
 alias mr_checkall='mr --directory ${HOME} --stats pullpush'
-alias mr_checkall_rsync='mr --directory ${RSYNCDIR} --stats --config ${RSYNCDIR}/.mrconfig.rsync status'
+alias mr_rsync='mr --config ${RSYNCDIR}/.mrconfig.rsync'
+alias mr_checkall_rsync='mr_rsync --directory ${RSYNCDIR} --stats status'
 
 # sync all, unmount USB stick and check it was unmounted
 alias goodbye='mr_checkall && mr_checkall_rsync && umount ${SYNCSTICK} && ( ! test -d ${SYNCSTICK} ) && checkcmd'
