@@ -1,6 +1,8 @@
 #!/usr/bin/env python2.6
 # -*- coding: utf-8 -*-
 
+# TODO: interface with chat windows as well. :) Skype bot?
+
 from __future__ import division
 
 import subprocess
@@ -97,6 +99,14 @@ def scrolling_text(txt, timestep=1):
     txt = txt[1:] + txt[0]
     time.sleep(timestep)
 
+def read_file(filename, timestep=5):
+  print(filename)
+  with open(filename,'r') as f:
+    for line in f:
+      print(line) # TODO: option to enable/disable stdout/skype output
+      MoodTextViaDbus(line)
+      time.sleep(timestep)
+
 def kirby(timestep=1):
   frames = [
     "<('o'<)",
@@ -131,6 +141,7 @@ def main():
   parser.add_option("--progress_number", action="store_true")  
   parser.add_option("--scrolling_text")
   parser.add_option("--kirby", action="store_true")
+  parser.add_option("--read-file")
   (options, args) = parser.parse_args()
 
   if options.verbose>1:
@@ -156,6 +167,10 @@ def main():
 
   if options.scrolling_text:
     scrolling_text(options.scrolling_text, options.timestep)
+    return
+
+  if options.read_file:
+    read_file(options.read_file, options.timestep)
     return
 
   #-------------------------
