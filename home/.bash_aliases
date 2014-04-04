@@ -15,6 +15,7 @@ alias source_openfoam='source $HOME/OpenFOAM/OpenFOAM-1.6/etc/bashrc'
 if [ "$TERM" != "dumb" ]; then
     eval "`dircolors -b`"
     alias ls='ls --color=auto'
+    alias ls_noExeColor='ls_noExeColor --color=auto'
     alias dir='ls --color=auto --format=vertical'
     alias vdir='ls --color=auto --format=long'
 fi
