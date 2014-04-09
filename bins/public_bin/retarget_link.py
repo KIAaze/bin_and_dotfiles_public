@@ -2,11 +2,8 @@
 # -*- coding: utf-8 -*-
 
 '''
-Script to change the target of symbolic links or replace them with hard links to a new target.
-The target is renamed based on the current target using python's re.sub for pattern substitution.
-TODO: Update doc
-Add option to find broken symlinks
-Add option to remove broken symlinks
+Script to do various things with links.
+At the moment mostly locating/removing/retargeting/converting (broken) symbolic links.
 '''
 
 import argparse
@@ -26,16 +23,16 @@ def get_argument_parser():
 
   subparsers = parser.add_subparsers(help='Available subcommands')
 
-  # parser for retarget_links
-  parser_retarget_links = subparsers.add_parser('retarget', help='replace a symbolic link with a symbolic or hard link and a new target')
+  # parser for retargetLinks
+  parser_retargetLinks = subparsers.add_parser('retarget', help='replace a symbolic link with a symbolic or hard link and a new target')
 
-  parser_retarget_links.add_argument('--use_sub', action="store_true", default=False, help='Use re.sub(pattern, repl) instead of str.replace(pattern, repl), i.e. basically use regular expressions instead of normal text.')
-  parser_retarget_links.add_argument('-s','--symbolic', action="store_true", default=False, help='create symbolic links instead of hard links')
-  parser_retarget_links.add_argument('-p','--pattern', required=True, help='pattern in link target to look for')
-  parser_retarget_links.add_argument('-r','--repl', required=True, help='string with which to replace the matched pattern')
-  parser_retarget_links.add_argument('link_name', nargs='+', help='The links you want to retarget.')
+  parser_retargetLinks.add_argument('--use_sub', action="store_true", default=False, help='Use re.sub(pattern, repl) instead of str.replace(pattern, repl), i.e. basically use regular expressions instead of normal text.')
+  parser_retargetLinks.add_argument('-s','--symbolic', action="store_true", default=False, help='create symbolic links instead of hard links')
+  parser_retargetLinks.add_argument('-p','--pattern', required=True, help='pattern in link target to look for')
+  parser_retargetLinks.add_argument('-r','--repl', required=True, help='string with which to replace the matched pattern')
+  parser_retargetLinks.add_argument('link_name', nargs='+', help='The links you want to retarget.')
   
-  parser_retarget_links.set_defaults(func=retarget_links)
+  parser_retargetLinks.set_defaults(func=retargetLinks)
 
   # parser for listBrokenSymlinks
   parser_listBrokenSymlinks = subparsers.add_parser('list', help='list broken symbolic links and eventually remove them.')
@@ -48,9 +45,17 @@ def get_argument_parser():
 
 def listBrokenSymlinks(arguments):
   '''
-  TODO: Should return a list of broken symlinks to be processed by other stuff.
-  # skip/select files based on pattern?
-  # only look for dir symlinks?
+  Prints out broken symlinks and their targets.
+  Also allows removing those broken symlinks interactively or automatically.
+
+  Returns a tuple (broken_symlinks, dirs_with_broken_symlinks) where:
+  -broken_symlinks is a list of (fullpath, target) tuples where:
+    -fullpath is the path of a broken symlink
+    -target is the corresponding link target
+  -dirs_with_broken_symlinks is a set of directories containing broken symlinks
+  
+  # TODO: skip/select files based on pattern?
+  # TODO: only look for dir symlinks?
   '''
 
   broken_symlinks = []
@@ -63,7 +68,7 @@ def listBrokenSymlinks(arguments):
         if os.path.islink(fullpath):
           target = os.readlink(fullpath)
           if not os.path.exists(target) and not os.path.exists(os.path.join(root, target)):
-            broken_symlinks.append((fullpath,target))
+            broken_symlinks.append((fullpath, target))
             dirs_with_broken_symlinks.add(root)
             print('broken symlink: {} -> {}'.format(fullpath, target))
             if arguments.remove:
@@ -78,7 +83,7 @@ def listBrokenSymlinks(arguments):
                   print('Removing ' + fullpath)
           else:
             if arguments.verbosity > 1:
-              print('working symlink: {} -> {}'.format(fullpath,target))
+              print('working symlink: {} -> {}'.format(fullpath, target))
   
   if arguments.verbosity > 0:
     print('The following {} directories contain broken symlinks:'.format(len(dirs_with_broken_symlinks)))
@@ -87,7 +92,12 @@ def listBrokenSymlinks(arguments):
   
   return( (broken_symlinks, dirs_with_broken_symlinks) )
 
-def retarget_links(arguments):
+def retargetLinks(arguments):
+  '''
+  Change the target of symbolic links or replace them with hard links to a new target.
+  The target is renamed based on the current target using python's str.replace() or re.sub() for pattern substitution.
+  '''
+  
   for link_name in arguments.link_name:
     print('--> Processing ' + link_name)
     if not os.path.lexists(link_name):
