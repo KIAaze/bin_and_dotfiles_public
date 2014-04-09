@@ -10,38 +10,38 @@ import fnmatch
 import tempfile
 import shutil
 
-####################################
-# Reorganizes files according to unique files.
-#
-# Example:
-# You have:
-#  src/b1/b1.a
-#  src/b1/b1.b
-#  src/b2/b2.a
-#  src/b2/b2.b
-#  src/b3/b3.a
-#  src/b3/b3.b
-#  src/b4/b4.a
-#  src/b4/b4.b
-#
-# Assuming b1.a=b3.a and b2.a=b4.a (more specifically same sha1sum), it allows you to reorganize the files as follows:
-#
-#  dst/sha1sum_of_b1.a/b1/b1.a
-#  dst/sha1sum_of_b1.a/b1/b1.b
-#  dst/sha1sum_of_b1.a/b3/b3.a
-#  dst/sha1sum_of_b1.a/b3/b3.b
-#
-#  dst/sha1sum_of_b2.a/b2/b2.a
-#  dst/sha1sum_of_b2.a/b2/b2.b
-#  dst/sha1sum_of_b2.a/b4/b4.a
-#  dst/sha1sum_of_b2.a/b4/b4.b
-#
-# by running:
-#  magicOrganizer.py -s ./src -d ./dst -p "*.a"
-####################################
+"""
+ Reorganizes files according to unique files.
 
-# convert to unix format
+ Example:
+ You have:
+  src/b1/b1.a
+  src/b1/b1.b
+  src/b2/b2.a
+  src/b2/b2.b
+  src/b3/b3.a
+  src/b3/b3.b
+  src/b4/b4.a
+  src/b4/b4.b
+
+ Assuming b1.a=b3.a and b2.a=b4.a (more specifically same sha1sum), it allows you to reorganize the files as follows:
+
+  dst/sha1sum_of_b1.a/b1/b1.a
+  dst/sha1sum_of_b1.a/b1/b1.b
+  dst/sha1sum_of_b1.a/b3/b3.a
+  dst/sha1sum_of_b1.a/b3/b3.b
+
+  dst/sha1sum_of_b2.a/b2/b2.a
+  dst/sha1sum_of_b2.a/b2/b2.b
+  dst/sha1sum_of_b2.a/b4/b4.a
+  dst/sha1sum_of_b2.a/b4/b4.b
+
+ by running:
+  magicOrganizer.py -s ./src -d ./dst -p "*.a"
+"""
+
 def fromdos(filename):
+  """ convert to unix format """
   try:
     retcode = subprocess.call(["fromdos", filename])
     if retcode < 0:
@@ -51,8 +51,8 @@ def fromdos(filename):
   except OSError as e:
     print("Execution failed:", e, file=sys.stderr)
 
-# get the sha1sum corresponding to the UNIX version of the file (i.e. like after running fromdos/dos2unix)
 def getSha1sumOfUnixVersion(filename):
+  """ get the sha1sum corresponding to the UNIX version of the file (i.e. like after running fromdos/dos2unix) """
   with open(filename, 'rb') as f:
     sha1sum = hashlib.sha1(f.read().replace(b'\r\n',b'\n')).hexdigest()      
     return(sha1sum)
@@ -62,8 +62,8 @@ def getSha1sum(filename):
     sha1sum = hashlib.sha1(f.read()).hexdigest()
     return(sha1sum)
 
-# move contents of srcdir into dstdir
 def moveContents(srcdir,dstdir):
+  """ move contents of srcdir into dstdir """
   contents = os.listdir(srcdir)
   for i in contents:
     src_item = os.path.join(srcdir,i)
@@ -77,8 +77,8 @@ def moveContents(srcdir,dstdir):
     except OSError as e:
       print("Execution failed:", e, file=sys.stderr)
 
-# automagically organize data folders...
 def organize(arguments):
+  """ automagically organize data folders... """
   
   fileAndSha1sum_list = []
   
@@ -176,8 +176,8 @@ def organize(arguments):
 
   #os.renames(sys.argv[1],os.path.join(sys.argv[2],sys.argv[1]))
 
-# automagically rename data folders...
 def rename(arguments):
+  """ automagically rename data folders... """
   
   if len(set(arguments.pattern))!=len(arguments.pattern):
     print('ERROR: Some of the specified patterns are identical.', file=sys.stderr)
@@ -352,7 +352,7 @@ def removeDuplicates(arguments):
   return(notRemoved)
 
 def get_argument_parser():
-  # command-line option handling
+  """ command-line option handling """
   parser = argparse.ArgumentParser(description = 'Tools to organize files and folders.', fromfile_prefix_chars='@')
 
   parser.add_argument('-v','--verbose', action="count", default=0, help='verbosity level')
