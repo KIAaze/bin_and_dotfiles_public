@@ -1,17 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-# TODO: Check out the following modules: fileinput, filecmp, difflib
-
-import os
-import sys
-import argparse
-import hashlib
-import subprocess
-import fnmatch
-import tempfile
-import shutil
-
 """
  Reorganizes files according to unique files.
 
@@ -39,8 +27,19 @@ import shutil
   dst/sha1sum_of_b2.a/b4/b4.b
 
  by running:
-  magicOrganizer.py -s ./src -d ./dst -p "*.a"
+  magicOrganizer.py organize -s ./src -d ./dst -p "*.a"
+
+ TODO: Check out the following modules: fileinput, filecmp, difflib
 """
+
+import os
+import sys
+import argparse
+import hashlib
+import subprocess
+import fnmatch
+import tempfile
+import shutil
 
 def fromdos(filename):
   """ convert to unix format """
