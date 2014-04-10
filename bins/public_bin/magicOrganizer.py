@@ -324,7 +324,7 @@ def removeDuplicates(arguments):
         
         # sanity check
         if os.path.samefile(fullpath_dup,fullpath_orig):
-          print('ERROR:',fullpath_dup,'and',fullpath_orig,'refer to the same path!!!', file=sys.stderr)    
+          print('ERROR:',fullpath_dup,'and',fullpath_orig,'refer to the same path!!!', file=sys.stderr)
           sys.exit(-1)
         
         sha1sum_dup = getSha1sum(fullpath_dup)
