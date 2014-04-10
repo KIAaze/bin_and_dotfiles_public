@@ -30,6 +30,11 @@
   magicOrganizer.py organize -s ./src -d ./dst -p "*.a"
 
  TODO: Check out the following modules: fileinput, filecmp, difflib
+ TODO: Document pattern usage.
+ TODO: Make sure there are no problems when src is in dst or dst in src...
+ TODO: "directory pruner/stripper: remove useless dirs from a long directory tree. ex: /a/b/c/d/e/* -> /a_b_c_d_e/* or similar."
+ TODO: pass multiple source directories or specific dirs conatining matching files
+ TODO: Add option to only move if there are multiple "dir matches".
 """
 
 import os
@@ -79,64 +84,82 @@ def moveContents(srcdir,dstdir):
       print("Execution failed:", e, file=sys.stderr)
 
 def organize(arguments):
-  """ automagically organize data folders... """
+  """
+  Automagically organize data folders...
   
-  fileAndSha1sum_list = []
+  First we analyze the directory structure for any potential problems.
+  Then, starting from the deepest directory, we move all directories containing files matching the specified pattern into the corresponding sha1sum folder with the same relative path.
+  """
   
-  # TODO: It might be possible to combine the two os.walks into one...
-  
-  if arguments.verbose:
-    print('=== ANALYSIS ===')
-  # first we analyze the directory structure for any potential problems
-  for root, dirnames, filenames in os.walk(arguments.srcdir, topdown=False):
-    local_sha1sum_set = set()
-    local_fileAndSha1sum_list = []
-    for filename in fnmatch.filter(filenames, arguments.pattern):
-      if not arguments.exclude_pattern or not ( filename in fnmatch.filter(filenames, arguments.exclude_pattern) ):
-      
-        # build the pathname
-        fullpath = os.path.join(root, filename)
-        
-        # get their sha1sums
-        sha1sum = getSha1sumOfUnixVersion(fullpath)
-        
-        if arguments.verbose:
-          print((sha1sum, fullpath))
-        
-        fileAndSha1sum_list.append( (sha1sum, fullpath) )
-        local_fileAndSha1sum_list.append( (sha1sum, fullpath) )
-        local_sha1sum_set.add(sha1sum)
-    
-    if(len(local_sha1sum_set)>1):
-      print('ERROR:',root,'contains more than one matching file, but not with the same sha1sum.')
-      sys.exit(-1)
-  
-  fileAndSha1sum_list = []
-  
-  if arguments.verbose:
-    print('=== PROCESSING ===')
-  # starting from the deepest directory move all directories containing files matching the specified pattern into the corresponding sha1sum folder with the same relative path
-  for root, dirnames, filenames in os.walk(arguments.srcdir, topdown=False):
-    for filename in fnmatch.filter(filenames, arguments.pattern):
-      if not arguments.exclude_pattern or not ( filename in fnmatch.filter(filenames, arguments.exclude_pattern) ):
-      
-        # build the pathname
-        fullpath = os.path.join(root, filename)
+  for do_process in [False, True]:
 
-        if not os.path.exists(fullpath):
-          # TODO: Directory moving should be handled in a nicer way. You can only move a dir once after all. i.e. Should check all files in dir and then process it, also avoidig need for pre-processing. -> process dirnames instead of filenames.
-          print('WARNING:',fullpath,'does not exist anymore. Probably already moved do to other matching file with same sha1sum. Skipping.', file=sys.stderr)
-          continue
+    fileAndSha1sum_list = []
+
+    if arguments.verbose:
+      if not do_process:
+        print('=== ANALYSIS ===')
+      else:
+        print('=== PROCESSING ===')
+
+    for root, dirname_list, filename_list in os.walk(arguments.srcdir, topdown=False):
+
+      if arguments.verbose > 1:
+        print('--> root = ',root)
+      if arguments.verbose > 2:
+        print('files',len(filename_list))
+        print('dirs:',len(dirname_list))
+
+      local_sha1sum_set = set()
+      local_fileAndSha1sum_list = []
+
+      for filename in filename_list:
+
+        # check filename against patterns
+        match = False
+
+        for pattern_to_match in arguments.pattern:
+          if fnmatch.fnmatch(filename, pattern_to_match):
+            match = True
+
+        for pattern_to_exclude in arguments.exclude_pattern:
+          if fnmatch.fnmatch(filename, pattern_to_exclude):
+            match = False
         
-        # get their sha1sums
-        sha1sum = getSha1sumOfUnixVersion(fullpath)
-        
-        if arguments.verbose:
-          print((sha1sum, fullpath))
-        
-        fileAndSha1sum_list.append( (sha1sum, fullpath) )
-        
-        src = os.path.dirname(fullpath)
+        # if match, get the sha1sum and add it to the sets/lists
+        if match:
+
+          # build the pathname
+          fullpath = os.path.join(root, filename)
+
+          # check it exists, just in case
+          if not os.path.exists(fullpath):
+            print('ERROR: ' + fullpath + 'does not exist anymore. Probably already moved due to other matching file with same sha1sum. Aborting.', file=sys.stderr)
+            sys.exit(-1)
+
+          sha1sum = getSha1sumOfUnixVersion(fullpath)
+          
+          if arguments.verbose:
+            print((sha1sum, fullpath))
+          
+          # we don't need all those lists. Leftovers from debugging.
+          fileAndSha1sum_list.append( (sha1sum, fullpath) )
+          local_fileAndSha1sum_list.append( (sha1sum, fullpath) )
+          local_sha1sum_set.add(sha1sum)
+      
+      if len(local_sha1sum_set) > 1:
+        # no single sha1sum
+        print('ERROR:',root,'contains more than one matching file, but not with the same sha1sum.')
+        sys.exit(-1)
+
+      elif do_process and len(local_sha1sum_set) == 1:
+        # move directory
+
+        if arguments.verbose > 1:
+          print('Number of matching files with same sha1sum: {}'.format(len(local_fileAndSha1sum_list)))
+
+        (sha1sum, fullpath) = local_fileAndSha1sum_list[0]
+
+        src = os.path.dirname(fullpath) # could just be set to root
         dst = os.path.join(arguments.dstdir, sha1sum, os.path.relpath(src, start=arguments.srcdir))
         
         if os.path.samefile(src,arguments.srcdir):
@@ -158,24 +181,7 @@ def organize(arguments):
               sys.exit(-1)
             os.renames(src,dst)
 
-  ## get all unique sha1sums
-  #sha1sum_set = {sha1sum for (sha1sum, fullpath) in fileAndSha1sum_list}
-  
-  ## create folder for each sha1sum
-  #for sha1sum in sha1sum_set:
-    #if arguments.verbose:
-      #print(sha1sum)
-    #os.makedirs(os.path.join(arguments.dstdir,sha1sum), exist_ok=True)
-
-  #for root, dirs, files in os.walk(sys.argv[1]):
-    #for name in files:
-      #print(os.path.join(root, name))
-    #for name in dirs:
-      #print(os.path.join(root, name))
-  
-  #os.makedirs(sys.argv[1], exist_ok=True)
-
-  #os.renames(sys.argv[1],os.path.join(sys.argv[2],sys.argv[1]))
+  return
 
 def rename(arguments):
   """ automagically rename data folders... """
@@ -362,10 +368,10 @@ def get_argument_parser():
   subparsers = parser.add_subparsers(title='subcommands', description='valid subcommands', help='available operations', dest='operation')
   
   parser_organize = subparsers.add_parser('organize', help='Sort folders containing specific files into folders named after the sha1sums of those files.')
-  parser_organize.add_argument('-s','--srcdir', help='source directory to scan for .EXT files', required=True)
-  parser_organize.add_argument('-d','--dstdir', help='destination directory into which to sort folders', required=True)
-  parser_organize.add_argument('-p','--pattern', help='patterns the files should match', required=True)
-  parser_organize.add_argument('--exclude-pattern', help='patterns the files should not match')
+  parser_organize.add_argument('-s', '--srcdir', help='source directory to scan for .EXT files', required=True)
+  parser_organize.add_argument('-d', '--dstdir', help='destination directory into which to sort folders', required=True)
+  parser_organize.add_argument('-p', '--pattern', help='patterns the files should match', required=True, action='append')
+  parser_organize.add_argument('-x', '--exclude-pattern', help='patterns the files should not match', action='append', default=[])
   parser_organize.set_defaults(func=organize)
 
   parser_rename = subparsers.add_parser('rename', help='rename folders based on contents matching patterns')

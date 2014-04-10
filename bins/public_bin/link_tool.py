@@ -62,6 +62,11 @@ def listBrokenSymlinks(arguments):
   dirs_with_broken_symlinks = set()
 
   for current_directory in arguments.DIR:
+    
+    if not os.path.isdir(current_directory):
+      print('ERROR:' + current_directory + 'is not a directory. Skipping.', file=sys.stderr)
+      continue
+    
     for root, dirs, filenames in os.walk(current_directory, followlinks=True):
       for f in filenames:
         fullpath = os.path.join(root, f)
