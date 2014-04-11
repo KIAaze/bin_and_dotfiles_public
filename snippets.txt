@@ -43,6 +43,11 @@ Fails on some fortunes. Use bins/public_bin/setSkypeMoodText.py for pythonic str
 # Print skype mood text
 sqlite3 ~/.Skype/USER/main.db "select mood_text from Accounts;"
 
+# CLI mail attachments
+echo "This is the message body" | mutt -a "/path/to/file.to.attach" -s "subject of message" -- recipient@domain.com
+echo "This is the message body" | mutt -a "/path/to/file.to.attach" -a "/path/to/file.to.attach2" -s "subject of message" -- recipient@domain.com
+mutt -a "/path/to/file.to.attach" -a "/path/to/file.to.attach2" -s "subject of message" -- recipient@domain.com < body.txt
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
 %%% extracting data from figure:
