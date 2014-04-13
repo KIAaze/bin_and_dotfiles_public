@@ -147,3 +147,5 @@ fi
 # 
 # alias kagent="kill -9 $SSH_AGENT_PID"
 ##########################################
+
+eval $(dircolors $HOME/.dir_colors)
