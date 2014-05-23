@@ -358,6 +358,11 @@ def removeDuplicates(arguments):
         print('NOT removing',fullpath_dup,': It is not a file.')
   return(notRemoved)
 
+def getCheckSum(arguments):
+  for f in arguments.FILE:
+    print('sha1sum = {} sha1sum_unix = {} {}'.format( getSha1sum(f), getSha1sumOfUnixVersion(f) , f))
+  return
+
 def get_argument_parser():
   """ command-line option handling """
   parser = argparse.ArgumentParser(description = 'Tools to organize files and folders.', fromfile_prefix_chars='@')
@@ -385,6 +390,10 @@ def get_argument_parser():
   parser_removeDuplicates.add_argument('-d','--dupdir', help='directory with potential duplicate files', required=True)
   parser_removeDuplicates.add_argument("--remove-only-if-all-duplicates", action="store_true", default=False, help="Remove duplicates only if all files are duplicates, i.e. if the directory would be emptied on a normal run.")
   parser_removeDuplicates.set_defaults(func=removeDuplicatesMain)
+
+  parser_getCheckSum = subparsers.add_parser('getCheckSum', help='Calculate checksum of a file')
+  parser_getCheckSum.add_argument('FILE', nargs='+', help='Files to calculate checksums for')
+  parser_getCheckSum.set_defaults(func=getCheckSum)
 
   return parser
 
