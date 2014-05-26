@@ -48,6 +48,9 @@ echo "This is the message body" | mutt -a "/path/to/file.to.attach" -s "subject 
 echo "This is the message body" | mutt -a "/path/to/file.to.attach" -a "/path/to/file.to.attach2" -s "subject of message" -- recipient@domain.com
 mutt -a "/path/to/file.to.attach" -a "/path/to/file.to.attach2" -s "subject of message" -- recipient@domain.com < body.txt
 
+# print only 12th line from a file:
+sed -n '12 p' FILE
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
 %%% extracting data from figure:
