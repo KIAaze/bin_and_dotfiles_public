@@ -1,3 +1,4 @@
+#!/bin/bash
 # ~/.bash_prompt
 
 #####################################################################################
@@ -94,7 +95,7 @@ function get_length()
 function pre_prompt {
   newRET=$(funny_face)
   newPWD=$(pwd | sed "s|$HOME|~|")
-  user="whoami"
+  user=$(whoami)
   host=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
   datenow=$(date "+%a, %d %b %y")
 
@@ -102,7 +103,7 @@ function pre_prompt {
 
   if [ $ANONYMOUS -eq 0 ]
   then
-    PROMPTBASE="┌─($user@$host ddd., DD mmm YY)($newPWD)─┐"
+    PROMPTBASE="┌─($newPWD)($user@$host ddd, DD mmm YY)─┐"
 #     let promptsize=$(echo -n "┌─($user@$host ddd., DD mmm YY)($newPWD)─┐" | wc -m | tr -d " ")
 #     let promptsize=$promptsize-3
   else
@@ -113,7 +114,8 @@ function pre_prompt {
 
 #   echo PROMPTBASE = $PROMPTBASE
 
-  let promptsize=$(echo -n $PROMPTBASE | wc -m | tr -d " ")
+#   let promptsize=$(echo -n $PROMPTBASE | wc --chars | tr --delete " ")
+  let promptsize=$(echo -n $PROMPTBASE | wc --chars)
 
   # echo "<$newPWD>"
 
@@ -137,7 +139,7 @@ function pre_prompt {
   if [ "$fillsize" -lt "0" ]
   then
       let cutt=3-${fillsize}
-      newPWD="...$(echo -n $PWD | sed -e "s/\(^.\{$cutt\}\)\(.*\)/\2/")"
+      newPWD="...$(echo -n $PWD | sed --expression="s/\(^.\{$cutt\}\)\(.*\)/\2/")"
   fi
 }
 
