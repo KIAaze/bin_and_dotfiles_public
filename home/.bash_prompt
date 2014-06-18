@@ -170,10 +170,10 @@ load_prompt()
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
       xterm)
-          PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
+          PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}($textcolor\u@\h \$(date \"+%a, %d %b %y\")$linecolor)─┐\n$linecolor└─(\$newRET)(\#)($textcolor\$(date \"+%H:%M\")$linecolor)─>$defaultcolor "
           ;;
       screen)
-          PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
+          PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}($textcolor\u@\h \$(date \"+%a, %d %b %y\")$linecolor)─┐\n$linecolor└─(\$newRET)(\#)($textcolor\$(date \"+%H:%M\")$linecolor)─>$defaultcolor "
           ;;
           *)
           PS1="┌─(\$newPWD)\${fill}(\u@\h \$(date \"+%a, %d %b %y\"))─┐\n└─(\$newRET)(\#)(\$(date \"+%H:%M\") )─> "
@@ -186,10 +186,10 @@ load_prompt()
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
     xterm)
-        PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}─┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
+        PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}─┐\n$linecolor└─(\$newRET)(\#)─>$defaultcolor "
         ;;
     screen)
-        PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}─┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
+        PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}─┐\n$linecolor└─(\$newRET)(\#)─>$defaultcolor "
         ;;
         *)
         PS1="┌─(\$newPWD)\${fill}─┐\n└─(\$newRET)(\#)─> "
@@ -218,6 +218,26 @@ load_prompt()
   PS1="\$(play_command_sound)$PS1"
 }
 
+set_color_theme()
+{
+  if [ $1 == "dark" ]
+  then
+    export linecolor=$green
+    export textcolor=$cyan
+    export defaultcolor="\[\033[m\]"
+  else
+    export linecolor=$bblue
+    export textcolor=$orange
+    export defaultcolor="\[\033[m\]"
+  fi
+  if [[ $PROMPTSTYLE ]]
+  then
+    load_prompt $PROMPTSTYLE
+  else
+    echo "WARNING: PROMPTSTYLE not set. Skipping load_prompt."
+  fi
+}
+
 prompt_update()
 {
   # WIP/prototype
@@ -235,6 +255,8 @@ prompt_update()
 }
 
 set_command_sound 0
+
+set_color_theme "dark"
 
 if [[ $PROMPTSTYLE ]]
 then
