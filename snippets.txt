@@ -51,6 +51,9 @@ mutt -a "/path/to/file.to.attach" -a "/path/to/file.to.attach2" -s "subject of m
 # print only 12th line from a file:
 sed -n '12 p' FILE
 
+# set permissions for files and directories separately:
+find . \( -type f -exec chmod 400 {} \; \) -o \( -type d -exec chmod 500 {} \; \)
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
 %%% extracting data from figure:
