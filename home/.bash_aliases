@@ -159,3 +159,6 @@ alias rsync_to_GNULinux='rsync --archive --compress --hard-links'
 alias commit-todo='cd $HOME/Desktop/TODO/ && git commit -am "todo"; cd -'
 
 alias path='echo $PATH | tr ":" "\n"'
+
+# seems to be the same as /usr/lib/x86_64-linux-gnu/octave/3.8.1/exec/x86_64-pc-linux-gnu/octave-gui, but just in case...
+alias octave-gui='octave --force-gui'
