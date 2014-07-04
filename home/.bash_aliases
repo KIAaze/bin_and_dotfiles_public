@@ -156,6 +156,7 @@ alias countHardLinkedFiles='find . -type f -links +1 -printf "inode=%i file=%p \
 alias rsync_to_Windows='rsync --archive --compress --no-perms --no-group --no-links --chmod=ugo=rwX'
 alias rsync_to_GNULinux='rsync --archive --compress --hard-links'
 
+alias diff-todo='cd $HOME/Desktop/TODO/ && git diff; cd -'
 alias commit-todo='cd $HOME/Desktop/TODO/ && git commit -am "todo"; cd -'
 
 alias path='echo $PATH | tr ":" "\n"'
