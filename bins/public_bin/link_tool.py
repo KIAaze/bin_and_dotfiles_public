@@ -4,6 +4,8 @@
 '''
 Script to do various things with links.
 At the moment mostly locating/removing/retargeting/converting (broken) symbolic links.
+TODO: Add example for simple symlink to hardlink change. Clarify that hardlink is the default.
+TODO: Make it work for relative symlinks.
 '''
 
 import argparse
