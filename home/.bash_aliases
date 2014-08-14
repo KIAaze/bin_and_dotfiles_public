@@ -163,3 +163,8 @@ alias path='echo $PATH | tr ":" "\n"'
 
 # seems to be the same as /usr/lib/x86_64-linux-gnu/octave/3.8.1/exec/x86_64-pc-linux-gnu/octave-gui, but just in case...
 alias octave-gui='octave --force-gui'
+
+# updatedb aliases
+alias updatedb_user='updatedb -l0 --prunepaths="/tmp /var/spool /home/.ecryptfs"'
+alias updatedb_user_media='updatedb_user -U /media -o $HOME/media.locate.db'
+alias updatedb_user_root_and_media='updatedb_user -U / -o $HOME/root_and_media.locate.db'
