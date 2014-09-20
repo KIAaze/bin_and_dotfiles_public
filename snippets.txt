@@ -54,6 +54,10 @@ sed -n '12 p' FILE
 # set permissions for files and directories separately:
 find . \( -type f -exec chmod 400 {} \; \) -o \( -type d -exec chmod 500 {} \; \)
 
+You can check the parameters your system was booted up with by running cat
+/proc/cmdline and see if includes your changes.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
 %%% extracting data from figure:
