@@ -8,6 +8,7 @@ if [ -f ~/.bash_local ]; then
   source ~/.bash_local
 fi
 
+mkdir -p "$HOME/log"
 LOGFILE="$HOME/log/skype_wrapper.log"
 
 echo "===" 1>> $LOGFILE 2>&1
