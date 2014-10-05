@@ -5,6 +5,10 @@
 ##################
 #ALIASES
 ##################
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 # OpenFOAM stuff
 #alias source_openfoam='source $HOME/OpenFOAM/OpenFOAM-1.5/etc/bashrc'
@@ -34,7 +38,7 @@ alias lsdot='ls -ld \.[A-Za-z0-9]*'
 # To see something coming into ls output: lss
 alias lss='ls -lrt | grep $1'
 
-# safety aliases for rm,mv,cp
+# safety aliases for rm, mv, cp
 alias rm='rm -iv'
 alias mv='mv -iv'
 alias cp='cp -iv' 
@@ -121,7 +125,13 @@ alias modulegrep='module avail 2>&1 | grep '
 
 alias cdtemp='cd $(mktemp -d )'
 
-alias bashclean='env -i bash --noprofile --init-file /etc/profile'
+# start a clean bash shell for tests
+alias bashclean='env --ignore-environment bash --noprofile --norc'
+alias bashcleansystem='env --ignore-environment bash --noprofile --rcfile /etc/profile'
+
+# start a clean zsh shell
+# -f    equivalent to --no-rcs
+alias zshclean='env --ignore-environment zsh --no-rcs'
 
 # Fun with a personal quote file :)
 alias addquote='editor $QUOTEFILE && strfile $QUOTEFILE'
