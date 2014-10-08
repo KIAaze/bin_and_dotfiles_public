@@ -67,9 +67,10 @@ if [ -f ~/.bash_aliases ]; then
     source ~/.bash_aliases
 fi
 
-if [ -f ~/.zsh_prompt ]; then
-    source ~/.zsh_prompt
-fi
+# TODO: Finish adapting. Leads to weird stuff at the moment.
+# if [ -f ~/.zsh_prompt ]; then
+#     source ~/.zsh_prompt
+# fi
 
 #to stay in the directory visited with mc on exit. :)
 if [ -f /usr/share/mc/bin/mc.sh ]; then
