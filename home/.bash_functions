@@ -96,29 +96,31 @@ backup_bashfiles()
   echo "All backed up in $ARCHIVE";
 }
 
+# We use /usr/bin/which instead of just which, so it also works properly in zsh which has a built-in which (problem appears with aliased commands).
+# TODO: Make it work with aliased commands as well.
 whichreally()
 {
-  readlink -f $(which "$1");
+  readlink -f $(/usr/bin/which "$1");
 }
 
 lessexe()
 {
-  less $(readlink -f $(which "$1"));
+  less $(readlink -f $(/usr/bin/which "$1"));
 }
 
 moreexe()
 {
-  more $(readlink -f $(which "$1"));
+  more $(readlink -f $(/usr/bin/which "$1"));
 }
 
 catexe()
 {
-  cat $(readlink -f $(which "$1"));
+  cat $(readlink -f $(/usr/bin/which "$1"));
 }
 
 vimexe()
 {
-  vim $(readlink -f $(which "$1"));
+  vim $(readlink -f $(/usr/bin/which "$1"));
 }
 
 catbin()
