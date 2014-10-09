@@ -42,37 +42,42 @@ autoload -U colors && colors
 autoload -Uz promptinit
 promptinit
 # prompt fire
-prompt adam2
+# prompt adam2
+prompt suse
 
-##########################################################
-# Source global definitions
-if [ -f /etc/zsh/zshrc ]; then
-  source /etc/zsh/zshrc
+# ##########################################################
+if [ -f ~/.zsh_env ]; then
+  source ~/.zsh_env
 fi
-
-if [ -f ~/.bash_env ]; then
-  source ~/.bash_env
-fi
-
+# DISABLING ALL TO SEE IF MESSED UP HISTORY PROBLEM STILL OCCURS.
+# # Source global definitions
+# if [ -f /etc/zsh/zshrc ]; then
+#   source /etc/zsh/zshrc
+# fi
+# 
+# if [ -f ~/.bash_env ]; then
+#   source ~/.bash_env
+# fi
+# 
 # Local stuff (i.e. not synced across PCs)
 if [ -f ~/.bash_local ]; then
   source ~/.bash_local
 fi
-
-if [ -f ~/.bash_functions ]; then
-    source ~/.bash_functions
-fi
-
+# 
+# if [ -f ~/.bash_functions ]; then
+#     source ~/.bash_functions
+# fi
+# 
 if [ -f ~/.bash_aliases ]; then
     source ~/.bash_aliases
 fi
-
-# TODO: Finish adapting. Leads to weird stuff at the moment.
-# if [ -f ~/.zsh_prompt ]; then
-#     source ~/.zsh_prompt
+# 
+# # TODO: Finish adapting. Leads to weird stuff at the moment.
+# # if [ -f ~/.zsh_prompt ]; then
+# #     source ~/.zsh_prompt
+# # fi
+# 
+# #to stay in the directory visited with mc on exit. :)
+# if [ -f /usr/share/mc/bin/mc.sh ]; then
+#   source /usr/share/mc/bin/mc.sh
 # fi
-
-#to stay in the directory visited with mc on exit. :)
-if [ -f /usr/share/mc/bin/mc.sh ]; then
-  source /usr/share/mc/bin/mc.sh
-fi
