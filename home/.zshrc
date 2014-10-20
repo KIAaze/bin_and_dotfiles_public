@@ -45,6 +45,9 @@ promptinit
 # prompt adam2
 prompt suse
 
+# to disable automatic removal of slashes from auto-completed entries
+# setopt no_auto_remove_slash
+
 # ##########################################################
 if [ -f ~/.zsh_env ]; then
   source ~/.zsh_env
