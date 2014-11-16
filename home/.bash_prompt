@@ -257,10 +257,3 @@ prompt_update()
 set_command_sound 0
 
 set_color_theme "dark"
-
-if [[ $PROMPTSTYLE ]]
-then
-  load_prompt $PROMPTSTYLE
-else
-  echo "WARNING: PROMPTSTYLE not set. Skipping load_prompt."
-fi
