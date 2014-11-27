@@ -164,14 +164,6 @@ rtm_file() {
   done
 }
 
-# improve this, might require python
-qstatuserfull()
-{
-  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 1 Job_Name
-  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 5 JOBDIR
-  qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 2 JOBDIR
-}
-
 ##########################################
 # ssh-agent stuff
 ##########################################
@@ -255,4 +247,22 @@ zip2dir()
     echo "=== Processing $i ==="
     atool -x "$i" && rm -iv "$i"
   done
+}
+
+### torque utilities
+# improve this, might require python -> done in qstat.py
+qstatuserfull()
+{
+  # note: qstat -u $USER breaks this because it passes on invalid JOB IDs...
+  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 1 Job_Name
+  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 5 JOBDIR
+  qstat | grep $USER | awk '{print $1}' | xargs qstat -f | grep -A 2 JOBDIR
+}
+
+qstat-summary()
+{
+        Ntotal=$(qstat -u $USER | grep -c $USER)
+        Nrunning=$(qstat -u $USER | grep $USER | grep -c " R ")
+        Nqueued=$(qstat -u $USER | grep $USER | grep -c " Q ")
+        echo "job status: running = ${Nrunning} queued = ${Nqueued} total = ${Ntotal}"
 }
