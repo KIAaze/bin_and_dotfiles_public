@@ -101,20 +101,25 @@ fi
 # Modules for working on BC
 if declare -f module >/dev/null
 then
-	module add shared torque moab 2>/dev/null
-	module add languages/python-2.7 2>/dev/null
-	module add apps/matlab-R2009a 2>/dev/null
-	module load apps/meep-mpi 2>/dev/null
-	module load meep-mpi 2>/dev/null
-	module load gnu_builds/hdf5.mpi 2>/dev/null
-	module load gnu_builds/h5utils 2>/dev/null
-	module load gnu_builds/gsl-1.13 2>/dev/null
-	module load gnu_builds/gsl 2>/dev/null
-	module load languages/fpc-2.4.0 2>/dev/null
-	module load apps/paraview-3.8 2>/dev/null
-	module load languages/python-2.7.2 2>/dev/null
-	module load tools/git-1.7.9 2>/dev/null
-	module load languages/python-3.3.2 2>/dev/null
+	module load apps/meep-1.2-mpi
+	module add shared torque moab
+	module load libraries/gnu_builds/atlas-3.10.1
+	module load libraries/gnu_builds/gsl-1.16
+
+#	module add shared torque moab 2>/dev/null
+#	module add languages/python-2.7 2>/dev/null
+#	module add apps/matlab-R2009a 2>/dev/null
+#	module load apps/meep-mpi 2>/dev/null
+#	module load meep-mpi 2>/dev/null
+#	module load gnu_builds/hdf5.mpi 2>/dev/null
+#	module load gnu_builds/h5utils 2>/dev/null
+#	module load gnu_builds/gsl-1.13 2>/dev/null
+#	module load gnu_builds/gsl 2>/dev/null
+#	module load languages/fpc-2.4.0 2>/dev/null
+#	module load apps/paraview-3.8 2>/dev/null
+#	module load languages/python-2.7.2 2>/dev/null
+#	module load tools/git-1.7.9 2>/dev/null
+#	module load languages/python-3.3.2 2>/dev/null
 fi
 
 # If not running interactively, don't do anything
