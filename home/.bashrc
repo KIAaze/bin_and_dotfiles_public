@@ -43,7 +43,7 @@ export HISTCONTROL=ignoredups:erasedups
 
 # hack for infinite bash history (but it still only saves the last HISTSIZE commands from the currently running shell)
 # normally unsetting HISTFILESIZE should be enough, but for some strange reason bash keeps resetting it after finishing reading all the ~/.bash* files.
-export HISTSIZE=500
+export HISTSIZE=1000
 export HISTFILESIZE=$(expr $(wc -l $HOME/.bash_history | awk '{print $1}') + $HISTSIZE)
 
 ################
@@ -152,3 +152,19 @@ fi
 # 
 # alias kagent="kill -9 $SSH_AGENT_PID"
 ##########################################
+
+if test -f $HOME/.dir_colors
+then
+	eval $(dircolors $HOME/.dir_colors)
+fi
+
+# set vi editing mode
+set -o vi
+
+### vi editing mode tips:
+# switch to command mode: ESC
+# switch to insert mode: i
+# start vi editor: v
+## For more info:
+# http://www.catonmat.net/blog/bash-vi-editing-mode-cheat-sheet/
+# man 3 readline

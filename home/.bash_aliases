@@ -5,6 +5,10 @@
 ##################
 #ALIASES
 ##################
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 # OpenFOAM stuff
 #alias source_openfoam='source $HOME/OpenFOAM/OpenFOAM-1.5/etc/bashrc'
@@ -15,6 +19,7 @@ alias source_openfoam='source $HOME/OpenFOAM/OpenFOAM-1.6/etc/bashrc'
 if [ "$TERM" != "dumb" ]; then
     eval "`dircolors -b`"
     alias ls='ls --color=auto'
+    alias ls_noExeColor='ls_noExeColor --color=auto'
     alias dir='ls --color=auto --format=vertical'
     alias vdir='ls --color=auto --format=long'
 fi
@@ -33,7 +38,7 @@ alias lsdot='ls -ld \.[A-Za-z0-9]*'
 # To see something coming into ls output: lss
 alias lss='ls -lrt | grep $1'
 
-# safety aliases for rm,mv,cp
+# safety aliases for rm, mv, cp
 alias rm='rm -iv'
 alias mv='mv -iv'
 alias cp='cp -iv' 
@@ -68,8 +73,18 @@ alias profile='valgrind --tool=callgrind --dump-instr=yes --simulate-cache=yes -
 alias git_checkall='git pull && git push && git status'
 alias bzr_checkall='bzr pull && bzr push && bzr status'
 
-# using the multiple repository manager with a custom pullpush function :)
-alias mr_checkall='mr -d ~ -s pullpush'
+if [ -n "${RSYNCDIR}" ] && [ -n "${SYNCSTICK}" ]
+then
+  # using the multiple repository manager with a custom pullpush function :)
+  alias mr_checkall='mr --directory ${HOME} --stats pullpush'
+  alias mr_rsync='mr --config ${RSYNCDIR}/.mrconfig.rsync'
+  alias mr_checkall_rsync='mr_rsync --directory ${RSYNCDIR} --stats status'
+
+  # sync all, unmount USB stick and check it was unmounted
+  alias goodbye='mr_checkall && mr_checkall_rsync && umount ${SYNCSTICK} && ( ! test -d ${SYNCSTICK} ) && checkcmd'
+else
+  echo "WARNING: RSYNCDIR or SYNCSTICK not defined."
+fi
 
 # plugin testing
 # You must have the plugin stuff in a subdirectory named "designer" for this to work
@@ -90,7 +105,10 @@ alias ducks='find . -maxdepth 1 -mindepth 1 -print0  | xargs -0 -n1 du -ks | sor
 # for fun
 alias iamcow='fortune | cowsay'
 alias iamsurprise='fortune | cowsay -f $(random_cow)'
-alias cow_xmessage='xmessage -center "Hello, `whoami`. I'\''m a talking cow.`fortune | cowsay` " -buttons "☠"'
+
+# The solution to put single-quotes within single-quotes: '\''
+# Functions are probably a better idea of course. :)
+alias cow_xmessage='xmessage -buttons MOO:0 -default MOO -center Hello, "$(whoami)". I$'\''\'\'''\''m a talking cow.$'\''\n'\''"$(fortune | cowsay)"'
 
 # get your external IP
 alias myip='echo My IP is && curl http://www.whatismyip.com/automation/n09230945.asp && echo'
@@ -107,7 +125,13 @@ alias modulegrep='module avail 2>&1 | grep '
 
 alias cdtemp='cd $(mktemp -d )'
 
-alias bashclean='env -i bash --noprofile --init-file /etc/profile'
+# start a clean bash shell for tests
+alias bashclean='env --ignore-environment bash --noprofile --norc'
+alias bashcleansystem='env --ignore-environment bash --noprofile --rcfile /etc/profile'
+
+# start a clean zsh shell
+# -f    equivalent to --no-rcs
+alias zshclean='env --ignore-environment zsh --no-rcs'
 
 # Fun with a personal quote file :)
 alias addquote='editor $QUOTEFILE && strfile $QUOTEFILE'
@@ -133,7 +157,8 @@ alias ssh_tunnel='ssh -q -C2TnN -D'
 # listing them in the form:
 # SIZE NLINKS INODE FILENAME
 # TODO: Create fslint-gui like script/interface, to make processing easier
-alias findHardLinkedFiles='find . -type f -links +1 -printf "%s=size nlinks=%n inode=%i file=%p \n" | sort -n'
+alias findHardLinkedFiles_SortBySize='find . -type f -links +1 -printf "%s=size nlinks=%n inode=%i file=%p \n" | sort -n'
+alias findHardLinkedFiles_SortByInode='find . -type f -links +1 -printf "inode=%i %s=size nlinks=%n file=%p \n" | sort -n'
 # TODO: Understand why '\'' works... Easier method?
 alias countHardLinkedFiles='find . -type f -links +1 -printf "inode=%i file=%p \n" | awk '\''{print $1}'\'' | sort -u | wc -l'
 
@@ -141,4 +166,15 @@ alias countHardLinkedFiles='find . -type f -links +1 -printf "inode=%i file=%p \
 alias rsync_to_Windows='rsync --archive --compress --no-perms --no-group --no-links --chmod=ugo=rwX'
 alias rsync_to_GNULinux='rsync --archive --compress --hard-links'
 
+alias diff-todo='cd $HOME/Desktop/TODO/ && git diff; cd -'
 alias commit-todo='cd $HOME/Desktop/TODO/ && git commit -am "todo"; cd -'
+
+alias path='echo $PATH | tr ":" "\n"'
+
+# seems to be the same as /usr/lib/x86_64-linux-gnu/octave/3.8.1/exec/x86_64-pc-linux-gnu/octave-gui, but just in case...
+alias octave-gui='octave --force-gui'
+
+# updatedb aliases
+alias updatedb_user='updatedb -l0 --prunepaths="/tmp /var/spool /home/.ecryptfs"'
+alias updatedb_user_media='updatedb_user -U /media -o $HOME/media.locate.db'
+alias updatedb_user_root_and_media='updatedb_user -U / -o $HOME/root_and_media.locate.db'

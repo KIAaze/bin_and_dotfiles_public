@@ -1,4 +1,15 @@
 #!/bin/bash
+
+# Based originally on a script by Dr Small: http://ubuntuforums.org/showthread.php?t=452850&page=12&p=6245737#post6245737
+
+MAXTIME=15
+MAXSTEPS=200
+
+random_progress_bar()
+{
+  progress_bar.sh $(($MAXTIME*($RANDOM+1)/32768)) $(($MAXSTEPS*($RANDOM+1)/32768))
+}
+
 clear
 echo ''
 echo 'Trying 127.0.0.1...'
@@ -18,10 +29,9 @@ echo ''
 echo "Goodmorning $LOGIN"
 echo 'Welcome back to the [U.S.] Department of Defense'
 sleep 2
-echo 'Which country would you like to attack?'
 echo 'Loading Countries...'
-touch countries
-bar.sh -E -c 'mv countries country && sleep 1 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
+random_progress_bar
+echo 'Which country would you like to attack?'
 
 echo ''
 echo 'Iran......[1]'
@@ -35,11 +45,11 @@ read COUNTRY
 
 echo '' 
 echo "Preparing to attack country #$COUNTRY..."
-bar.sh -E -c 'mv countries country && sleep 1 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
+random_progress_bar
 echo ''
-echo 'Please choose your prefered method of destruction:'
 echo 'Loading weapons...'
-bar.sh -E -c 'mv countries country && sleep 1 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
+random_progress_bar
+echo 'Please choose your prefered method of destruction:'
 
 echo ''
 echo 'Nuclear Bomb.....[1]'
@@ -55,7 +65,7 @@ read GO
 case $GO in
 	y | Y)
 	echo 'Preparing to launch attack...'
-	bar.sh -E -c 'mv countries country && sleep 2 && mv country nation && sleep 1 && mv nation attack && sleep 1 && mv attack countries'
+	random_progress_bar
 	sleep 2
 	echo '[ERROR] Power Grid Failure.'
 	sleep 1
@@ -66,14 +76,11 @@ case $GO in
 	echo 'Attack aborted.'
 	echo '221 2.0.0 Bye'
 	echo 'Connection closed by foreign host.'
-	rm countries
 	exit 0;;
 
-	n | N)
+	*)
 	echo 'Attack aborted.'
 	echo '221 2.0.0 Bye'
 	echo 'Connection closed by foreign host.'
-	rm countries
 	exit 0;;
 esac
-

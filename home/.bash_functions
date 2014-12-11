@@ -96,29 +96,31 @@ backup_bashfiles()
   echo "All backed up in $ARCHIVE";
 }
 
+# We use /usr/bin/which instead of just which, so it also works properly in zsh which has a built-in which (problem appears with aliased commands).
+# TODO: Make it work with aliased commands as well.
 whichreally()
 {
-  readlink -f $(which "$1");
+  readlink -f $(/usr/bin/which "$1");
 }
 
 lessexe()
 {
-  less $(readlink -f $(which "$1"));
+  less $(readlink -f $(/usr/bin/which "$1"));
 }
 
 moreexe()
 {
-  more $(readlink -f $(which "$1"));
+  more $(readlink -f $(/usr/bin/which "$1"));
 }
 
 catexe()
 {
-  cat $(readlink -f $(which "$1"));
+  cat $(readlink -f $(/usr/bin/which "$1"));
 }
 
 vimexe()
 {
-  vim $(readlink -f $(which "$1"));
+  vim $(readlink -f $(/usr/bin/which "$1"));
 }
 
 catbin()
@@ -160,14 +162,6 @@ rtm_file() {
   cat "$1" | while read line; do
     rtm "$line"
   done
-}
-
-# improve this, might require python
-qstatuserfull()
-{
-  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 1 Job_Name
-  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 5 JOBDIR
-  qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 2 JOBDIR
 }
 
 ##########################################
@@ -228,4 +222,47 @@ move_to_writeonly()
   do
     mv -iv "$f" "/opt/writeonly/$f.$RANDOM"
   done
+}
+
+# convert video to ogg audio file
+# Tip: Use the following options of youtube-dl instead:
+# -x, --extract-audio        convert video files to audio-only files (requires
+#                                          ffmpeg or avconv and ffprobe or avprobe)
+# --audio-format FORMAT      "best", "aac", "vorbis", "mp3", "m4a", "opus", or
+#                                          "wav"; best by default
+mp4_to_ogg()
+{
+  for i in "$@"
+  do
+    echo "=== Converting $i ==="
+    ffmpeg2theora --novideo -o "${i%.mp4}.ogg" "$i"
+  done
+}
+
+# extract and delete a zip
+zip2dir()
+{
+  for i in "$@"
+  do
+    echo "=== Processing $i ==="
+    atool -x "$i" && rm -iv "$i"
+  done
+}
+
+### torque utilities
+# improve this, might require python -> done in qstat.py
+qstatuserfull()
+{
+  # note: qstat -u $USER breaks this because it passes on invalid JOB IDs...
+  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 1 Job_Name
+  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 5 JOBDIR
+  qstat | grep $USER | awk '{print $1}' | xargs qstat -f | grep -A 2 JOBDIR
+}
+
+qstat-summary()
+{
+        Ntotal=$(qstat -u $USER | grep -c $USER)
+        Nrunning=$(qstat -u $USER | grep $USER | grep -c " R ")
+        Nqueued=$(qstat -u $USER | grep $USER | grep -c " Q ")
+        echo "job status: running = ${Nrunning} queued = ${Nqueued} total = ${Ntotal}"
 }

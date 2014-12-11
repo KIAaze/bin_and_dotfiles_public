@@ -1,0 +1,735 @@
+#!/bin/zsh
+# ~/.zsh_prompt
+
+#####################################################################################
+# PROMPT STYLING
+#####################################################################################
+# bash prompt quick reference
+#        PROMPT_COMMAND
+#               If set, the value is executed as a command prior to issuing each primary prompt.
+
+# PROMPTING
+#        When executing interactively, bash displays the primary prompt PS1 when it is ready to read a command, and the secondary prompt PS2 when it needs more input to complete a command.  Bash allows these prompt strings to be cus‐
+#        tomized by inserting a number of backslash-escaped special characters that are decoded as follows:
+#               \a     an ASCII bell character (07)
+#               \d     the date in "Weekday Month Date" format (e.g., "Tue May 26")
+#               \D{format}
+#                      the format is passed to strftime(3) and the result is inserted into the prompt string; an empty format results in a locale-specific time representation.  The braces are required
+#               \e     an ASCII escape character (033)
+#               \h     the hostname up to the first `.'
+#               \H     the hostname
+#               \j     the number of jobs currently managed by the shell
+#               \l     the basename of the shell's terminal device name
+#               \n     newline
+#               \r     carriage return
+#               \s     the name of the shell, the basename of $0 (the portion following the final slash)
+#               \t     the current time in 24-hour HH:MM:SS format
+#               \T     the current time in 12-hour HH:MM:SS format
+#               \@     the current time in 12-hour am/pm format
+#               \A     the current time in 24-hour HH:MM format
+#               \u     the username of the current user
+#               \v     the version of bash (e.g., 2.00)
+#               \V     the release of bash, version + patch level (e.g., 2.00.0)
+#               \w     the current working directory, with $HOME abbreviated with a tilde (uses the value of the PROMPT_DIRTRIM variable)
+#               \W     the basename of the current working directory, with $HOME abbreviated with a tilde
+#               \!     the history number of this command
+#               \#     the command number of this command
+#               \$     if the effective UID is 0, a #, otherwise a $
+#               \nnn   the character corresponding to the octal number nnn
+#               \\     a backslash
+#               \[     begin a sequence of non-printing characters, which could be used to embed a terminal control sequence into the prompt
+#               \]     end a sequence of non-printing characters
+# 
+#        The command number and the history number are usually different: the history number of a command is its position in the history list, which may include commands restored from the history file (see HISTORY below),  while  the
+#        command  number  is  the  position  in the sequence of commands executed during the current shell session.  After the string is decoded, it is expanded via parameter expansion, command substitution, arithmetic expansion, and
+#        quote removal, subject to the value of the promptvars shell option (see the description of the shopt command under SHELL BUILTIN COMMANDS below).
+
+#####################################################################################
+
+# TODO: Split prompt into different parts which can be enabled/disabled separately. :)
+# TODO: Fix carriage return breaking (can apparently be done by enclosing all escape sequences with "\[" and "\]")
+# TODO: Fix multi-line prompt broken alignement (happens in some terminals)
+# TODO: Store/show previous command?
+# TODO: Store/show time of previous command? (or even the time it took to run!)
+# TODO: Limit length of prompt (i.e. limit path length)
+
+# TODO: Does not work in zsh. Necessary?
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+# shopt -s checkwinsize
+
+# TODO: new line ("\n") does not work in zsh prompt.
+# TODO: Color escape sequences do not work in zsh.
+
+function funny_face {
+  # shows a happy face if there is no error and a sad face + error number if the previous command returned an error
+  _ret=$?;
+  if test $_ret -ne 0;
+  then
+    echo "0_0->ret=$_ret";
+  else
+    echo "^_^";
+  fi
+  
+  # TODO: Does not work in zsh.
+#   set ?=$_ret; # this is so the user can reuse $? later
+  unset _ret; # unset the temporary variable
+}
+
+function set_command_sound {
+  export PLAY_COMMAND_SOUND=$1
+}
+
+play_command_sound()
+{
+#   echo TROLOLO
+#   echo $PLAY_COMMAND_SOUND
+#   [ $PLAY_COMMAND_SOUND -eq 1 ]
+#   echo $?
+#   test $PLAY_COMMAND_SOUND -eq 1
+#   echo $?
+#   test 1 -eq 1
+#   echo $?
+  if test $PLAY_COMMAND_SOUND -eq 1
+  then
+    padsp aplay $CMDSOUND 1>/dev/null 2>&1 &
+#   else
+#     echo KIK
+  fi
+#   echo KIKIKI
+}
+
+function pre_prompt_short {
+  echo "CALLING pre_prompt_short"
+  newRET=$(funny_face)
+}
+
+function get_length()
+{
+  echo -n $1 | wc -m
+}
+
+# TODO: Improve by passing PROMPTBASE as argument or something like that.
+function pre_prompt {
+
+  newRET=$(funny_face)
+#   echo "CALLING pre_prompt"
+#   echo "newRET = $newRET"
+  newPWD=$(pwd | sed "s|$HOME|~|")
+  user=$(whoami)
+  host=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
+  datenow=$(date "+%a, %d %b %y")
+  
+  # play_command_sound
+
+  if [ $ANONYMOUS -eq 0 ]
+  then
+    PROMPTBASE="┌─($newPWD)($user@$host ddd, DD mmm YY)─┐"
+#     let promptsize=$(echo -n "┌─($user@$host ddd., DD mmm YY)($newPWD)─┐" | wc -m | tr -d " ")
+#     let promptsize=$promptsize-3
+  else
+    PROMPTBASE="┌─($newPWD)─┐"
+#     let promptsize=$(echo -n "┌─($newPWD)─┐" | wc -m | tr -d " ")
+#     let promptsize=$promptsize
+  fi
+
+#   echo PROMPTBASE = $PROMPTBASE
+
+#   let promptsize=$(echo -n $PROMPTBASE | wc --chars | tr --delete " ")
+  let promptsize=$(echo -n $PROMPTBASE | wc --chars)
+
+  # echo "<$newPWD>"
+
+#   echo COLUMNS = $COLUMNS
+#   echo promptsize = $promptsize
+
+  let fillsize=${COLUMNS}-${promptsize}
+
+#   echo fillsize = $fillsize
+
+  fill=""
+  while [ "$fillsize" -gt "0" ]
+  do
+    fill="${fill}─"
+#     fill="${fill}+"
+    let fillsize=${fillsize}-1
+  done
+
+#   echo fill length = $(get_length $fill)
+
+  if [ "$fillsize" -lt "0" ]
+  then
+      let cutt=3-${fillsize}
+      newPWD="...$(echo -n $PWD | sed --expression="s/\(^.\{$cutt\}\)\(.*\)/\2/")"
+  fi
+}
+
+export black="\[\033[0;38;5;0m\]"
+export red="\[\033[0;38;5;1m\]"
+export orange="\[\033[0;38;5;130m\]"
+export green="\[\033[0;38;5;2m\]"
+export yellow="\[\033[0;38;5;3m\]"
+export blue="\[\033[0;38;5;4m\]"
+export bblue="\[\033[0;38;5;12m\]"
+# %{\[\033[0;38;5;12m\]%}
+export magenta="\[\033[0;38;5;55m\]"
+export cyan="\[\033[0;38;5;6m\]"
+export white="\[\033[0;38;5;7m\]"
+export coldblue="\[\033[0;38;5;33m\]"
+export smoothblue="\[\033[0;38;5;111m\]"
+export iceblue="\[\033[0;38;5;45m\]"
+export turqoise="\[\033[0;38;5;50m\]"
+export smoothgreen="\[\033[0;38;5;42m\]"
+export defaultcolor="\[\033[m\]"
+
+### ZSH Expansion of Prompt Sequences
+# 13 Prompt Expansion
+# *******************
+# 
+# 
+# 
+# 13.1 Expansion of Prompt Sequences
+# ==================================
+# 
+# Prompt sequences undergo a special form of expansion.  This type of
+# expansion is also available using the -P option to the print builtin.
+# 
+# If the PROMPT_SUBST option is set, the prompt string is first subjected
+# to _parameter expansion_, _command substitution_ and _arithmetic
+# expansion_.  See *note Expansion::.
+# 
+# Certain escape sequences may be recognised in the prompt string.
+# 
+# If the PROMPT_BANG option is set, a `!' in the prompt is replaced by
+# the current history event number.  A literal `!' may then be
+# represented as `!!'.
+# 
+# If the PROMPT_PERCENT option is set, certain escape sequences that
+# start with `%' are expanded.  Many escapes are followed by a single
+# character, although some of these take an optional integer argument that
+# should appear between the `%' and the next character of the sequence.
+# More complicated escape sequences are available to provide conditional
+# expansion.
+# 
+# 
+# 
+# 13.2 Simple Prompt Escapes
+# ==========================
+# 
+# 
+# 
+# 13.2.1 Special characters
+# -------------------------
+# 
+# 
+# %%
+#      A `%'.
+# 
+# %)
+#      A `)'.
+# 
+# 13.2.2 Login information
+# ------------------------
+# 
+# 
+# %l
+#      The line (tty) the user is logged in on, without `/dev/' prefix.
+#      If the name starts with `/dev/tty', that prefix is stripped.
+# 
+# %M
+#      The full machine hostname.
+# 
+# %m
+#      The hostname up to the first `.'.  An integer may follow the `%'
+#      to specify how many components of the hostname are desired.  With
+#      a negative integer, trailing components of the hostname are shown.
+# 
+# %n
+#      $USERNAME.
+# 
+# %y
+#      The line (tty) the user is logged in on, without `/dev/' prefix.
+#      This does not treat `/dev/tty' names specially.
+# 
+# 13.2.3 Shell state
+# ------------------
+# 
+# 
+# %#
+#      A `#' if the shell is running with privileges, a `%' if not.
+#      Equivalent to `%(!.#.%%)'.  The definition of `privileged', for
+#      these purposes, is that either the effective user ID is zero, or,
+#      if POSIX.1e capabilities are supported, that at least one
+#      capability is raised in either the Effective or Inheritable
+#      capability vectors.
+# 
+# %?
+#      The return status of the last command executed just before the
+#      prompt.
+# 
+# %_
+#      The status of the parser, i.e. the shell constructs (like `if' and
+#      `for') that have been started on the command line. If given an
+#      integer number that many strings will be printed; zero or negative
+#      or no integer means print as many as there are.  This is most
+#      useful in prompts PS2 for continuation lines and PS4 for debugging
+#      with the XTRACE option; in the latter case it will also work
+#      non-interactively.
+# 
+# %d
+# /
+#      Current working directory.  If an integer follows the `%', it
+#      specifies a number of trailing components of the current working
+#      directory to show; zero means the whole path.  A negative integer
+#      specifies leading components, i.e. %-1d specifies the first
+#      component.
+# 
+# %~
+#      As %d and %/, but if the current working directory has a named
+#      directory as its prefix, that part is replaced by a `~' followed by
+#      the name of the directory.  If it starts with $HOME, that part is
+#      replaced by a `~'.
+# 
+# %h
+# %!
+#      Current history event number.
+# 
+# %i
+#      The line number currently being executed in the script, sourced
+#      file, or shell function given by %N.  This is most useful for
+#      debugging as part of $PS4.
+# 
+# %I
+#      The line number currently being executed in the file %x.  This is
+#      similar to %i, but the line number is always a line number in the
+#      file where the code was defined, even if the code is a shell
+#      function.
+# 
+# %j
+#      The number of jobs.
+# 
+# %L
+#      The current value of $SHLVL.
+# 
+# %N
+#      The name of the script, sourced file, or shell function that zsh is
+#      currently executing, whichever was started most recently.  If
+#      there is none, this is equivalent to the parameter $0.  An integer
+#      may follow the `%' to specify a number of trailing path components
+#      to show; zero means the full path.  A negative integer specifies
+#      leading components.
+# 
+# %x
+#      The name of the file containing the source code currently being
+#      executed.  This behaves as %N except that function and eval command
+#      names are not shown, instead the file where they were defined.
+# 
+# %c
+# %.
+# %C
+#      Trailing component of the current working directory.  An integer
+#      may follow the `%' to get more than one component.  Unless `%C' is
+#      used, tilde contraction is performed first.  These are deprecated
+#      as %c and %C are equivalent to %1~ and %1/, respectively, while
+#      explicit positive integers have the same effect as for the latter
+#      two sequences.
+# 
+# 
+# 
+# 13.2.4 Date and time
+# --------------------
+# 
+# 
+# %D
+#      The date in YY-MM-DD format.
+# 
+# %T
+#      Current time of day, in 24-hour format.
+# 
+# %t
+# %@
+#      Current time of day, in 12-hour, am/pm format.
+# 
+# %*
+#      Current time of day in 24-hour format, with seconds.
+# 
+# %w
+#      The date in DAY-DD format.
+# 
+# %W
+#      The date in MM/DD/YY format.
+# 
+# %D{STRING}
+#      STRING is formatted using the strftime function.  See man page
+#      strftime(3) for more details.  Various zsh extensions provide
+#      numbers with no leading zero or space if the number is a single
+#      digit:
+# 
+# 
+#     %f
+#           a day of the month
+# 
+#     %K
+#           the hour of the day on the 24-hour clock
+# 
+#     %L
+#           the hour of the day on the 12-hour clock
+# 
+#      The GNU extension that a `-' between the % and the format
+#      character causes a leading zero or space to be stripped is handled
+#      directly by the shell for the format characters d, f, H, k, l, m,
+#      M, S and y; any other format characters are provided to strftime()
+#      with any leading `-', present, so the handling is system
+#      dependent.  Further GNU extensions are not supported at present.
+# 13.2.5 Visual effects
+# ---------------------
+# 
+# 
+# %B (%b)
+#      Start (stop) boldface mode.
+# 
+# %E
+#      Clear to end of line.
+# 
+# %U (%u)
+#      Start (stop) underline mode.
+# 
+# %S (%s)
+#      Start (stop) standout mode.
+# 
+# %F (%f)
+#      Start (stop) using a different foreground colour, if supported by
+#      the terminal.  The colour may be specified two ways: either as a
+#      numeric argument, as normal, or by a sequence in braces following
+#      the %F, for example %F{red}.  In the latter case the values
+#      allowed are as described for the fg zle_highlight attribute; *note
+#      Character Highlighting::.  This means that numeric colours are
+#      allowed in the second format also.
+# 
+# %K (%k)
+#      Start (stop) using a different bacKground colour.  The syntax is
+#      identical to that for %F and %f.
+# 
+# %{...%}
+#      Include a string as a literal escape sequence.  The string within
+#      the braces should not change the cursor position.  Brace pairs can
+#      nest.
+# 
+#      A positive numeric argument between the % and the { is treated as
+#      described for %G below.
+# 
+# %G
+#      Within a %{...%} sequence, include a `glitch': that is, assume
+#      that a single character width will be output.  This is useful when
+#      outputting characters that otherwise cannot be correctly handled
+#      by the shell, such as the alternate character set on some
+#      terminals.  The characters in question can be included within a
+#      %{...%} sequence together with the appropriate number of %G
+#      sequences to indicate the correct width.  An integer between the
+#      `%' and `G' indicates a character width other than one.  Hence
+#      %{SEQ%2G%} outputs SEQ and assumes it takes up the width of two
+#      standard characters.
+# 
+#      Multiple uses of %G accumulate in the obvious fashion; the position
+#      of the %G is unimportant.  Negative integers are not handled.
+# 
+#      Note that when prompt truncation is in use it is advisable to
+#      divide up output into single characters within each %{...%} group
+#      so that the correct truncation point can be found.
+# 
+# 13.3 Conditional Substrings in Prompts
+# ======================================
+# 
+# 
+# %v
+#      The value of the first element of the psvar array parameter.
+#      Following the `%' with an integer gives that element of the array.
+#      Negative integers count from the end of the array.
+# 
+# %(X.TRUE-TEXT.FALSE-TEXT)
+#      Specifies a ternary expression.  The character following the X is
+#      arbitrary; the same character is used to separate the text for the
+#      `true' result from that for the `false' result.  This separator
+#      may not appear in the TRUE-TEXT, except as part of a %-escape
+#      sequence.  A `)' may appear in the FALSE-TEXT as `%)'.  TRUE-TEXT
+#      and FALSE-TEXT may both contain arbitrarily-nested escape
+#      sequences, including further ternary expressions.
+# 
+#      The left parenthesis may be preceded or followed by a positive
+#      integer N, which defaults to zero.  A negative integer will be
+#      multiplied by -1.  The test character X may be any of the
+#      following:
+# 
+# 
+#     !
+#           True if the shell is running with privileges.
+# 
+#     #
+#           True if the effective uid of the current process is N.
+# 
+#     ?
+#           True if the exit status of the last command was N.
+# 
+#     _
+#           True if at least N shell constructs were started.
+# 
+#     C
+#     /
+#           True if the current absolute path has at least N elements
+#           relative to the root directory, hence / is counted as 0
+#           elements.
+# 
+#     c
+#     .
+#     ~
+#           True if the current path, with prefix replacement, has at
+#           least N elements relative to the root directory, hence / is
+#           counted as 0 elements.
+# 
+#     D
+#           True if the month is equal to N (January = 0).
+# 
+#     d
+#           True if the day of the month is equal to N.
+# 
+#     g
+#           True if the effective gid of the current process is N.
+# 
+#     j
+#           True if the number of jobs is at least N.
+# 
+#     L
+#           True if the SHLVL parameter is at least N.
+# 
+#     l
+#           True if at least N characters have already been printed on
+#           the current line.
+# 
+#     S
+#           True if the SECONDS parameter is at least N.
+# 
+#     T
+#           True if the time in hours is equal to N.
+# 
+#     t
+#           True if the time in minutes is equal to N.
+# 
+#     v
+#           True if the array psvar has at least N elements.
+# 
+#     V
+#           True if element N of the array psvar is set and non-empty.
+# 
+#     w
+#           True if the day of the week is equal to N (Sunday = 0).
+# 
+# %<STRING<
+# %>STRING>
+# %[XSTRING]
+#      Specifies truncation behaviour for the remainder of the prompt
+#      string.  The third, deprecated, form is equivalent to `%XSTRINGX',
+#      i.e. X may be `<' or `>'.  The numeric argument, which in the
+#      third form may appear immediately after the `[', specifies the
+#      maximum permitted length of the various strings that can be
+#      displayed in the prompt.  The STRING will be displayed in place of
+#      the truncated portion of any string; note this does not undergo
+#      prompt expansion.
+# 
+#      The forms with `<' truncate at the left of the string, and the
+#      forms with `>' truncate at the right of the string.  For example,
+#      if the current directory is `/home/pike', the prompt `%8<..<%/'
+#      will expand to `..e/pike'.  In this string, the terminating
+#      character (`<', `>' or `]'), or in fact any character, may be
+#      quoted by a preceding `\'; note when using print -P, however, that
+#      this must be doubled as the string is also subject to standard
+#      print processing, in addition to any backslashes removed by a
+#      double quoted string:  the worst case is therefore `print -P
+#      "%<\\\\<<..."'.
+# 
+#      If the STRING is longer than the specified truncation length, it
+#      will appear in full, completely replacing the truncated string.
+# 
+#      The part of the prompt string to be truncated runs to the end of
+#      the string, or to the end of the next enclosing group of the `%('
+#      construct, or to the next truncation encountered at the same
+#      grouping level (i.e. truncations inside a `%(' are separate), which
+#      ever comes first.  In particular, a truncation with argument zero
+#      (e.g. `%<<') marks the end of the range of the string to be
+#      truncated while turning off truncation from there on. For example,
+#      the prompt '%10<...<%~%<<%# ' will print a truncated
+#      representation of the current directory, followed by a `%' or `#',
+#      followed by a space.  Without the `%<<', those two characters
+#      would be included in the string to be truncated.
+# 16.2.8 Prompting
+# ----------------
+# 
+# 
+# PROMPT_BANG <K>
+#      If set, `!' is treated specially in prompt expansion.  See *note
+#      Prompt Expansion::.
+# 
+# PROMPT_CR (+V) <D>
+#      Print a carriage return just before printing a prompt in the line
+#      editor.  This is on by default as multi-line editing is only
+#      possible if the editor knows where the start of the line appears.
+# 
+# PROMPT_SP <D>
+#      Attempt to preserve a partial line (i.e. a line that did not end
+#      with a newline) that would otherwise be covered up by the command
+#      prompt due to the PROMPT_CR option.  This works by outputting some
+#      cursor-control characters, including a series of spaces, that
+#      should make the terminal wrap to the next line when a partial line
+#      is present (note that this is only successful if your terminal has
+#      automatic margins, which is typical).
+# 
+#      When a partial line is preserved, by default you will see an
+#      inverse+bold character at the end of the partial line:  a "%" for
+#      a normal user or a "#" for root.  If set, the shell parameter
+#      PROMPT_EOL_MARK can be used to customize how the end of partial
+#      lines are shown.
+# 
+#      NOTE: if the PROMPT_CR option is not set, enabling this option will
+#      have no effect.  This option is on by default.
+# 
+# PROMPT_PERCENT <C> <Z>
+#      If set, `%' is treated specially in prompt expansion.  See *note
+#      Prompt Expansion::.
+# 
+# PROMPT_SUBST <K> <S>
+#      If set, _parameter expansion_, _command substitution_ and
+#      _arithmetic expansion_ are performed in prompts.  Substitutions
+#      within prompts do not affect the command status.
+# 
+# TRANSIENT_RPROMPT
+#      Remove any right prompt from display when accepting a command
+#      line.  This may be useful with terminals with other cut/paste
+#      methods.
+
+setopt promptsubst
+
+command_number=1
+
+preexec() {
+  (( command_number += 1 ))
+}
+
+# echo $TERM
+load_prompt()
+{
+ if [ $1 -eq 0 ]
+ then
+    # non-anonymous 2-line prompt
+    export ANONYMOUS=0
+    add-zsh-hook precmd pre_prompt
+#     precmd() { pre_prompt;}
+    case "$TERM" in
+      xterm)
+          PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}($textcolor%n@%M \$(date \"+%a, %d %b %y\")$linecolor)─┐
+$linecolor└─(\$newRET)(\$command_number)($textcolor\$(date \"+%H:%M\")$linecolor)─>$defaultcolor "
+#           PS1="koko"
+          ;;
+      screen)
+          PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}($textcolor\u@\h \$(date \"+%a, %d %b %y\")$linecolor)─┐\n$linecolor└─(\$newRET)(\#)($textcolor\$(date \"+%H:%M\")$linecolor)─>$defaultcolor "
+          ;;
+          *)
+          PS1="┌─(\$newPWD)\${fill}(\u@\h \$(date \"+%a, %d %b %y\"))─┐\n└─(\$newRET)(\#)(\$(date \"+%H:%M\") )─> "
+#           PS1="koko"
+          ;;
+    esac
+  elif [ $1 -eq 1 ]
+  then
+    # anonymous 2-line prompt
+    export ANONYMOUS=1
+    PROMPT_COMMAND=pre_prompt
+    case "$TERM" in
+    xterm)
+        PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}─┐\n$linecolor└─(\$newRET)(\#)─>$defaultcolor "
+        ;;
+    screen)
+        PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}─┐\n$linecolor└─(\$newRET)(\#)─>$defaultcolor "
+        ;;
+        *)
+        PS1="┌─(\$newPWD)\${fill}─┐\n└─(\$newRET)(\#)─> "
+        ;;
+    esac
+  elif [ $1 -eq 2 ]
+  then
+    # non-anonymous 1-line prompt
+    PROMPT_COMMAND=pre_prompt_short
+    PS1='\[\e[0;1;33;41m\][$newRET][\#][\t][\u@\h][\w]\$ \[\e[m\] '
+  elif [ $1 -eq 3 ]
+  then
+    # non-anonymous 1-line prompt
+    PROMPT_COMMAND=pre_prompt_short
+    PS1='\[\e[0;1;33;44m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
+  elif [ $1 -eq 4 ]
+  then
+    # non-anonymous 1-line prompt
+    PROMPT_COMMAND=pre_prompt_short
+    PS1='\[\e[0;1;31;44m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
+  else
+    # anonymous 1-line prompt
+    PROMPT_COMMAND=pre_prompt_short
+    PS1='\[\e[0;1;33;44m\][$newRET][\#][\w]\$ \[\e[m\] '
+  fi
+  PS1="\$(play_command_sound)$PS1"
+}
+
+set_color_theme()
+{
+#   echo KOKO
+#   echo $1
+#   test $1 = "dark"
+#   echo $?
+#   echo LOL
+  if test $1 = "dark"
+  then
+    export linecolor=$green
+    export textcolor=$cyan
+    export defaultcolor="\[\033[m\]"
+  else
+    export linecolor=$bblue
+    export textcolor=$orange
+    export defaultcolor="\[\033[m\]"
+  fi
+#   echo KOKO
+  if  (( $+PROMPTSTYLE ))
+  then
+    load_prompt $PROMPTSTYLE
+  else
+    echo "WARNING: PROMPTSTYLE not set. Skipping load_prompt."
+  fi
+}
+
+prompt_update()
+{
+  # WIP/prototype
+  # elements:
+  #   -> 1-line/2-line prompt:
+  #   -> path: \w
+  #   -> user@host: \u@\h
+  #   -> date: \D{%Y-%m-%d}
+  #   -> funny face: \$newRET
+  #   -> command number: \#
+  #   -> time: \t
+  #   -> text color:
+  #   -> highlight color:
+  PS1="$a$b$c"
+}
+
+set_command_sound 0
+
+# echo $PROMPTSTYLE
+# echo start
+set_color_theme "dark"
+# echo done
+# echo $PROMPTSTYLE
+
+if (( $+PROMPTSTYLE ))
+then
+  load_prompt $PROMPTSTYLE
+else
+  echo "WARNING: PROMPTSTYLE not set. Skipping load_prompt."
+fi
+
+# echo ALLDONE

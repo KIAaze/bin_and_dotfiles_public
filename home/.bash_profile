@@ -21,10 +21,10 @@ if [ -f ~/.bash_profile_local ]; then
   source ~/.bash_profile_local
 fi
 
-# User specific environment and startup programs
-#if [ -f ~/.bash_env ]; then
-#	. ~/.bash_env
-#fi
+# User specific environment and startup programs.
+# if [ -f ~/.bash_env ]; then
+#   source ~/.bash_env
+# fi
 
 # echo $PATH
 # PATH=$PATH:$HOME/bin

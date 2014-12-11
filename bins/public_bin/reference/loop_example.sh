@@ -17,3 +17,21 @@ for (( index = 0 ; index <= 10 ; index++ ))
 do
 	echo $index
 done
+
+# zenity progress bar examples
+for ((i=0;i<=100;i++)); do echo $i; sleep 0.1s; done | zenity --progress
+
+for ((i=0;i<=12;i++)); do echo $(bashcalc.sh 100*$i/12); sleep 0.1s; done | zenity --progress
+
+for ((i=0;i<=12;i++)); do echo $(echo "scale=3; 100*$i/12" | bc); sleep 0.4s; done | zenity --progress
+
+(
+for ((i=0;i<=12;i++))
+do
+        echo $(echo "scale=3; 100*$i/12" | bc)
+        sleep 0.4s
+done
+) | zenity --progress
+
+# osd_cat progress bar example
+for ((i=0;i<=100;i++)); do ( osd_cat -b percentage -c green -p middle -A center -f -adobe-helvetica-bold-r-normal-*-*-240-*-*-p-*-*-* -d 1 -P $i & ) ; sleep 0.1; done;

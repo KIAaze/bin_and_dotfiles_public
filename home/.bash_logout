@@ -15,3 +15,6 @@ then if test -r /var/run/gpm.pid && test -d "/proc/$(/bin/cat /var/run/gpm.pid)"
 fi
  
 #/usr/bin/clear
+
+# "close sudo session"
+sudo -k

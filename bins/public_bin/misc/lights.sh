@@ -11,12 +11,10 @@ echo  "* * * Press CTRL + C to stop"
 
 while [ 1 ]
 do
-
-    echo -e "\033[1q Scroll On Other Off"
-    sleep 1
-    echo -e "\033[2q Num On Other Off" 
-    sleep 1
-    echo -e "\033[3q Caps On Other Off"  
-    sleep 1
-    
-done    
+  echo -e "\033[1q Scroll On Other Off"
+  sleep 1
+  echo -e "\033[2q Num On Other Off" 
+  sleep 1
+  echo -e "\033[3q Caps On Other Off"  
+  sleep 1
+done

@@ -1,3 +1,6 @@
+######################
+# bash
+
 # For useful one-liners, with which I am not quite sure what to do yet:
 TODO: Put on command-line-fu? (might even already be there...)
 
@@ -23,3 +26,63 @@ press shift-H while in a manual to get help on less :)
 
 # print out third line in a file
 sed -n -e'3p' file.txt
+
+# add/remove user from group
+gpasswd -a/-d USER GROUP
+
+# .msi installation
+wine msiexec /i FOO.msi
+
+# fill terminal with "=". From http://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window
+yes = | head -n$(($LINES * $COLUMNS)) | tr -d '\n'
+
+# Change Skype mood text! :)
+sqlite3 ~/.Skype/USER/main.db "UPDATE Accounts SET mood_text='$(fortune -s)';"
+Fails on some fortunes. Use bins/public_bin/setSkypeMoodText.py for pythonic string cleansing. :)
+
+# Print skype mood text
+sqlite3 ~/.Skype/USER/main.db "select mood_text from Accounts;"
+
+# CLI mail attachments
+echo "This is the message body" | mutt -a "/path/to/file.to.attach" -s "subject of message" -- recipient@domain.com
+echo "This is the message body" | mutt -a "/path/to/file.to.attach" -a "/path/to/file.to.attach2" -s "subject of message" -- recipient@domain.com
+mutt -a "/path/to/file.to.attach" -a "/path/to/file.to.attach2" -s "subject of message" -- recipient@domain.com < body.txt
+
+# print only 12th line from a file:
+sed -n '12 p' FILE
+
+# set permissions for files and directories separately:
+find . \( -type f -exec chmod 400 {} \; \) -o \( -type d -exec chmod 500 {} \; \)
+
+You can check the parameters your system was booted up with by running cat
+/proc/cmdline and see if includes your changes.
+
+-----
+http://stackoverflow.com/questions/4321456/find-exec-a-shell-function
+Since only the shell knows how to run shell functions, you have to run a shell to run a function. You also need to mark your function for export with export -f, otherwise the subshell won't inherit them:
+export -f dosomething
+find . -exec bash -c 'dosomething "$0"' {} \;
+-----
+
+# copy ./a/b/c to DEST/a/b/c
+cp -r --parents ./a/b/c DEST
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%Matlab:
+%%% extracting data from figure:
+
+% "plot" (2D) plot:
+  h = gcf; %current figure handle
+  axesObjs = get(h, 'Children');  %axes handles
+  dataObjs = get(axesObjs, 'Children'); %handles to low-level graphics objects in axes
+  objTypes = get(dataObjs, 'Type');  %type of low-level graphics object
+  xdata = get(dataObjs, 'XData');  %data from low-level grahics objects
+  ydata = get(dataObjs, 'YData');
+  zdata = get(dataObjs, 'ZData');
+
+% "imagesc" plot:
+  objTypes1 = get(dataObjs{1}, 'Type');
+  objTypes2 = get(dataObjs{2}, 'Type');
+  cdata1 = get(dataObjs{1}, 'CData');
+  cdata2 = get(dataObjs{2}, 'CData');
+  imagesc(cdata2)
