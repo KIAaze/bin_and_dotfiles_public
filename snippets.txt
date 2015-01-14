@@ -67,6 +67,17 @@ find . -exec bash -c 'dosomething "$0"' {} \;
 # copy ./a/b/c to DEST/a/b/c
 cp -r --parents ./a/b/c DEST
 
+---
+from: https://daniel-lange.com/archives/93-How-much-memory-does-a-process-use-on-Linux.html
+For running processes:
+  ps -eo 'pid user rss:8 size:8 cmd' --sort 'rss'
+will give you a nice sorted list of processes and their RSS and VSZ (SIZE) in kiB (old school kB...).
+
+For short running commands GNU time (not the bash build-in time command) has a nice capability that's not widely known yet:
+  /usr/bin/time -f "RSS: %MkiB" <command>
+will tell you the maximum RSS size the <command> has had during its lifetime. That's better than top or watch ps and trying to spot the process.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
 %%% extracting data from figure:
