@@ -98,19 +98,20 @@ backup_bashfiles()
 
 # We use /usr/bin/which instead of just which, so it also works properly in zsh which has a built-in which (problem appears with aliased commands).
 # TODO: Make it work with aliased commands as well.
+# TODO: A cat with syntax highlighting would be cool.
 whichreally()
 {
   readlink -f $(/usr/bin/which "$1");
 }
 
-lessexe()
-{
-  less $(readlink -f $(/usr/bin/which "$1"));
-}
-
 moreexe()
 {
   more $(readlink -f $(/usr/bin/which "$1"));
+}
+
+lessexe()
+{
+  less $(readlink -f $(/usr/bin/which "$1"));
 }
 
 catexe()
@@ -123,14 +124,19 @@ vimexe()
   vim $(readlink -f $(/usr/bin/which "$1"));
 }
 
-catbin()
+kateexe()
 {
-  cat $HOME/bin/$1;
+  kate $(readlink -f $(/usr/bin/which "$1"));
 }
 
 lessbin()
 {
   less $HOME/bin/$1;
+}
+
+catbin()
+{
+  cat $HOME/bin/$1;
 }
 
 vimbin()
