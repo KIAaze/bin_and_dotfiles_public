@@ -14,6 +14,8 @@ fi
 SRCDIR=$1
 DSTDIR=$2
 
+echo "${SRCDIR} -> ${DSTDIR}"
+
 # set desired flags
 echo "delete nothing on destination(n)? --delete-after(a)? --delete-before(b)? show what would be deleted, but do nothing(i)? quit(q)?"
 read ans
