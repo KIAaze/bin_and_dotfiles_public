@@ -7,7 +7,10 @@ MAXSTEPS=200
 
 random_progress_bar()
 {
-  progress_bar.sh $(($MAXTIME*($RANDOM+1)/32768)) $(($MAXSTEPS*($RANDOM+1)/32768))
+  SECONDS=$(( (($MAXTIME-1)*$RANDOM)/32767 + 1 ))
+  NMAX=$(( (($MAXSTEPS-1)*$RANDOM)/32767 + 1 ))
+
+  progress_bar.sh ${SECONDS} ${NMAX}
 }
 
 clear
