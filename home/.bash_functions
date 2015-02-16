@@ -129,6 +129,16 @@ kateexe()
   kate $(readlink -f $(/usr/bin/which "$1"));
 }
 
+geanyexe()
+{
+  geany $(readlink -f $(/usr/bin/which "$1"));
+}
+
+geditexe()
+{
+  gedit $(readlink -f $(/usr/bin/which "$1"));
+}
+
 lessbin()
 {
   less $HOME/bin/$1;
