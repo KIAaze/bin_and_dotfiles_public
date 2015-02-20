@@ -6,6 +6,12 @@ Script to do various things with links.
 At the moment mostly locating/removing/retargeting/converting (broken) symbolic links.
 TODO: Add example for simple symlink to hardlink change. Clarify that hardlink is the default.
 TODO: Make it work for relative symlinks.
+TODO: Make converting symlinks to hard links easier.
+
+CRITICAL BUG: If the link is a cross-device link, it will be removed, but fail to create a new hard link afterwards!
+example:
+OSError: [Errno 18] Invalid cross-device link: '/usr/share/doc/texlive-doc/latex/tools/longtable.pdf' -> 'longtable.pdf'
+TODO: check for cross-device links before any replacments.
 '''
 
 import argparse
