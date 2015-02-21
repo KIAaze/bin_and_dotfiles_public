@@ -290,7 +290,7 @@ cat()
 {
   for i in "$@"
   do
-    if [[ $( file "$i" | grep -c text ) -eq 0 ]]
+    if [[ $( file --dereference "$i" | grep -c text ) -eq 0 ]]
     then # not a text file
       echo "\"$i\" may be a binary file.  See it anyway? (using hexdump) (use /bin/cat if you want default cat behaviour)"
       read ans
