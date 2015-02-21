@@ -282,3 +282,25 @@ qstat-summary()
         Nqueued=$(qstat -u $USER | grep $USER | grep -c " Q ")
         echo "job status: running = ${Nrunning} queued = ${Nqueued} total = ${Ntotal}"
 }
+
+# A cat wrapper to prevent cat-ing binary files, which apart from potentially messing up the terminal, can also be a security risk (accidental or malicious).
+# It will offer to use hexdump instead.
+# Note that you can reset a messed-up terminal using the "reset" command.
+cat()
+{
+  for i in "$@"
+  do
+    if [[ $( file "$i" | grep -c text ) -eq 0 ]]
+    then # not a text file
+      echo "\"$i\" may be a binary file.  See it anyway? (using hexdump) (use /bin/cat if you want default cat behaviour)"
+      read ans
+      if [[ $ans = 'y' ]]
+      then
+        hexdump -C "$i"
+      fi
+    else # a text file
+      # Without the full path, it would recurse infinitely. ^^
+      /bin/cat "$i"
+    fi
+  done
+}
