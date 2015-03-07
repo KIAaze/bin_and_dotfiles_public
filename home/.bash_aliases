@@ -83,7 +83,7 @@ then
   # sync all, unmount USB stick and check it was unmounted
   alias goodbye='mr_checkall && mr_checkall_rsync && umount ${SYNCSTICK} && ( ! test -d ${SYNCSTICK} ) && checkcmd'
 else
-  echo "WARNING: RSYNCDIR or SYNCSTICK not defined."
+  echo "WARNING: RSYNCDIR or SYNCSTICK not defined." 1>&2
 fi
 
 # plugin testing
