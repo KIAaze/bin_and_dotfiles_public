@@ -300,7 +300,7 @@ cat()
       echo "custom cat: $i: Permission denied"
       return
     fi
-    if [[ $( file --dereference "$i" | grep -c text ) -eq 0 ]]
+    if [[ $( file --dereference "$i" | grep -c text ) -eq 0 ]] && test -s "$i"
     then # not a text file
       echo "\"$i\" may be a binary file.  See it anyway? (using hexdump) (use /bin/cat if you want default cat behaviour)"
       read ans
