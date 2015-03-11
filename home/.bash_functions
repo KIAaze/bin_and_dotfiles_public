@@ -295,6 +295,16 @@ cat()
       echo "custom cat: $i: No such file or directory"
       return
     fi
+    if test -d "$i"
+    then
+      echo "custom cat: $i: Is a directory"
+      return
+    fi
+    if ! test -f "$i"
+    then
+      echo "custom cat: $i: Is not a regular file"
+      return
+    fi
     if ! test -r "$i"
     then
       echo "custom cat: $i: Permission denied"
