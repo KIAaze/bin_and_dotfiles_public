@@ -286,28 +286,28 @@ qstat-summary()
 # A cat wrapper to prevent cat-ing binary files, which apart from potentially messing up the terminal, can also be a security risk (accidental or malicious).
 # It will offer to use hexdump instead.
 # Note that you can reset a messed-up terminal using the "reset" command.
-cat()
+safe-cat()
 {
   for i in "$@"
   do
     if ! test -e "$i"
     then
-      echo "custom cat: $i: No such file or directory"
+      echo "safe-cat: $i: No such file or directory"
       return
     fi
     if test -d "$i"
     then
-      echo "custom cat: $i: Is a directory"
+      echo "safe-cat: $i: Is a directory"
       return
     fi
     if ! test -f "$i"
     then
-      echo "custom cat: $i: Is not a regular file"
+      echo "safe-cat: $i: Is not a regular file"
       return
     fi
     if ! test -r "$i"
     then
-      echo "custom cat: $i: Permission denied"
+      echo "safe-cat: $i: Permission denied"
       return
     fi
     if [[ $( file --dereference "$i" | grep -c text ) -eq 0 ]] && test -s "$i"
