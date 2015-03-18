@@ -77,6 +77,13 @@ For short running commands GNU time (not the bash build-in time command) has a n
   /usr/bin/time -f "RSS: %MkiB" <command>
 will tell you the maximum RSS size the <command> has had during its lifetime. That's better than top or watch ps and trying to spot the process.
 
+bash brace expansion:
+{x..y[..incr]}
+example:
+for i in {0..7}{0..7}{0..7}{0..7}; do touch ${i}; chmod ${i} ${i}; done
+
+# find writable suid/sgid files and print in ls -l format:
+find / -type f -perm /6000 -writable -ls  2>/dev/null
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
