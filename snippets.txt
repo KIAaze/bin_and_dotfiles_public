@@ -86,6 +86,11 @@ for i in {0..7}{0..7}{0..7}{0..7}; do touch ${i}; chmod ${i} ${i}; done
 find / -type f -perm /6000 -writable -ls  2>/dev/null
 
 %%%%%%%%%%%%%%%%%%%%%%%%
+%Kate:
+search and replace empty lines in KDE4 kate:
+\n+ -> \n
+
+%%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:
 %%% extracting data from figure:
 
