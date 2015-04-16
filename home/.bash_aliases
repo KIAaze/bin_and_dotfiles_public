@@ -182,3 +182,5 @@ alias updatedb_user_root_and_media='updatedb_user -U / -o $HOME/root_and_media.l
 alias pep8-py3='python3 /usr/lib/python3/dist-packages/pep8.py'
 
 alias unset_locale='unset  LANGUAGE LC_ALL LC_MESSAGES LANG'
+
+alias python3='python3 -W error'
