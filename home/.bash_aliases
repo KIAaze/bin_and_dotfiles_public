@@ -183,4 +183,5 @@ alias pep8-py3='python3 /usr/lib/python3/dist-packages/pep8.py'
 
 alias unset_locale='unset  LANGUAGE LC_ALL LC_MESSAGES LANG'
 
-alias python3='python3 -W error'
+# alias python3='python3 -W error' # unfortunately causes exit due to imp module deprecation...
+
