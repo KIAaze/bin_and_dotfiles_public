@@ -46,7 +46,7 @@ import fnmatch
 import tempfile
 import shutil
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 import argparseui
 
 def fromdos(filename):
