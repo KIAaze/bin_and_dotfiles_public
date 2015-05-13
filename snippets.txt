@@ -85,6 +85,9 @@ for i in {0..7}{0..7}{0..7}{0..7}; do touch ${i}; chmod ${i} ${i}; done
 # find writable suid/sgid files and print in ls -l format:
 find / -type f -perm /6000 -writable -ls  2>/dev/null
 
+Check for files+directories in base directory of external drive via locate db:
+$ locate --regex -d ~/mydrive.locate.db "/media/USER/mydrive/[^/]*$"
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
