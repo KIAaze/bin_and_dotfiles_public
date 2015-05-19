@@ -185,3 +185,4 @@ alias unset_locale='unset  LANGUAGE LC_ALL LC_MESSAGES LANG'
 
 # alias python3='python3 -W error' # unfortunately causes exit due to imp module deprecation...
 
+alias unset_proxies='unset http_proxy https_proxy'
