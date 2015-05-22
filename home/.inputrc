@@ -1,6 +1,9 @@
 $include /etc/inputrc
 
-set editing-mode vi
+# Used by anything using readline.
+# WARNING: Used in GNU Octave as well, but makes it almost unusable, maybe because config is not as nice as in bash?
+#set editing-mode vi
+
 $if mode=vi
 set keymap vi-command
 # these are for vi-command mode
