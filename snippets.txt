@@ -88,6 +88,10 @@ find / -type f -perm /6000 -writable -ls  2>/dev/null
 Check for files+directories in base directory of external drive via locate db:
 $ locate --regex -d ~/mydrive.locate.db "/media/USER/mydrive/[^/]*$"
 
+# If you have important data you do not want to change, you might like the chattr command. Like in
+chattr +i $HOME/all-my-photos
+# cf: http://www.reddit.com/r/linux/comments/38i6id/yesterday_i_discovered_a_new_thing_not_to_do_with/
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
