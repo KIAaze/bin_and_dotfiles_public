@@ -92,6 +92,9 @@ $ locate --regex -d ~/mydrive.locate.db "/media/USER/mydrive/[^/]*$"
 chattr +i $HOME/all-my-photos
 # cf: http://www.reddit.com/r/linux/comments/38i6id/yesterday_i_discovered_a_new_thing_not_to_do_with/
 
+# make clean in multiple subdirs
+find ~/src/ -name "Makefile" -execdir make clean \;
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
