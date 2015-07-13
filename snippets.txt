@@ -101,6 +101,9 @@ chattr +i $HOME/all-my-photos
 # make clean in multiple subdirs
 find ~/src/ -name "Makefile" -execdir make clean \;
 
+# cat files "horizontally": paste
+paste dunnet-room-map.txt dunnet-room-names.txt > dunnet-room-map+names.txt
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
