@@ -104,6 +104,33 @@ find ~/src/ -name "Makefile" -execdir make clean \;
 # cat files "horizontally": paste
 paste dunnet-room-map.txt dunnet-room-names.txt > dunnet-room-map+names.txt
 
+# How to grep (search) committed code in the git history?
+# cf http://stackoverflow.com/questions/2928584/how-to-grep-search-committed-code-in-the-git-history
+
+  #To search for commit content (i.e., actual lines of source, as opposed to commit messages and the like), what you need to do is:
+  git grep <regexp> $(git rev-list --all)
+  git rev-list --all | xargs git grep expression will work if you run into an "Argument list too long" error
+  #This will grep through all your commit text for regexp.
+
+  #Here are some other useful ways of searching your source:
+  #Search working tree for text matching regular expression regexp:
+  git grep <regexp>
+
+  #Search working tree for lines of text matching regular expression regexp1 or regexp2:
+  git grep -e <regexp1> [--or] -e <regexp2>
+
+  #Search working tree for lines of text matching regular expression regexp1 and regexp2, reporting file paths only:
+  git grep -e <regexp1> --and -e <regexp2>
+
+  #Search working tree for files that have lines of text matching regular expression regexp1 and lines of text matching regular expression regexp2:
+  git grep -l --all-match -e <regexp1> -e <regexp2>
+
+  #Search all revisions for text matching regular expression regexp:
+  git grep <regexp> $(git rev-list --all)
+
+  #Search all revisions between rev1 and rev2 for text matching regular expression regexp:
+  git grep <regexp> $(git rev-list <rev1>..<rev2>)
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
