@@ -131,6 +131,9 @@ paste dunnet-room-map.txt dunnet-room-names.txt > dunnet-room-map+names.txt
   #Search all revisions between rev1 and rev2 for text matching regular expression regexp:
   git grep <regexp> $(git rev-list <rev1>..<rev2>)
 
+grep for multiple words:
+  grep -E "(STR1|STR2|STR3)" foo.txt
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
