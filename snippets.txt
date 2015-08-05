@@ -134,6 +134,12 @@ paste dunnet-room-map.txt dunnet-room-names.txt > dunnet-room-map+names.txt
 grep for multiple words:
   grep -E "(STR1|STR2|STR3)" foo.txt
 
+http://stackoverflow.com/questions/191364/quick-unix-command-to-display-specific-lines-in-the-middle-of-a-file
+  # print line number 52
+  sed -n '52p' # method 1
+  sed '52!d' # method 2
+  sed '52q;d' # method 3,  efficient on large files
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
