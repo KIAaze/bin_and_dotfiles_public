@@ -324,3 +324,14 @@ safe-cat()
     fi
   done
 }
+
+# http://unix.stackexchange.com/questions/52534/how-to-print-only-the-duplicate-values-from-a-text-file
+print_duplicate_lines() {
+  sort $1 | uniq -d
+}
+
+# http://stackoverflow.com/questions/11532157/unix-removing-duplicate-lines-without-sorting
+# http://www.unixcl.com/2008/03/remove-duplicates-without-sorting-file.html
+remove_duplicate_lines() {
+  awk ' !x[$0]++' $1
+}
