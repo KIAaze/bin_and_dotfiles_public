@@ -1,0 +1,37 @@
+50 white sticks
+12*5+1=61 red sticks
+12*6+2=74 connectors
+
++1 connector
++4 red sticks
+
+==============
+connectors: 75
+white sticks: 50
+red sticks: 65
+
+all sticks: 50+65 = 115
+
+===============
+== c60 ==
+60 90 32
+v=60, e=90, f=32, p=12, h=20
+True True True True
+v=60, e=90, f=32, p=12, h=20
+True True True True
+== c70 ==
+70 105 37
+v=70, e=105, f=37, p=12, h=25
+True True True True
+v=70, e=105, f=37, p=12, h=25
+True True True True
+== c78 ==
+78 117 41
+v=78, e=117, f=41, p=12, h=29
+True True True True
+v=78, e=117, f=41, p=12, h=29
+True True True True
+== c75 ==
+75 115 42
+v=75, e=115, f=42, p=22, h=20
+True True True True

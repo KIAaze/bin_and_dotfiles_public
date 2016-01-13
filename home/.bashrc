@@ -105,6 +105,7 @@ then
 	module add shared torque moab
 	module load libraries/gnu_builds/atlas-3.10.1
 	module load libraries/gnu_builds/gsl-1.16
+	module load apps/matlab-r2013b
 
 #	module add shared torque moab 2>/dev/null
 #	module add languages/python-2.7 2>/dev/null
@@ -119,7 +120,7 @@ then
 #	module load apps/paraview-3.8 2>/dev/null
 #	module load languages/python-2.7.2 2>/dev/null
 #	module load tools/git-1.7.9 2>/dev/null
-#	module load languages/python-3.3.2 2>/dev/null
+	module load languages/python-3.3.2 2>/dev/null
 fi
 
 # If not running interactively, don't do anything

@@ -292,15 +292,25 @@ safe-cat()
   do
     if ! test -e "$i"
     then
-      echo "custom cat: $i: No such file or directory"
+      echo "safe-cat: $i: No such file or directory"
+      return
+    fi
+    if test -d "$i"
+    then
+      echo "safe-cat: $i: Is a directory"
+      return
+    fi
+    if ! test -f "$i"
+    then
+      echo "safe-cat: $i: Is not a regular file"
       return
     fi
     if ! test -r "$i"
     then
-      echo "custom cat: $i: Permission denied"
+      echo "safe-cat: $i: Permission denied"
       return
     fi
-    if [[ $( file --dereference "$i" | grep -c text ) -eq 0 ]]
+    if [[ $( file --dereference "$i" | grep -c text ) -eq 0 ]] && test -s "$i"
     then # not a text file
       echo "\"$i\" may be a binary file.  See it anyway? (using hexdump) (use /bin/cat if you want default cat behaviour)"
       read ans
@@ -313,4 +323,15 @@ safe-cat()
       /bin/cat "$i"
     fi
   done
+}
+
+# http://unix.stackexchange.com/questions/52534/how-to-print-only-the-duplicate-values-from-a-text-file
+print_duplicate_lines() {
+  sort $1 | uniq -d
+}
+
+# http://stackoverflow.com/questions/11532157/unix-removing-duplicate-lines-without-sorting
+# http://www.unixcl.com/2008/03/remove-duplicates-without-sorting-file.html
+remove_duplicate_lines() {
+  awk ' !x[$0]++' $1
 }

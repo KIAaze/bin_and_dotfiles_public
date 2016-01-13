@@ -77,6 +77,89 @@ For short running commands GNU time (not the bash build-in time command) has a n
   /usr/bin/time -f "RSS: %MkiB" <command>
 will tell you the maximum RSS size the <command> has had during its lifetime. That's better than top or watch ps and trying to spot the process.
 
+# show parents of a given process and their PIDs:
+pstree -p -s PID
+
+# check for any process containing NAME and give ps -aux like output:
+pgrep -a -f NAME
+
+bash brace expansion:
+{x..y[..incr]}
+example:
+for i in {0..7}{0..7}{0..7}{0..7}; do touch ${i}; chmod ${i} ${i}; done
+
+# find writable suid/sgid files and print in ls -l format:
+find / -type f -perm /6000 -writable -ls  2>/dev/null
+
+Check for files+directories in base directory of external drive via locate db:
+$ locate --regex -d ~/mydrive.locate.db "/media/USER/mydrive/[^/]*$"
+
+# If you have important data you do not want to change, you might like the chattr command. Like in
+chattr +i $HOME/all-my-photos
+# cf: http://www.reddit.com/r/linux/comments/38i6id/yesterday_i_discovered_a_new_thing_not_to_do_with/
+
+# make clean in multiple subdirs
+find ~/src/ -name "Makefile" -execdir make clean \;
+
+# cat files "horizontally": paste
+paste dunnet-room-map.txt dunnet-room-names.txt > dunnet-room-map+names.txt
+
+# How to grep (search) committed code in the git history?
+# cf http://stackoverflow.com/questions/2928584/how-to-grep-search-committed-code-in-the-git-history
+
+  #To search for commit content (i.e., actual lines of source, as opposed to commit messages and the like), what you need to do is:
+  git grep <regexp> $(git rev-list --all)
+  git rev-list --all | xargs git grep expression will work if you run into an "Argument list too long" error
+  #This will grep through all your commit text for regexp.
+
+  #Here are some other useful ways of searching your source:
+  #Search working tree for text matching regular expression regexp:
+  git grep <regexp>
+
+  #Search working tree for lines of text matching regular expression regexp1 or regexp2:
+  git grep -e <regexp1> [--or] -e <regexp2>
+
+  #Search working tree for lines of text matching regular expression regexp1 and regexp2, reporting file paths only:
+  git grep -e <regexp1> --and -e <regexp2>
+
+  #Search working tree for files that have lines of text matching regular expression regexp1 and lines of text matching regular expression regexp2:
+  git grep -l --all-match -e <regexp1> -e <regexp2>
+
+  #Search all revisions for text matching regular expression regexp:
+  git grep <regexp> $(git rev-list --all)
+
+  #Search all revisions between rev1 and rev2 for text matching regular expression regexp:
+  git grep <regexp> $(git rev-list <rev1>..<rev2>)
+
+grep for multiple words:
+  grep -E "(STR1|STR2|STR3)" foo.txt
+
+http://stackoverflow.com/questions/191364/quick-unix-command-to-display-specific-lines-in-the-middle-of-a-file
+  # print line number 52
+  sed -n '52p' # method 1
+  sed '52!d' # method 2
+  sed '52q;d' # method 3,  efficient on large files
+
+Easy parallel processing with GNU parallel:
+  parallel -j 8 ./process {} ::: *.svg
+
+  That will keep 8 jobs running in parallel till all 20,000 files are processed. The {} is short-hand for the filename, and the list of filenames is given after the :::. If there are too may files for your command line, you can feed them in like this on stdin:
+
+  find . -name "*.svg" | parallel -j 8 ./process {}
+
+  Then you would wrap your Inkscape command in a script called process and make it executable (using chmod +x process) and make it take a single parameter - i.e. the filename.
+
+  source: http://stackoverflow.com/questions/26572397/how-to-process-20k-svg-files-with-inkscape-cli-mode-align-and-merge-objects
+
+man page tips:
+--------------
+-search for word in man pages: man -K WORD (-K, --global-apropos)
+-find location of used man page: man -w mount (-w, --where, --path, --location)
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%Kate:
+search and replace empty lines in KDE4 kate:
+\n+ -> \n
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Matlab:

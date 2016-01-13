@@ -9,9 +9,10 @@ TODO: Make it work for relative symlinks.
 TODO: Make converting symlinks to hard links easier.
 
 CRITICAL BUG: If the link is a cross-device link, it will be removed, but fail to create a new hard link afterwards!
+CRITICAL BUG: If the link is to a directory, it will be removed, but fail to create a new hard link afterwards!
 example:
 OSError: [Errno 18] Invalid cross-device link: '/usr/share/doc/texlive-doc/latex/tools/longtable.pdf' -> 'longtable.pdf'
-TODO: check for cross-device links before any replacments.
+TODO: check for cross-device links before any replacments. -> Or simply rename to tempfile, use try statement and rename back in case of failure.
 '''
 
 import argparse
@@ -131,6 +132,12 @@ def retargetLinks(arguments):
       print('old_target = ' + old_target)
       print('new_target = ' + new_target)
     if os.path.exists(new_target):
+      
+      # skip if target is a directory and not using symlinks
+      if os.path.isdir(new_target) and not arguments.symbolic:
+        print(new_target + ' is a directory. Hard linking not supported. Skipping ' + link_name, file=sys.stderr)
+        continue
+      
       if arguments.not_interactive:
         ans = 'y'
       else:
