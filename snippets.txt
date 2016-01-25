@@ -156,6 +156,10 @@ man page tips:
 -search for word in man pages: man -K WORD (-K, --global-apropos)
 -find location of used man page: man -w mount (-w, --where, --path, --location)
 
+In case of networking problems:
+-------------------------------
+    service network-manager --full-restart
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
