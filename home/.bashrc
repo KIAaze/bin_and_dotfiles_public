@@ -169,3 +169,6 @@ set -o vi
 ## For more info:
 # http://www.catonmat.net/blog/bash-vi-editing-mode-cheat-sheet/
 # man 3 readline
+
+GPG_TTY=$(tty)
+export GPG_TTY
