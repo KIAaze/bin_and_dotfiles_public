@@ -101,11 +101,11 @@ fi
 # Modules for working on BC
 if declare -f module >/dev/null
 then
-	module load apps/meep-1.2-mpi
-	module add shared torque moab
-	module load libraries/gnu_builds/atlas-3.10.1
-	module load libraries/gnu_builds/gsl-1.16
-	module load apps/matlab-r2013b
+	module load apps/meep-1.2-mpi 2>/dev/null
+	module add shared torque moab 2>/dev/null
+	module load libraries/gnu_builds/atlas-3.10.1 2>/dev/null
+	module load libraries/gnu_builds/gsl-1.16 2>/dev/null
+	module load apps/matlab-r2013b 2>/dev/null
 
 #	module add shared torque moab 2>/dev/null
 #	module add languages/python-2.7 2>/dev/null
