@@ -188,3 +188,5 @@ alias unset_locale='unset  LANGUAGE LC_ALL LC_MESSAGES LANG'
 alias unset_proxies='unset http_proxy https_proxy'
 
 alias dunnet='emacs -batch -l dunnet'
+
+alias time_plus='/usr/bin/time -f "RSS: %MkiB Time: %E"'

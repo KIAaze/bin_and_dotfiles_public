@@ -76,6 +76,7 @@ will give you a nice sorted list of processes and their RSS and VSZ (SIZE) in ki
 For short running commands GNU time (not the bash build-in time command) has a nice capability that's not widely known yet:
   /usr/bin/time -f "RSS: %MkiB" <command>
 will tell you the maximum RSS size the <command> has had during its lifetime. That's better than top or watch ps and trying to spot the process.
+#              M      Maximum resident set size of the process during its lifetime, in Kilobytes.
 
 # show parents of a given process and their PIDs:
 pstree -p -s PID
