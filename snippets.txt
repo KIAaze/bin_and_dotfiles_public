@@ -161,6 +161,20 @@ In case of networking problems:
 -------------------------------
     service network-manager --full-restart
 
+git patching:
+-------------
+  http://stackoverflow.com/questions/9810752/git-how-to-create-a-patch-without-commit
+  When other guys had already given some answer which comply with git convention, the OP's question, "create a patch without commit", can be also solved in this way:
+
+  git diff > my_patch.txt
+
+  Later you can apply this patch, also without a commit, by:
+
+  git apply my_patch.txt
+
+  But if you are just working locally, a git checkout another_branch -m is good enough to bring all your current uncommit changes to that another_branch, without even patch and apply.
+
+    
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
