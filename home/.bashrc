@@ -14,13 +14,16 @@ fi
 # echo $PATH
 
 # User specific aliases and functions
-if [ -f ~/.bash_env ]; then
-  source ~/.bash_env
+if [ -f $HOME/.bash_env_public ]; then
+  source $HOME/.bash_env_public
+fi
+if [ -f $HOME/.bash_env_private ]; then
+  source $HOME/.bash_env_private
 fi
 
 # Local stuff (i.e. not synced across PCs)
-if [ -f ~/.bash_local ]; then
-  source ~/.bash_local
+if [ -f $HOME/.bash_local ]; then
+  source $HOME/.bash_local
 fi
 
 ##################

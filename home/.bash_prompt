@@ -240,7 +240,7 @@ set_color_theme()
 
 prompt_update()
 {
-  # WIP/prototype
+  echo "WIP/prototype"
   # elements:
   #   -> 1-line/2-line prompt:
   #   -> path: \w
@@ -251,7 +251,7 @@ prompt_update()
   #   -> time: \t
   #   -> text color:
   #   -> highlight color:
-  PS1="$a$b$c"
+#   PS1="$a$b$c"
 }
 
 set_command_sound 0
