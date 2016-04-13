@@ -108,7 +108,12 @@ then
 	module add shared torque moab 2>/dev/null
 	module load libraries/gnu_builds/atlas-3.10.1 2>/dev/null
 	module load libraries/gnu_builds/gsl-1.16 2>/dev/null
-	module load apps/matlab-r2013b 2>/dev/null
+	
+	# load most recent matlab
+    if ! module load matlab-R2014a-x86_64 2>/dev/null
+    then
+      module load apps/matlab-r2013b 2>/dev/null
+    fi
 
 #	module add shared torque moab 2>/dev/null
 #	module add languages/python-2.7 2>/dev/null
