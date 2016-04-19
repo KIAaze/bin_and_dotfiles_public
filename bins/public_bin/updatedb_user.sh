@@ -20,6 +20,12 @@ yestoall=false
 
 for source_directory in "$@"
 do
+  if ! test -d ${source_directory}
+  then
+    echo "${source_directory} does not exist or is not a valid directory. Skipping..."
+    continue
+  fi
+  
   if test ${source_directory} = "/"
   then
     db_file="root_and_media.locate.db"
@@ -39,4 +45,5 @@ do
     esac
   fi
   updatedb --prunepaths="/tmp /var/spool /home/.ecryptfs" --require-visibility 0 --database-root ${source_directory} --output ${db_file}
+  df -h ${source_directory} | tee ${db_file%.locate.db}.df.log
 done
