@@ -40,10 +40,10 @@ do
     case $ans in
       y|Y|yes) echo "Proceeding...";;
       n|N|no) echo "Skipping..."; continue;;
-      a|A|all) echo "Disabling confirmation..."; yestoall=true; continue;;
+      a|A|all) echo "Disabling confirmation and proceeding..."; yestoall=true;;
       *) echo "Quitting..."; exit;;
     esac
   fi
-  updatedb --prunepaths="/tmp /var/spool /home/.ecryptfs" --require-visibility 0 --database-root ${source_directory} --output ${db_file}
   df -h ${source_directory} | tee ${db_file%.locate.db}.df.log
+  updatedb --prunepaths="/tmp /var/spool /home/.ecryptfs" --require-visibility 0 --database-root ${source_directory} --output ${db_file}
 done
