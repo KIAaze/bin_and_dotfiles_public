@@ -168,7 +168,7 @@ then
 fi
 
 # set vi editing mode
-set -o vi
+#set -o vi
 
 ### vi editing mode tips:
 # switch to command mode: ESC
