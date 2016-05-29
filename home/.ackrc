@@ -1,2 +1,4 @@
 --type-set=lyx:ext:lyx
 --type-set=pgf:ext:pgf
+--type-set=csv:ext:csv
+--type-set=txt:ext:txt
