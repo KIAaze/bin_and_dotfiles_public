@@ -2,3 +2,12 @@
 --type-set=pgf:ext:pgf
 --type-set=csv:ext:csv
 --type-set=txt:ext:txt
+--type-set=bbl:ext:bbl
+
+--nohtml
+--nobbl
+
+--ignore-file=is:correction_list.lyx
+--ignore-file=is:make.log
+--ignore-file=is:make.log.00
+--ignore-file=is:PR-B.lyx
