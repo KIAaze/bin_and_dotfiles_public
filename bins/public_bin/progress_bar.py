@@ -28,7 +28,7 @@ import argparse
 # TODO: We could use the actual elapsed time to dynamically adjust the sleep time. But this is mainly for reference and use in scripts where a progress bar is needed.
 
 def progress_bar_set(fraction):
-  str_open = '{:6.2f}% ['.format(100*fraction)
+  str_open = '{:6.2%} ['.format(fraction)
   str_close = ']'
   ncols = int(subprocess.check_output(['tput','cols']))
   BARLENGTH = ncols - len(str_open) - len(str_close)
