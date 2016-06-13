@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Convertion from text to ASCII codes
+# Conversion from text to ASCII codes
 
 message = raw_input("Enter message to encode: ")
 

@@ -93,7 +93,7 @@ alias test_plugin='export QT_PLUGIN_PATH=$(pwd); designer'
 # To check a process is running in a box with a heavy load: pss
 alias pss='ps -ef | grep $1'
 
-# usefull alias to browse your filesystem for heavy usage quickly
+# useful alias to browse your filesystem for heavy usage quickly
 # alias ducks='ls -A | grep -v -e '\''^\.\.$'\'' |xargs -i du -ks {} |sort -rn |head -16 | awk '\''{print $2}'\'' | xargs -i du -hs {}'
 #alias ducks='ls -A | grep -v -e '\''^\.\.$'\'' |xargs -i du -ks {} |sort -rn |head -16 | awk '\''{ all=""; for (i=2; i<=NF; i++) all = $all,$i; print $all;}'\'' | xargs -i du -hs {}'
 #alias ducks='find . -maxdepth 1 -mindepth 1 -print0  | xargs -0 -n1 du -ks | sort -rn | head -16 | cut -f2 | xargs -i du -hs {}'

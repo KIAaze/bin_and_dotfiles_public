@@ -74,7 +74,7 @@ case $GO in
 	sleep 1
 	echo 'Continuing Attack anyhow.'
 	sleep 2
-	echo "error: on line 556. Syntax error near 'AND IF(login!=root) DIE //I need to fix this line at a later date, when I learn some more SQL. I know what I want it to do, but for the life of me I can't find it in the SQL manual. Oh well. This application is not throughly tested anyhow. DO NOT USE FOR PRODUCTION. meh';"
+	echo "error: on line 556. Syntax error near 'AND IF(login!=root) DIE //I need to fix this line at a later date, when I learn some more SQL. I know what I want it to do, but for the life of me I can't find it in the SQL manual. Oh well. This application is not thoroughly tested anyhow. DO NOT USE FOR PRODUCTION. meh';"
 	sleep 3
 	echo 'Attack aborted.'
 	echo '221 2.0.0 Bye'

@@ -71,7 +71,7 @@ Finally, some Netbook Remix users may be unable to use this script out of the
     box. For these users, triggerring the script will often cause all windows
     to be immediately minimized. These users will need to uncomment the
     'blackList' variable listed below. They may also need to 'sticky' a
-    window (and preferrably make it reside under other windows) to achieve
+    window (and preferably make it reside under other windows) to achieve
     full functionality. See this thread:
     ubuntuforums.org/showthread.php?t=976002 , especially beginning with post
     #18."""
