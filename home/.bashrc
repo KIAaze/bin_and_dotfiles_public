@@ -104,16 +104,19 @@ fi
 # Modules for working on BC
 if declare -f module >/dev/null
 then
+    module load shared default-environment 2>/dev/null
 	module load apps/meep-1.2-mpi 2>/dev/null
 	module add shared torque moab 2>/dev/null
 	module load libraries/gnu_builds/atlas-3.10.1 2>/dev/null
 	module load libraries/gnu_builds/gsl-1.16 2>/dev/null
-	
-	# load most recent matlab
-    if ! module load matlab-R2014a-x86_64 2>/dev/null
-    then
-      module load apps/matlab-r2013b 2>/dev/null
-    fi
+
+    module load tools/git-1.8.4.2 2>/dev/null
+
+	# load most recent matlab (module does not return error on failure...)
+#     if ! module load matlab-R2014a-x86_64 2>/dev/null
+#     then
+#       module load apps/matlab-r2013b 2>/dev/null
+#     fi
 
 #	module add shared torque moab 2>/dev/null
 #	module add languages/python-2.7 2>/dev/null
@@ -180,3 +183,6 @@ fi
 
 GPG_TTY=$(tty)
 export GPG_TTY
+
+# export GUILE_WARN_DEPRECATED=no
+# unset USERNAME
