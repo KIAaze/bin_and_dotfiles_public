@@ -1,0 +1,8 @@
+if [ -f /etc/bashrc ]; then
+  source /etc/bashrc
+fi
+
+module load shared default-environment
+module load libraries/gnu_builds/gsl-1.16
+module load apps/python-meep-1.3
+module load libraries/gnu_builds/h5utils-1.12.1
