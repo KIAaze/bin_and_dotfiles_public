@@ -1,5 +1,5 @@
 #!/bin/bash
-# ~/.bash_prompt
+# ${HOME}/.bash_prompt
 
 #####################################################################################
 # PROMPT STYLING
@@ -94,7 +94,7 @@ function get_length()
 # TODO: Improve by passing PROMPTBASE as argument or something like that.
 function pre_prompt {
   newRET=$(funny_face)
-  newPWD=$(pwd | sed "s|$HOME|~|")
+  newPWD=$(pwd | sed "s|${HOME}|~|")
   user=$(whoami)
   host=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
   datenow=$(date "+%a, %d %b %y")

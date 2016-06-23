@@ -1,5 +1,5 @@
 #!/bin/bash
-# ~/.bash_functions
+# ${HOME}/.bash_functions
 
 mailme()
 {
@@ -85,8 +85,8 @@ num_threads()
 # back up .bash* files
 backup_bashfiles()
 {
-  ARCHIVE="$HOME/bash_dotfiles_$(date +%Y%m%d_%H%M%S).tar.gz";
-  cd ~
+  ARCHIVE="${HOME}/bash_dotfiles_$(date +%Y%m%d_%H%M%S).tar.gz";
+  cd ${HOME}
   if [ $1 -eq 0 ]
   then
     tar -czvf $ARCHIVE .bashrc .bash_functions .bash_aliases .bash_prompt
@@ -141,17 +141,17 @@ geditexe()
 
 lessbin()
 {
-  less $HOME/bin/$1;
+  less ${HOME}/bin/$1;
 }
 
 catbin()
 {
-  cat $HOME/bin/$1;
+  cat ${HOME}/bin/$1;
 }
 
 vimbin()
 {
-  vim $HOME/bin/$1;
+  vim ${HOME}/bin/$1;
 }
 
 syncgitrepo()
@@ -166,8 +166,8 @@ syncgitrepo()
 
 syncbindot()
 {
-  syncgitrepo ~/bin_and_dotfiles_private/
-  syncgitrepo ~/bin_and_dotfiles_public/
+  syncgitrepo ${HOME}/bin_and_dotfiles_private/
+  syncgitrepo ${HOME}/bin_and_dotfiles_public/
 }
 
 rtm() {
@@ -188,12 +188,12 @@ rtm_file() {
 # -check for multiple ssh-agent agents running
 # -if AGENTFILE info does not correspond to ssh-agent process, kill it and start new one.
 # TODO: See if we can use Gnome or KDE keyring depending on environment. (ssh-add -D does not delete identities from the Gnome keyring)
-# TODO: Create script/function to auto-add all identities in ~/.ssh? Better to just have one key per system or one key per app?
+# TODO: Create script/function to auto-add all identities in ${HOME}/.ssh? Better to just have one key per system or one key per app?
 
 ssh_agent_restart()
 {
   # depends on hostname to support systems with multiple login nodes and shared home directory
-  AGENTFILE="$HOME/agent.$(hostname).sh"
+  AGENTFILE="${HOME}/agent.$(hostname).sh"
   # Note: added --user in case other users are running their own agents
   AGENTPID=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
   if [ -n "$AGENTPID" ]; then
@@ -208,7 +208,7 @@ ssh_agent_restart()
 
 ssh_agent_start()
 {
-  AGENTFILE="$HOME/agent.$(hostname).sh"
+  AGENTFILE="${HOME}/agent.$(hostname).sh"
   if [ -e "$AGENTFILE" ]; then
     source "$AGENTFILE"
     if ! ( [ -n "$SSH_AUTH_SOCK" ] && [ -e "$SSH_AUTH_SOCK" ] ); then
