@@ -1,9 +1,14 @@
 #!/bin/bash
 
+# path setup
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:$HOME/opt/bin
 export PATH=$PATH:$HOME/bin/public_bin
 export PATH=$PATH:$HOME/Development/script_inception_public/bin
+
+# python setup
+export PYTHONSTARTUP=$HOME/.pystartup
+export PYTHONPATH=$PYTHONPATH:$HOME/Development/script_inception_public
 
 export PROMPTSTYLE=3
 
