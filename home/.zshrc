@@ -67,9 +67,9 @@ if [ -f ~/.bash_local ]; then
   source ~/.bash_local
 fi
 # 
-# if [ -f ~/.bash_functions ]; then
-#     source ~/.bash_functions
-# fi
+if [ -f ~/.bash_functions ]; then
+  source ~/.bash_functions
+fi
 # 
 if [ -f ~/.bash_aliases ]; then
     source ~/.bash_aliases
@@ -80,7 +80,7 @@ fi
 # #     source ~/.zsh_prompt
 # # fi
 # 
-# #to stay in the directory visited with mc on exit. :)
-# if [ -f /usr/share/mc/bin/mc.sh ]; then
-#   source /usr/share/mc/bin/mc.sh
-# fi
+#to stay in the directory visited with mc on exit. :)
+if [ -f /usr/share/mc/bin/mc.sh ]; then
+  source /usr/share/mc/bin/mc.sh
+fi
