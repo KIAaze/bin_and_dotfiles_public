@@ -6,6 +6,7 @@
 
 --nohtml
 --nobbl
+--nojs
 
 --ignore-file=is:correction_list.lyx
 --ignore-file=is:correction_list.txt
