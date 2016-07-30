@@ -16,5 +16,10 @@ fi
  
 #/usr/bin/clear
 
-# "close sudo session"
+# "close sudo session" (only works if su --login is used, i.e. if exiting a login shell...)
 sudo -k
+
+echo "closed sudo session"
+#sudo echo
+
+#sleep 15
