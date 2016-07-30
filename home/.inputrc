@@ -1,0 +1,20 @@
+$include /etc/inputrc
+
+# Used by anything using readline.
+# WARNING: Used in GNU Octave as well, but makes it almost unusable, maybe because config is not as nice as in bash?
+#set editing-mode vi
+
+$if mode=vi
+set keymap vi-command
+# these are for vi-command mode
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\C-a": beginning-of-line
+"\C-e": end-of-line
+set keymap vi-insert
+# these are for vi-insert mode
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\C-a": beginning-of-line
+"\C-e": end-of-line
+$endif

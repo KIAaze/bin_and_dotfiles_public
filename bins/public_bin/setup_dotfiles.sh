@@ -48,9 +48,18 @@ then
 fi
 mkdir -p $HOME/bin
 
-# dir setup: change if you've placed the repository elsewhere
-BIN_AND_DOTFILES_PRIVATE=$HOME/bin_and_dotfiles_private
-BIN_AND_DOTFILES_PUBLIC=$HOME/bin_and_dotfiles_public
+##### dir setup: change if you've placed the repository elsewhere. Variables can be passed by command line as follows:
+# BIN_AND_DOTFILES_PRIVATE=foo BIN_AND_DOTFILES_PUBLIC=fuu  ./bins/public_bin/setup_dotfiles.sh
+
+# BIN_AND_DOTFILES_PRIVATE=${BIN_AND_DOTFILES_PRIVATE:-$HOME/bin_and_dotfiles_private}
+BIN_AND_DOTFILES_PRIVATE=${BIN_AND_DOTFILES_PRIVATE:-$HOME/Development/bin_and_dotfiles_private}
+
+# BIN_AND_DOTFILES_PUBLIC=${BIN_AND_DOTFILES_PUBLIC:-$HOME/bin_and_dotfiles_public}
+# BIN_AND_DOTFILES_PUBLIC=${BIN_AND_DOTFILES_PUBLIC:-$HOME/Development/bin_and_dotfiles_public}
+BIN_AND_DOTFILES_PUBLIC=${BIN_AND_DOTFILES_PUBLIC:-$(readlink -f $(dirname $(readlink -f $0))/../..)}
+
+echo "BIN_AND_DOTFILES_PRIVATE = ${BIN_AND_DOTFILES_PRIVATE}"
+echo "BIN_AND_DOTFILES_PUBLIC = ${BIN_AND_DOTFILES_PUBLIC}"
 
 # public configuration
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/bins/public_bin $HOME/bin
@@ -60,10 +69,16 @@ safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bash_logout $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bash_profile $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bash_prompt $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bashrc $HOME
+safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.bash_env_public $HOME
 #safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.pystartup $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.vimrc $HOME
-safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.ackrc $HOME
-safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.ackrc $HOME
+
+safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.inputrc $HOME
+
+# bash->zsh transition work in progress
+safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.zshrc $HOME
+safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.zsh_prompt $HOME
+safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.zsh_profile $HOME
 
 cd $BIN_AND_DOTFILES_PUBLIC
 if [[ $GIT_USERNAME_JZ && $GIT_EMAIL_JZ ]]
@@ -81,7 +96,7 @@ if [ -d $BIN_AND_DOTFILES_PRIVATE ]
 then
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/private_bin $HOME/bin
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/community_bin $HOME/bin
-  safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.bash_env $HOME
+  safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.bash_env_private $HOME
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.gitconfig $HOME
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/todo.cfg $HOME
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.mrconfig $HOME
@@ -106,7 +121,7 @@ then
   cd -
 
   chmod 700 $BIN_AND_DOTFILES_PRIVATE
-  chmod 600 $HOME/.bash_env
+  chmod 600 $HOME/.bash_env_private
 else
   echo "WARNING: $BIN_AND_DOTFILES_PRIVATE not found"
 fi

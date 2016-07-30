@@ -1,35 +1,15 @@
-# ~/.bash_profile
-# set -x
+# ${HOME}/.bash_profile
 #echo "reading .bash_profile"
 
-source /etc/profile
-
-# Get the aliases and functions
-if [ -f ~/.bashrc ]; then
-  source ~/.bashrc
+if [ -f /etc/profile ]; then
+  source /etc/profile
 fi
 
-if [ -f ~/.bash_functions ]; then
-    source ~/.bash_functions
+if [ -f ${HOME}/.bashrc ]; then
+  source ${HOME}/.bashrc
 fi
 
-if [ -f /usr/bin/xbindkeys ] && [ -f $HOME/.xbindkeysrc ]; then
-  /usr/bin/xbindkeys
+# for non-synced stuff (machine specific welcome messages for example)
+if [ -f ${HOME}/.bash_profile_local ]; then
+  source ${HOME}/.bash_profile_local
 fi
-
-if [ -f ~/.bash_profile_local ]; then
-  source ~/.bash_profile_local
-fi
-
-# User specific environment and startup programs
-#if [ -f ~/.bash_env ]; then
-#	. ~/.bash_env
-#fi
-
-# echo $PATH
-# PATH=$PATH:$HOME/bin
-# echo $PATH
-
-# export PATH
-
-# unset USERNAME

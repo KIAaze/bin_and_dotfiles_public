@@ -1,5 +1,5 @@
 #!/bin/bash
-# ~/.bash_functions
+# ${HOME}/.bash_functions
 
 mailme()
 {
@@ -85,8 +85,8 @@ num_threads()
 # back up .bash* files
 backup_bashfiles()
 {
-  ARCHIVE="$HOME/bash_dotfiles_$(date +%Y%m%d_%H%M%S).tar.gz";
-  cd ~
+  ARCHIVE="${HOME}/bash_dotfiles_$(date +%Y%m%d_%H%M%S).tar.gz";
+  cd ${HOME}
   if [ $1 -eq 0 ]
   then
     tar -czvf $ARCHIVE .bashrc .bash_functions .bash_aliases .bash_prompt
@@ -96,44 +96,62 @@ backup_bashfiles()
   echo "All backed up in $ARCHIVE";
 }
 
+# We use /usr/bin/which instead of just which, so it also works properly in zsh which has a built-in which (problem appears with aliased commands).
+# TODO: Make it work with aliased commands as well.
+# TODO: A cat with syntax highlighting would be cool.
 whichreally()
 {
-  readlink -f $(which "$1");
-}
-
-lessexe()
-{
-  less $(readlink -f $(which "$1"));
+  readlink -f $(/usr/bin/which "$1");
 }
 
 moreexe()
 {
-  more $(readlink -f $(which "$1"));
+  more $(readlink -f $(/usr/bin/which "$1"));
+}
+
+lessexe()
+{
+  less $(readlink -f $(/usr/bin/which "$1"));
 }
 
 catexe()
 {
-  cat $(readlink -f $(which "$1"));
+  cat $(readlink -f $(/usr/bin/which "$1"));
 }
 
 vimexe()
 {
-  vim $(readlink -f $(which "$1"));
+  vim $(readlink -f $(/usr/bin/which "$1"));
 }
 
-catbin()
+kateexe()
 {
-  cat $HOME/bin/$1;
+  kate $(readlink -f $(/usr/bin/which "$1"));
+}
+
+geanyexe()
+{
+  geany $(readlink -f $(/usr/bin/which "$1"));
+}
+
+geditexe()
+{
+  gedit $(readlink -f $(/usr/bin/which "$1"));
 }
 
 lessbin()
 {
-  less $HOME/bin/$1;
+  less ${HOME}/bin/$1;
+}
+
+catbin()
+{
+  cat ${HOME}/bin/$1;
 }
 
 vimbin()
 {
-  vim $HOME/bin/$1;
+  vim ${HOME}/bin/$1;
 }
 
 syncgitrepo()
@@ -148,8 +166,8 @@ syncgitrepo()
 
 syncbindot()
 {
-  syncgitrepo ~/bin_and_dotfiles_private/
-  syncgitrepo ~/bin_and_dotfiles_public/
+  syncgitrepo ${HOME}/bin_and_dotfiles_private/
+  syncgitrepo ${HOME}/bin_and_dotfiles_public/
 }
 
 rtm() {
@@ -162,14 +180,6 @@ rtm_file() {
   done
 }
 
-# improve this, might require python
-qstatuserfull()
-{
-  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 1 Job_Name
-  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 5 JOBDIR
-  qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 2 JOBDIR
-}
-
 ##########################################
 # ssh-agent stuff
 ##########################################
@@ -178,12 +188,12 @@ qstatuserfull()
 # -check for multiple ssh-agent agents running
 # -if AGENTFILE info does not correspond to ssh-agent process, kill it and start new one.
 # TODO: See if we can use Gnome or KDE keyring depending on environment. (ssh-add -D does not delete identities from the Gnome keyring)
-# TODO: Create script/function to auto-add all identities in ~/.ssh? Better to just have one key per system or one key per app?
+# TODO: Create script/function to auto-add all identities in ${HOME}/.ssh? Better to just have one key per system or one key per app?
 
 ssh_agent_restart()
 {
   # depends on hostname to support systems with multiple login nodes and shared home directory
-  AGENTFILE="$HOME/agent.$(hostname).sh"
+  AGENTFILE="${HOME}/agent.$(hostname).sh"
   # Note: added --user in case other users are running their own agents
   AGENTPID=`/bin/ps -f --user $USER | grep ssh-agent | grep -v grep  | awk '{print $2}' | xargs`
   if [ -n "$AGENTPID" ]; then
@@ -198,7 +208,7 @@ ssh_agent_restart()
 
 ssh_agent_start()
 {
-  AGENTFILE="$HOME/agent.$(hostname).sh"
+  AGENTFILE="${HOME}/agent.$(hostname).sh"
   if [ -e "$AGENTFILE" ]; then
     source "$AGENTFILE"
     if ! ( [ -n "$SSH_AUTH_SOCK" ] && [ -e "$SSH_AUTH_SOCK" ] ); then
@@ -253,4 +263,75 @@ zip2dir()
     echo "=== Processing $i ==="
     atool -x "$i" && rm -iv "$i"
   done
+}
+
+### torque utilities
+# improve this, might require python -> done in qstat.py
+qstatuserfull()
+{
+  # note: qstat -u $USER breaks this because it passes on invalid JOB IDs...
+  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 1 Job_Name
+  #qstatuser | awk '{print $1}' | xargs qstat -f | grep -A 5 JOBDIR
+  qstat | grep $USER | awk '{print $1}' | xargs qstat -f | grep -A 2 JOBDIR
+}
+
+qstat-summary()
+{
+        Ntotal=$(qstat -u $USER | grep -c $USER)
+        Nrunning=$(qstat -u $USER | grep $USER | grep -c " R ")
+        Nqueued=$(qstat -u $USER | grep $USER | grep -c " Q ")
+        echo "job status: running = ${Nrunning} queued = ${Nqueued} total = ${Ntotal}"
+}
+
+# A cat wrapper to prevent cat-ing binary files, which apart from potentially messing up the terminal, can also be a security risk (accidental or malicious).
+# It will offer to use hexdump instead.
+# Note that you can reset a messed-up terminal using the "reset" command.
+safe-cat()
+{
+  for i in "$@"
+  do
+    if ! test -e "$i"
+    then
+      echo "safe-cat: $i: No such file or directory"
+      return
+    fi
+    if test -d "$i"
+    then
+      echo "safe-cat: $i: Is a directory"
+      return
+    fi
+    if ! test -f "$i"
+    then
+      echo "safe-cat: $i: Is not a regular file"
+      return
+    fi
+    if ! test -r "$i"
+    then
+      echo "safe-cat: $i: Permission denied"
+      return
+    fi
+    if [[ $( file --dereference "$i" | grep -c text ) -eq 0 ]] && test -s "$i"
+    then # not a text file
+      echo "\"$i\" may be a binary file.  See it anyway? (using hexdump) (use /bin/cat if you want default cat behaviour)"
+      read ans
+      if [[ $ans = 'y' ]]
+      then
+        hexdump -C "$i"
+      fi
+    else # a text file
+      # Without the full path, it would recurse infinitely. ^^
+      /bin/cat "$i"
+    fi
+  done
+}
+
+# http://unix.stackexchange.com/questions/52534/how-to-print-only-the-duplicate-values-from-a-text-file
+print_duplicate_lines() {
+  sort $1 | uniq -d
+}
+
+# http://stackoverflow.com/questions/11532157/unix-removing-duplicate-lines-without-sorting
+# http://www.unixcl.com/2008/03/remove-duplicates-without-sorting-file.html
+remove_duplicate_lines() {
+  awk ' !x[$0]++' $1
 }

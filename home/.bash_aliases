@@ -1,15 +1,19 @@
 #!/bin/bash
-# ~/.bash_aliases
+# ${HOME}/.bash_aliases
 #echo "reading .bash_aliases"
 
 ##################
 #ALIASES
 ##################
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ${HOME}/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 # OpenFOAM stuff
-#alias source_openfoam='source $HOME/OpenFOAM/OpenFOAM-1.5/etc/bashrc'
-#alias source_openfoam='source $HOME/OpenFOAM/OpenFOAM-1.4.1/.OpenFOAM-1.4.1/bashrc'
-alias source_openfoam='source $HOME/OpenFOAM/OpenFOAM-1.6/etc/bashrc'
+#alias source_openfoam='source ${HOME}/OpenFOAM/OpenFOAM-1.5/etc/bashrc'
+#alias source_openfoam='source ${HOME}/OpenFOAM/OpenFOAM-1.4.1/.OpenFOAM-1.4.1/bashrc'
+alias source_openfoam='source ${HOME}/OpenFOAM/OpenFOAM-1.6/etc/bashrc'
 
 # enable color support of ls and also add handy aliases
 if [ "$TERM" != "dumb" ]; then
@@ -34,7 +38,7 @@ alias lsdot='ls -ld \.[A-Za-z0-9]*'
 # To see something coming into ls output: lss
 alias lss='ls -lrt | grep $1'
 
-# safety aliases for rm,mv,cp
+# safety aliases for rm, mv, cp
 alias rm='rm -iv'
 alias mv='mv -iv'
 alias cp='cp -iv' 
@@ -78,8 +82,8 @@ then
 
   # sync all, unmount USB stick and check it was unmounted
   alias goodbye='mr_checkall && mr_checkall_rsync && umount ${SYNCSTICK} && ( ! test -d ${SYNCSTICK} ) && checkcmd'
-else
-  echo "WARNING: RSYNCDIR or SYNCSTICK not defined."
+# else
+#   echo "WARNING: RSYNCDIR or SYNCSTICK not defined."
 fi
 
 # plugin testing
@@ -96,7 +100,7 @@ alias pss='ps -ef | grep $1'
 alias ducks='find . -maxdepth 1 -mindepth 1 -print0  | xargs -0 -n1 du -ks | sort -rn | head -16 | cut -f2 | tr "\n" "\0" | xargs -0 du -hs'
 
 # cool colors for manpages
-# alias man="TERMINFO=~/.terminfo TERM=mostlike LESS=C PAGER=less man"
+# alias man="TERMINFO=${HOME}/.terminfo TERM=mostlike LESS=C PAGER=less man"
 
 # for fun
 alias iamcow='fortune | cowsay'
@@ -115,13 +119,19 @@ alias zsnes='zsnes -ad sdl'
 alias qstatgrepuser='qstat | grep $USER'
 alias qstatuser='qstat -u $USER'
 
-#alias syncbindot='cd ~/bin_and_dotfiles_private/ && git pull && git push && git status; cd -; cd ~/bin_and_dotfiles_public/ && git pull && git push && git status; cd -'
+#alias syncbindot='cd ${HOME}/bin_and_dotfiles_private/ && git pull && git push && git status; cd -; cd ${HOME}/bin_and_dotfiles_public/ && git pull && git push && git status; cd -'
 
 alias modulegrep='module avail 2>&1 | grep '
 
 alias cdtemp='cd $(mktemp -d )'
 
-alias bashclean='env -i bash --noprofile --init-file /etc/profile'
+# start a clean bash shell for tests
+alias bashclean='env --ignore-environment bash --noprofile --norc'
+alias bashcleansystem='env --ignore-environment bash --noprofile --rcfile /etc/profile'
+
+# start a clean zsh shell
+# -f    equivalent to --no-rcs
+alias zshclean='env --ignore-environment zsh --no-rcs'
 
 # Fun with a personal quote file :)
 alias addquote='editor $QUOTEFILE && strfile $QUOTEFILE'
@@ -131,7 +141,7 @@ alias fortune_custom='fortune -c 50% /usr/share/games/fortunes/ 50% $QUOTEFILE'
 # hack para "fortunas" españolas :D (debería entregar un bug sobre el paquete) (con fortunes-fr, funciona simplemente con "fortune fr")
 alias fortune_es='dpkg -L fortunes-es | grep dat | xargs -I{} basename {} .dat | xargs fortune'
 
-alias secure_ssh='chmod 700 ~/.ssh/ && chmod 600 ~/.ssh/* && ls -ld ~/.ssh/ && ls -l ~/.ssh'
+alias secure_ssh='chmod 700 ${HOME}/.ssh/ && chmod 600 ${HOME}/.ssh/* && ls -ld ${HOME}/.ssh/ && ls -l ${HOME}/.ssh'
 
 alias samba_start='sudo cp /etc/samba/smb.conf.on /etc/samba/smb.conf && sudo service smbd restart'
 alias samba_stop='sudo cp /etc/samba/smb.conf.off /etc/samba/smb.conf && sudo service smbd stop'
@@ -156,6 +166,29 @@ alias countHardLinkedFiles='find . -type f -links +1 -printf "inode=%i file=%p \
 alias rsync_to_Windows='rsync --archive --compress --no-perms --no-group --no-links --chmod=ugo=rwX'
 alias rsync_to_GNULinux='rsync --archive --compress --hard-links'
 
-alias commit-todo='cd $HOME/Desktop/TODO/ && git commit -am "todo"; cd -'
+alias diff-todo='cd ${HOME}/Desktop/TODO/ && git diff; cd -'
+alias commit-todo='cd ${HOME}/Desktop/TODO/ && git commit -am "todo"; cd -'
 
 alias path='echo $PATH | tr ":" "\n"'
+alias path_library='echo $LD_LIBRARY_PATH | tr ":" "\n"'
+alias path_python='echo $PYTHONPATH | tr ":" "\n"'
+
+# seems to be the same as /usr/lib/x86_64-linux-gnu/octave/3.8.1/exec/x86_64-pc-linux-gnu/octave-gui, but just in case...
+alias octave-gui='octave --force-gui'
+
+### updatedb aliases -> replaced by updatedb_user.sh script
+# alias updatedb_user='updatedb --require-visibility 0 --prunepaths="/tmp /var/spool /home/.ecryptfs"'
+# alias updatedb_user_media='updatedb_user --database-root /media --output ${HOME}/media.locate.db'
+# alias updatedb_user_root_and_media='updatedb_user --database-root / --output ${HOME}/root_and_media.locate.db'
+
+alias pep8-py3='python3 /usr/lib/python3/dist-packages/pep8.py'
+
+alias unset_locale='unset  LANGUAGE LC_ALL LC_MESSAGES LANG'
+
+# alias python3='python3 -W error' # unfortunately causes exit due to imp module deprecation...
+
+alias unset_proxies='unset http_proxy https_proxy'
+
+alias dunnet='emacs -batch -l dunnet'
+
+alias time_plus='/usr/bin/time -f "RSS: %MkiB Time: %E"'

@@ -1,0 +1,24 @@
+/* Blocks comments on youtube 
+ * place in ~/.mozilla/firefox/PROFILE/chrome/userContent.css
+ * */
+@-moz-document domain(youtube.com) {
+   #masthead,
+   #watch-headline-user-info,
+   #watch-sidebar,
+   #watch-actions,
+   #watch-actions-area-container,
+   #watch-info,
+   #watch-discussion,
+   #footer-container
+   {
+   display:none;
+   }
+
+   #content-container
+   {
+   width:640px!important;
+   margin-left: auto!important;
+   margin-right: auto!important;
+        margin-top: 30px!important;
+   }
+}

@@ -1,9 +1,9 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 # TODO: interface with chat windows as well. :) Skype bot?
 
-from __future__ import division
+from __future__ import division, print_function
 
 import subprocess
 import sqlite3
@@ -12,7 +12,8 @@ import sys
 import dbus
 import re
 import time
-import optparse
+#import optparse
+import argparse
 
 # script to set/get Skype mood status
 # cf also: https://pypi.python.org/pypi/Skype4Py/
@@ -22,7 +23,7 @@ import optparse
 def MoodTextViaDBFile(DBfile, mood_text=None):
   try:
     if not os.path.isfile(DBfile):
-      print '%s not found or is not a file' % DBfile
+      print('{} not found or is not a file'.format(DBfile))
       return('')
     conn = sqlite3.connect(DBfile)
     c = conn.cursor()
@@ -35,32 +36,63 @@ def MoodTextViaDBFile(DBfile, mood_text=None):
     conn.close()
     return(current_mood_text)
   except:
-    print "Could not use DB file %s properly." % DBfile
+    print("Could not use DB file {} properly.".format(DBfile))
     return("")
 
 # much better way based on https://blog.arrington.me/2012/change-your-skype-mood-text-in-linux-with-python/
-def MoodTextViaDbus(text=None):
+def MoodTextViaDbus(text=None, waitForSkype=0):
+  
   bus = dbus.SessionBus()
+  
+  if waitForSkype > 0:
+    time_start = time.time()
+    while 'com.Skype.API' not in bus.list_names():
+      # timeout after 
+      if time.time() - time_start > waitForSkype:
+        print('ERROR: Timeout while getting dbus object.', file=sys.stderr)
+        return("")
+      pass
+  
   try:
+    print('--> dbus part start')
+    print('getting object')
     proxy = bus.get_object('com.Skype.API', '/com/Skype')
+    print('invoke 1')
     proxy.Invoke('NAME '+sys.argv[0])
+    print('invoke 2')
     proxy.Invoke('PROTOCOL 2')
     if text is None:
+      print('invoke get')
+      error_str = 'ERROR 68'
       dbus_string = proxy.Invoke('GET PROFILE MOOD_TEXT')
+      if dbus_string == error_str and waitForSkype > 0:
+        while dbus_string == error_str:
+          #print('getting object')
+          proxy = bus.get_object('com.Skype.API', '/com/Skype')
+          #print('invoke 1')
+          proxy.Invoke('NAME '+sys.argv[0])
+          #print('invoke 2')
+          proxy.Invoke('PROTOCOL 2')
+          dbus_string = proxy.Invoke('GET PROFILE MOOD_TEXT')
+          if time.time() - time_start > waitForSkype:
+            print('ERROR: Timeout while getting mood text.', file=sys.stderr)
+            return("")
     else:
+      print('invoke set')
       dbus_string = proxy.Invoke('SET PROFILE MOOD_TEXT %s' % text)
     mood_text = re.sub('^PROFILE MOOD_TEXT ','',str(dbus_string))
+    print('--> dbus part done')
     return(mood_text)
   except:
-    print "Could not contact Skype client"
+    print("Could not contact Skype client")
     return("")
 
 # function to use both (lambda form attempt failed)
-def MoodText(DBfile=None, mood_text=None):
+def MoodText(DBfile=None, mood_text=None, waitForSkype=0):
   if DBfile:
     return(MoodTextViaDBFile(DBfile, mood_text))
   else:
-    return(MoodTextViaDbus(mood_text))
+    return(MoodTextViaDbus(mood_text, waitForSkype))
 
 # for fun
 def progress_bar(timestep=1):
@@ -128,21 +160,22 @@ def kirby(timestep=1):
 
 # main function
 def main():
-  parser = optparse.OptionParser()
-  parser.add_option("--DBfile")
-  parser.add_option('--verbose', '-v', action='count', default=0)
-  parser.add_option("-t", "--timestep", type=float, help='timestep in seconds for animations', default=1)
-  parser.add_option("--steps", type=int, help='number of steps', default=100)
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--DBfile")
+  parser.add_argument('--verbose', '-v', action='count', default=0)
+  parser.add_argument("-t", "--timestep", type=float, help='timestep in seconds for animations', default=1)
+  parser.add_argument("--steps", type=int, help='number of steps', default=100)
   # mutually exclusive group
-  parser.add_option("-f", "--fortune", action="store_true", default=False)
-  parser.add_option("-m", "--mood_text")
-  parser.add_option("-p", "--progress_bar", action="store_true")
-  parser.add_option("-s", "--spinner", action="store_true")
-  parser.add_option("--progress_number", action="store_true")  
-  parser.add_option("--scrolling_text")
-  parser.add_option("--kirby", action="store_true")
-  parser.add_option("--read-file")
-  (options, args) = parser.parse_args()
+  parser.add_argument("-f", "--fortune", action="store_true", default=False)
+  parser.add_argument("-m", "--mood_text", const="", nargs="?")
+  parser.add_argument("-p", "--progress_bar", action="store_true")
+  parser.add_argument("-s", "--spinner", action="store_true")
+  parser.add_argument("--progress_number", action="store_true")  
+  parser.add_argument("--scrolling_text")
+  parser.add_argument("--kirby", action="store_true")
+  parser.add_argument("--read-file")
+  parser.add_argument("-w", "--waitForSkype", type=int, help="Wait at least TIME seconds for skype to be available via dbus.", const=1*60, default=0, metavar="TIME", nargs="?")
+  options = parser.parse_args()
 
   if options.verbose>1:
     print(options)
@@ -187,11 +220,11 @@ def main():
     print('==>argument mood text :\n---\n%s\n---' % mood_text)
 
   if mood_text is None:
-    print('==>current mood text :\n---\n%s\n---' % MoodText(options.DBfile))
+    print('==>current mood text :\n---\n%s\n---' % MoodText(options.DBfile, mood_text=None, waitForSkype=options.waitForSkype))
   else:
-    print('==>old mood text :\n---\n%s\n---' % MoodText(options.DBfile))
-    MoodText(options.DBfile, mood_text)
-    print('==>new mood text :\n---\n%s\n---' % MoodText(options.DBfile))
+    print('==>old mood text :\n---\n%s\n---' % MoodText(options.DBfile, mood_text=None, waitForSkype=options.waitForSkype))
+    MoodText(options.DBfile, mood_text, waitForSkype=options.waitForSkype)
+    print('==>new mood text :\n---\n%s\n---' % MoodText(options.DBfile, mood_text=None, waitForSkype=options.waitForSkype))
 
 if __name__ == '__main__':
   main()

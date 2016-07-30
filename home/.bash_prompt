@@ -1,4 +1,5 @@
-# ~/.bash_prompt
+#!/bin/bash
+# ${HOME}/.bash_prompt
 
 #####################################################################################
 # PROMPT STYLING
@@ -93,8 +94,8 @@ function get_length()
 # TODO: Improve by passing PROMPTBASE as argument or something like that.
 function pre_prompt {
   newRET=$(funny_face)
-  newPWD=$(pwd | sed "s|$HOME|~|")
-  user="whoami"
+  newPWD=$(pwd | sed "s|${HOME}|~|")
+  user=$(whoami)
   host=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
   datenow=$(date "+%a, %d %b %y")
 
@@ -102,7 +103,7 @@ function pre_prompt {
 
   if [ $ANONYMOUS -eq 0 ]
   then
-    PROMPTBASE="┌─($user@$host ddd., DD mmm YY)($newPWD)─┐"
+    PROMPTBASE="┌─($newPWD)($user@$host ddd, DD mmm YY)─┐"
 #     let promptsize=$(echo -n "┌─($user@$host ddd., DD mmm YY)($newPWD)─┐" | wc -m | tr -d " ")
 #     let promptsize=$promptsize-3
   else
@@ -113,7 +114,8 @@ function pre_prompt {
 
 #   echo PROMPTBASE = $PROMPTBASE
 
-  let promptsize=$(echo -n $PROMPTBASE | wc -m | tr -d " ")
+#   let promptsize=$(echo -n $PROMPTBASE | wc --chars | tr --delete " ")
+  let promptsize=$(echo -n $PROMPTBASE | wc --chars)
 
   # echo "<$newPWD>"
 
@@ -137,7 +139,7 @@ function pre_prompt {
   if [ "$fillsize" -lt "0" ]
   then
       let cutt=3-${fillsize}
-      newPWD="...$(echo -n $PWD | sed -e "s/\(^.\{$cutt\}\)\(.*\)/\2/")"
+      newPWD="...$(echo -n $PWD | sed --expression="s/\(^.\{$cutt\}\)\(.*\)/\2/")"
   fi
 }
 
@@ -168,10 +170,10 @@ load_prompt()
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
       xterm)
-          PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
+          PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}($textcolor\u@\h \$(date \"+%a, %d %b %y\")$linecolor)─┐\n$linecolor└─(\$newRET)(\#)($textcolor\$(date \"+%H:%M\")$linecolor)─>$defaultcolor "
           ;;
       screen)
-          PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}($orange\u@\h \$(date \"+%a, %d %b %y\")$bblue)─┐\n$bblue└─(\$newRET)(\#)($orange\$(date \"+%H:%M\")$bblue)─>$defaultcolor "
+          PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}($textcolor\u@\h \$(date \"+%a, %d %b %y\")$linecolor)─┐\n$linecolor└─(\$newRET)(\#)($textcolor\$(date \"+%H:%M\")$linecolor)─>$defaultcolor "
           ;;
           *)
           PS1="┌─(\$newPWD)\${fill}(\u@\h \$(date \"+%a, %d %b %y\"))─┐\n└─(\$newRET)(\#)(\$(date \"+%H:%M\") )─> "
@@ -184,10 +186,10 @@ load_prompt()
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
     xterm)
-        PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}─┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
+        PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}─┐\n$linecolor└─(\$newRET)(\#)─>$defaultcolor "
         ;;
     screen)
-        PS1="$bblue┌─($orange\$newPWD$bblue)\${fill}─┐\n$bblue└─(\$newRET)(\#)─>$defaultcolor "
+        PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}─┐\n$linecolor└─(\$newRET)(\#)─>$defaultcolor "
         ;;
         *)
         PS1="┌─(\$newPWD)\${fill}─┐\n└─(\$newRET)(\#)─> "
@@ -216,9 +218,29 @@ load_prompt()
   PS1="\$(play_command_sound)$PS1"
 }
 
+set_color_theme()
+{
+  if [ $1 == "dark" ]
+  then
+    export linecolor=$green
+    export textcolor=$cyan
+    export defaultcolor="\[\033[m\]"
+  else
+    export linecolor=$bblue
+    export textcolor=$orange
+    export defaultcolor="\[\033[m\]"
+  fi
+  if [[ $PROMPTSTYLE ]]
+  then
+    load_prompt $PROMPTSTYLE
+  else
+    echo "WARNING: PROMPTSTYLE not set. Skipping load_prompt."
+  fi
+}
+
 prompt_update()
 {
-  # WIP/prototype
+  echo "WIP/prototype"
   # elements:
   #   -> 1-line/2-line prompt:
   #   -> path: \w
@@ -229,14 +251,9 @@ prompt_update()
   #   -> time: \t
   #   -> text color:
   #   -> highlight color:
-  PS1="$a$b$c"
+#   PS1="$a$b$c"
 }
 
 set_command_sound 0
 
-if [[ $PROMPTSTYLE ]]
-then
-  load_prompt $PROMPTSTYLE
-else
-  echo "WARNING: PROMPTSTYLE not set. Skipping load_prompt."
-fi
+set_color_theme "dark"
