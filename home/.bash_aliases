@@ -192,3 +192,6 @@ alias unset_proxies='unset http_proxy https_proxy'
 alias dunnet='emacs -batch -l dunnet'
 
 alias time_plus='/usr/bin/time -f "RSS: %MkiB Time: %E"'
+
+# alias locateInAll='locate --database ${DBPATH}'
+alias locateInAll='locate --database $(ls -1 ~/*.db | tr "\n" ":")'
