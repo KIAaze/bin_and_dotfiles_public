@@ -192,3 +192,5 @@ alias unset_proxies='unset http_proxy https_proxy'
 alias dunnet='emacs -batch -l dunnet'
 
 alias time_plus='/usr/bin/time -f "RSS: %MkiB Time: %E"'
+
+alias dlmp3='youtube-dl -x --audio-format=mp3'
