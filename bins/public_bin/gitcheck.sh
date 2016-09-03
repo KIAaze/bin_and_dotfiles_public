@@ -5,9 +5,15 @@
 # Use "git fetch SOURCE" if not all remotes are available (and you want to compare to a specific source). Else, use "git remote update".
 # git remote update
 
+# IMPORTANT: need way to specify remote/base sources! The current script only works for the default remote!
+
 LOCAL=$(git rev-parse @)
 REMOTE=$(git rev-parse @{u})
 BASE=$(git merge-base @ @{u})
+
+echo "LOCAL=${LOCAL}"
+echo "REMOTE=${REMOTE}"
+echo "BASE=${BASE}"
 
 if [ $LOCAL = $REMOTE ]; then
     echo "Up-to-date"
