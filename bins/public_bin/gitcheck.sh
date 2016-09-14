@@ -1,23 +1,23 @@
-#!/bin/sh
-
-# source: http://stackoverflow.com/questions/3258243/git-check-if-pull-needed
-
-# Use "git fetch SOURCE" if not all remotes are available (and you want to compare to a specific source). Else, use "git remote update".
-# git remote update
-
-# IMPORTANT: need way to specify remote/base sources! The current script only works for the default remote!
-
-# @
-#     @ alone is a shortcut for HEAD.
-# <branchname>@{upstream}, e.g. master@{upstream}, @{u}
-# 
-#     The suffix @{upstream} to a branchname (short form <branchname>@{u}) refers to the branch that the branch specified by branchname is set to build on top of (configured with branch.<name>.remote and branch.<name>.merge). A missing branchname defaults to the current one.
-# https://git-scm.com/docs/gitrevisions
-# :-master@{upstream}}
-# REMOTE_REVSPEC=${1:-master@{upstream}}
-# REMOTE_NAME=${1:$(git config branch.${BRANCH}.remote)}
-
-# could probably also just use "git diff --exit-code master remote/master", but this script gives more specific info (need to pull, need to push or diverged)
+#!/bin/bash
+#
+# Script to compare local and remote git repositories.
+#
+# Usage:
+#   gitcheck.sh REMOTE
+#
+# If REMOTE is not specified, it uses the default remote used for pull/push operations.
+#
+# Exit status:
+#   0 : Up-to-date
+#   1 : Need to pull
+#   2 : Need to push
+#   3 : Diverged
+#
+# Notes:
+#   -based on a script from: http://stackoverflow.com/questions/3258243/git-check-if-pull-needed
+#   -Use "git fetch SOURCE" if not all remotes are available (and you want to compare to a specific source). Else, use "git remote update".
+#   -cf https://git-scm.com/docs/gitrevisions
+#   -Could probably also just use "git diff --exit-code master remote/master", but this script gives more specific info (need to pull, need to push or diverged)
 
 LOCAL_REVSPEC=HEAD
 BRANCH=$(git rev-parse --abbrev-ref ${LOCAL_REVSPEC})
@@ -59,10 +59,8 @@ elif [ ${LOCAL_SHA1} = ${BASE_SHA1} ]; then
     exit 1
 elif [ ${REMOTE_SHA1} = ${BASE_SHA1} ]; then
     echo "Need to push"
-#     exit 0
     exit 2
 else
     echo "Diverged"
-#     exit 1
     exit 3
 fi
