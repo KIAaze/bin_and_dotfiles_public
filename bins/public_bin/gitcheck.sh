@@ -18,6 +18,7 @@
 #   -Use "git fetch SOURCE" if not all remotes are available (and you want to compare to a specific source). Else, use "git remote update".
 #   -cf https://git-scm.com/docs/gitrevisions
 #   -Could probably also just use "git diff --exit-code master remote/master", but this script gives more specific info (need to pull, need to push or diverged)
+#   -for a much more advanced version, see https://github.com/badele/gitcheck
 
 LOCAL_REVSPEC=HEAD
 BRANCH=$(git rev-parse --abbrev-ref ${LOCAL_REVSPEC})
