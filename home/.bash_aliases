@@ -197,3 +197,5 @@ alias dlmp3='~/bin/youtube-dl -x --audio-format=mp3'
 
 # alias locateInAll='locate --database ${DBPATH}'
 alias locateInAll='locate --database $(ls -1 ~/*.db | tr "\n" ":")'
+
+alias dmesg='dmesg --human'
