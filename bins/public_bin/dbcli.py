@@ -33,7 +33,7 @@ class Dropbox:
 		self.connected = False
 
 	def connect(self, cmd_socket="~/.dropbox/command_socket", iface_socket="~/.dropbox/iface_socket"):
-		"Connects to the Dropbox command_socket, returns True if it was successfull."
+		"Connects to the Dropbox command_socket, returns True if it was successful."
 		self.iface_sck=socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 		self.sck=socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 		try:

@@ -59,7 +59,7 @@ do
 
 done
 
-# define orignal and duplicates
+# define original and duplicates
 #ORIG=("${FILE_LIST[0]}")
 #DUPS=("${FILE_LIST[@]:1}")
 

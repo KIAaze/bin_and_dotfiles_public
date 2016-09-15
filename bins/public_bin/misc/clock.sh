@@ -40,6 +40,6 @@ done
 
 
 #
-# ./ch.sh: vivek-tech.com to nixcraft.com referance converted using this tool
+# ./ch.sh: vivek-tech.com to nixcraft.com reference converted using this tool
 # See the tool at http://www.nixcraft.com/uniqlinuxfeatures/tools/
 #
