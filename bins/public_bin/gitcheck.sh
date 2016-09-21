@@ -3,7 +3,7 @@
 # Script to compare local and remote git repositories.
 #
 # Usage:
-#   gitcheck.sh REMOTE
+#   gitcheck.sh [REMOTE]
 #
 # If REMOTE is not specified, it uses the default remote used for pull/push operations.
 #
@@ -12,6 +12,7 @@
 #   1 : Need to pull
 #   2 : Need to push
 #   3 : Diverged
+#   4 : ERROR: git fetch failed
 #
 # Notes:
 #   -based on a script from: http://stackoverflow.com/questions/3258243/git-check-if-pull-needed
@@ -41,7 +42,7 @@ echo "REMOTE_REVSPEC = ${REMOTE_REVSPEC}"
 if ! git fetch ${REMOTE_NAME}
 then
   echo "git fetch ${REMOTE_NAME} failed"
-  exit 1
+  exit 4
 fi
 
 LOCAL_SHA1=$(git rev-parse ${LOCAL_REVSPEC})
