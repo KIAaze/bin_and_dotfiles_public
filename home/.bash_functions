@@ -286,6 +286,8 @@ qstat-summary()
 # A cat wrapper to prevent cat-ing binary files, which apart from potentially messing up the terminal, can also be a security risk (accidental or malicious).
 # It will offer to use hexdump instead.
 # Note that you can reset a messed-up terminal using the "reset" command.
+# cf http://unix.stackexchange.com/questions/73713/how-safe-is-it-to-cat-an-arbitrary-file
+# better alternative to avoid confusing behaviour (at least for escape characters, not sure about binary files): cat --show-nonprinting
 safe-cat()
 {
   for i in "$@"

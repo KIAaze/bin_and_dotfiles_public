@@ -199,3 +199,7 @@ alias dlmp3='~/bin/youtube-dl -x --audio-format=mp3'
 alias locateInAll='locate --database $(ls -1 ~/*.db | tr "\n" ":")'
 
 alias dmesg='dmesg --human'
+
+# useful to show DOS line endings, but also for security
+# cf http://unix.stackexchange.com/questions/73713/how-safe-is-it-to-cat-an-arbitrary-file
+alias cat='cat --show-nonprinting'

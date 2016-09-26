@@ -158,3 +158,7 @@ export GPG_TTY
 if [ -f /usr/bin/xbindkeys ] && [ -f ${HOME}/.xbindkeysrc ]; then
   /usr/bin/xbindkeys
 fi
+
+# Disallow write access to your terminal. (disabled by default, but just in case...)
+# causes error on login in KDE4 however ("error found when loading ~/.profile:\n\nstdin: is not a tty\n as a result the session will not be configured correctly.")
+#mesg n
