@@ -203,3 +203,8 @@ alias dmesg='dmesg --human'
 # useful to show DOS line endings, but also for security
 # cf http://unix.stackexchange.com/questions/73713/how-safe-is-it-to-cat-an-arbitrary-file
 alias cat='cat --show-nonprinting'
+
+alias grep="grep --color='auto'"
+
+# http://stackoverflow.com/questions/3001177/how-do-i-grep-for-all-non-ascii-characters-in-unix
+alias grepNonAscii="grep --color='auto' --perl-regexp '[^\x00-\x7F]'"
