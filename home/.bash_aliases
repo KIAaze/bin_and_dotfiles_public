@@ -208,3 +208,6 @@ alias grep="grep --color='auto'"
 
 # http://stackoverflow.com/questions/3001177/how-do-i-grep-for-all-non-ascii-characters-in-unix
 alias grepNonAscii="grep --color='auto' --perl-regexp '[^\x00-\x7F]'"
+
+# give an error when certain Octave-only syntax is used.
+alias octave='octave --traditional'
