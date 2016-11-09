@@ -174,7 +174,9 @@ git patching:
 
   But if you are just working locally, a git checkout another_branch -m is good enough to bring all your current uncommit changes to that another_branch, without even patch and apply.
 
-    
+-record terminal sessions: man script (cf also python "pty" module)
+-python sys info: python -m sysconfig
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
