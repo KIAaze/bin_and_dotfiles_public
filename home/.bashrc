@@ -141,8 +141,9 @@ then
 	eval $(dircolors ${HOME}/.dir_colors)
 fi
 
-# set vi editing mode
+# set editing mode
 #set -o vi
+#set -o emacs
 
 ### vi editing mode tips:
 # switch to command mode: ESC
