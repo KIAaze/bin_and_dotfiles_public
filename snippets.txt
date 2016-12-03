@@ -152,6 +152,10 @@ Easy parallel processing with GNU parallel:
 
   source: http://stackoverflow.com/questions/26572397/how-to-process-20k-svg-files-with-inkscape-cli-mode-align-and-merge-objects
 
+-watch piped command:
+  watch -n 1 'tail -n 200 log/site_dev.log | fgrep Doctrine'
+  http://superuser.com/questions/140461/using-watch-with-pipes
+
 man page tips:
 --------------
 -search for word in man pages: man -K WORD (-K, --global-apropos)
