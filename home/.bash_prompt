@@ -169,7 +169,7 @@ load_prompt()
     export ANONYMOUS=0
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
-      xterm)
+      xterm*)
           PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}($textcolor\u@\h \$(date \"+%a, %d %b %y\")$linecolor)─┐\n$linecolor└─(\$newRET)(\#)($textcolor\$(date \"+%H:%M\")$linecolor)─>$defaultcolor "
           ;;
       screen)
@@ -185,7 +185,7 @@ load_prompt()
     export ANONYMOUS=1
     PROMPT_COMMAND=pre_prompt
     case "$TERM" in
-    xterm)
+    xterm*)
         PS1="$linecolor┌─($textcolor\$newPWD$linecolor)\${fill}─┐\n$linecolor└─(\$newRET)(\#)─>$defaultcolor "
         ;;
     screen)
