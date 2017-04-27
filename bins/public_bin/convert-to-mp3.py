@@ -33,7 +33,7 @@ def main():
   args = parser.parse_args()
   print(args)
   
-  extension_list = ['.ogg', '.m4a', '.opus', '.webm', '.flac']
+  extension_list = ['.ogg', '.m4a', '.opus', '.webm', '.flac', '.wma']
   
   for infile in args.infile:
     print('===> processing {}'.format(infile))
