@@ -15,7 +15,9 @@ import argparse
 import tempfile
 import subprocess
 
-def writeListToFile(L, outfilename):
+def writeListToFile(L, outfilename, verbose=False):
+  if verbose:
+    print('Logging to {}'.format(outfilename))
   with open(outfilename, 'w') as outfile:
     for i in L:
       outfile.write('{}\n'.format(i))
@@ -33,8 +35,15 @@ def main():
   parser.add_argument('--min-size-gzipped', type=int, default=50, help='minimal size in bytes for gzipped files')
   parser.add_argument('--check', action='store_true', help='Check if gzipped file already exists and if yes, check its size.')
   parser.add_argument('--check-only', action='store_true', help='Check if gzipped file already exists and if yes, check its size. Skip gzipping process.')
-  parser.add_argument('--logfile', help='log filenames to logfiles of the form BASE.(zipped|missing|toosmall|toosmall_zipped).log', metavar='BASE')
+  parser.add_argument('--logfile', help='log filenames to logfiles of the form BASE.{zipped,missing,toosmall,toosmall_zipped}.log', metavar='BASE')
   args = parser.parse_args()
+  
+  # hack to prevent mangled filenames on samba shares (seems to happen after lots of processing or stat calls?)
+  if args.logfile:
+    writeListToFile([], '{}.zipped.log'.format(args.logfile))
+    writeListToFile([], '{}.missing.log'.format(args.logfile))
+    writeListToFile([], '{}.toosmall.log'.format(args.logfile))
+    writeListToFile([], '{}.toosmall_zipped.log'.format(args.logfile))
   
   #print(['gzip'] + args.gzip_args)
   #return
@@ -109,13 +118,12 @@ def main():
     print()
   
   if args.logfile:
-    writeListToFile(files_zipped, '{}.zipped.log'.format(args.logfile))
-    writeListToFile(files_missing, '{}.missing.log'.format(args.logfile))
-    writeListToFile(files_toosmall, '{}.toosmall.log'.format(args.logfile))
-    writeListToFile(files_toosmall_zipped, '{}.toosmall_zipped.log'.format(args.logfile))
+    writeListToFile(files_zipped, '{}.zipped.log'.format(args.logfile), True)
+    writeListToFile(files_missing, '{}.missing.log'.format(args.logfile), True)
+    writeListToFile(files_toosmall, '{}.toosmall.log'.format(args.logfile), True)
+    writeListToFile(files_toosmall_zipped, '{}.toosmall_zipped.log'.format(args.logfile), True)
+  
   return
-
-  return 0
 
 if __name__ == '__main__':
   main()
