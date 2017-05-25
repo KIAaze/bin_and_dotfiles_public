@@ -42,10 +42,35 @@ shopt -s histappend
 #ignoredups checks the old history, erasedups checks the current history, not yet written to HISTFILE
 export HISTCONTROL=ignoredups:erasedups
 
+# HISTIGNORE
+#   A colon-separated list of patterns used to decide which command lines should be saved on the history list.
+#   Each pattern is anchored at the beginning of the line and must match the complete line (no implicit `*' is appended).
+#   Each pattern is tested against  the  line  after  the  checks  specified by HISTCONTROL are applied.
+#   In addition to the normal shell pattern matching characters, `&' matches the previous history line.
+#   `&' may be escaped using a backslash; the backslash is removed before attempting a match.
+#   The second and subsequent lines of a multi-line compound command are not tested, and are added to the history regardless of the value of HISTIGNORE.
+#   The pattern matching honors the setting of the extglob shell option.
+# HISTSIZE
+#   The number of commands to remember in the command history (see HISTORY below).  If the value is 0, commands are not saved in the history list.
+#   Numeric values less than zero result in every command being saved  on  the  history  list  (there  is  no limit).
+#   The shell sets the default value to 500 after reading any startup files.
+# HISTFILESIZE
+#   The maximum number of lines contained in the history file.
+#   When this variable is assigned a value, the history file is truncated, if necessary, to contain no more than that number of lines by removing the oldest entries.
+#   The history file  is  also truncated  to  this size after writing it when a shell exits.
+#   If the value is 0, the history file is truncated to zero size.
+#   Non-numeric values and numeric values less than zero inhibit truncation.
+#   The shell sets the default value to the value of HISTSIZE after reading any startup files.
+
 # hack for infinite bash history (but it still only saves the last HISTSIZE commands from the currently running shell)
 # normally unsetting HISTFILESIZE should be enough, but for some strange reason bash keeps resetting it after finishing reading all the ${HOME}/.bash* files.
-export HISTSIZE=1000
-export HISTFILESIZE=$(expr $(wc -l ${HOME}/.bash_history | awk '{print $1}') + $HISTSIZE)
+# export HISTSIZE=1000
+# 
+# if [ -f ${HOME}/.bash_history ]; then
+#   export HISTFILESIZE=$(expr $(wc -l ${HOME}/.bash_history | awk '{print $1}') + $HISTSIZE)
+# fi
+export HISTSIZE=-1
+export HISTFILESIZE=-1
 
 ################
 # MISC
