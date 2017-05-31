@@ -30,6 +30,7 @@ def main():
   parser.add_argument('-i', '--ignore-errors', action='store_true', help='Ignore errors, i.e. continue on conversion errors.')
   parser.add_argument('-e', '--replace-extension', action='store_true', help='By default, for an input file "source.ext" the name of the new file is simply "source.ext.mp3". Use this option to get "source.mp3" instead.')
   parser.add_argument('-v', '--verbose', action="count", dest="verbosity", default=0, help='verbosity level')
+  parser.add_argument('--output-format', default='mp3', help='Output format')
   args = parser.parse_args()
   print(args)
   
@@ -40,9 +41,9 @@ def main():
     (root, ext) = os.path.splitext(infile)
     if ext in extension_list:
       if args.replace_extension:
-        outfile = root + '.mp3'
+        outfile = root + '.' + args.output_format
       else:
-        outfile = infile + '.mp3'
+        outfile = infile + '.' + args.output_format
       if args.destination:
         outfile = os.path.join(args.destination, os.path.basename(outfile))
       print('{} -> {}'.format(infile, outfile))
