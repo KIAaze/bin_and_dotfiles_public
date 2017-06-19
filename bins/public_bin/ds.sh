@@ -6,11 +6,11 @@ function pp() {
   u="+Ki+Mi+Gi+Ti";
   split(u,unit,"+");
   v=sum;
-  for(i=1;i<5;i++) {
+  for(i=1;i<6;i++) {
     if(v<1024) break;
     v/=1024;
   }
-  printf("%.3f %sB\n", v, unit[i]);
+  printf("%d bytes = %.3f %sB\n", sum, v, unit[i]);
 }
 {sum+=$5}
 END{pp()}'
