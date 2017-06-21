@@ -99,7 +99,10 @@ def main():
           if args.dry_run:
             print(' '.join(cmd))
           else:
-            subprocess.run(cmd)
+            if sys.version_info >= (3,5):
+              subprocess.run(cmd)
+            else:
+              subprocess.call(cmd)
       else:
         N_toosmall += 1
         files_toosmall.append(filepath)
