@@ -34,10 +34,10 @@ fi
 
 REMOTE_REVSPEC=remotes/${REMOTE_NAME}/${BRANCH}
 
-echo "LOCAL_REVSPEC = ${LOCAL_REVSPEC}"
-echo "BRANCH = ${BRANCH}"
-echo "REMOTE_NAME = ${REMOTE_NAME}"
-echo "REMOTE_REVSPEC = ${REMOTE_REVSPEC}"
+# echo "LOCAL_REVSPEC = ${LOCAL_REVSPEC}"
+# echo "BRANCH = ${BRANCH}"
+# echo "REMOTE_NAME = ${REMOTE_NAME}"
+# echo "REMOTE_REVSPEC = ${REMOTE_REVSPEC}"
 
 if ! git fetch ${REMOTE_NAME}
 then
@@ -49,9 +49,9 @@ LOCAL_SHA1=$(git rev-parse ${LOCAL_REVSPEC})
 REMOTE_SHA1=$(git rev-parse ${REMOTE_REVSPEC})
 BASE_SHA1=$(git merge-base ${LOCAL_REVSPEC} ${REMOTE_REVSPEC})
 
-echo "LOCAL_SHA1 = ${LOCAL_SHA1}"
-echo "REMOTE_SHA1 = ${REMOTE_SHA1}"
-echo "BASE_SHA1 = ${BASE_SHA1}"
+# echo "LOCAL_SHA1 = ${LOCAL_SHA1}"
+# echo "REMOTE_SHA1 = ${REMOTE_SHA1}"
+# echo "BASE_SHA1 = ${BASE_SHA1}"
 
 if [ ${LOCAL_SHA1} = ${REMOTE_SHA1} ]; then
     echo "Up-to-date"
