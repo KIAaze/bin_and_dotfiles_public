@@ -7,6 +7,7 @@
 #ETA = now + estimated_time_left
 # TODO: logging support... + maybe default logging in a tmp file?
 # TODO: make output options easier to understand...
+# TODO: Use pigz for speed? (=parallel gzip)
 
 import os
 import re
