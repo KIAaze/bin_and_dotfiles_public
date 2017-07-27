@@ -8,6 +8,7 @@
 # TODO: logging support... + maybe default logging in a tmp file?
 # TODO: make output options easier to understand...
 # TODO: Use pigz for speed? (=parallel gzip)
+# TODO: parallelize
 
 import os
 import re
@@ -37,6 +38,7 @@ def main():
   parser.add_argument('--check', action='store_true', help='Check if gzipped file already exists and if yes, check its size.')
   parser.add_argument('--check-only', action='store_true', help='Check if gzipped file already exists and if yes, check its size. Skip gzipping process.')
   parser.add_argument('--logfile', help='log filenames to logfiles of the form BASE.{zipped,missing,toosmall,toosmall_zipped}.log', metavar='BASE')
+  parser.add_argument('--exe', help='Executable to use for compression. Default=gzip. Alternatives: pigz,...', default='gzip')
   args = parser.parse_args()
   
   # hack to prevent mangled filenames on samba shares (seems to happen after lots of processing or stat calls?)
@@ -46,14 +48,14 @@ def main():
     writeListToFile([], '{}.toosmall.log'.format(args.logfile))
     writeListToFile([], '{}.toosmall_zipped.log'.format(args.logfile))
   
-  #print(['gzip'] + args.gzip_args)
+  #print([args.exe] + args.gzip_args)
   #return
   
   print_progress = not args.verbosity > 0 and not args.dry_run
   
   gzip_args = []
   if args.force:
-    gzip_args.append('-f')
+    gzip_args.append('--force')
   
   files_to_gzip = []
   
@@ -96,7 +98,7 @@ def main():
         N_zipped += 1
         files_zipped.append(filepath)
         if not args.check_only:
-          cmd = ['gzip'] + gzip_args + [filepath]
+          cmd = [args.exe] + gzip_args + [filepath]
           if args.dry_run:
             print(' '.join(cmd))
           else:

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eu
 
+# TODO: ssh support for faster operations
+# TODO: find options to skip symlinks and specific directories for example
+
 DIR1=${1}
 DIR2=${2}
 
