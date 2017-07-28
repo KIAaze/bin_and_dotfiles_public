@@ -141,6 +141,11 @@ alias fortune_custom='fortune -c 50% /usr/share/games/fortunes/ 50% $QUOTEFILE'
 # hack para "fortunas" españolas :D (debería entregar un bug sobre el paquete) (con fortunes-fr, funciona simplemente con "fortune fr")
 alias fortune_es='dpkg -L fortunes-es | grep dat | xargs -I{} basename {} .dat | xargs fortune'
 
+# alias due to bug in ubuntu 17.04 (incorrect default paths :( )
+alias fortune='fortune /usr/share/games/fortunes/'
+
+alias fortune_all='find /usr/share/games/fortunes -name "*.dat" | xargs dirname | sort | uniq | xargs /usr/games/fortune -c'
+
 alias secure_ssh='chmod 700 ${HOME}/.ssh/ && chmod 600 ${HOME}/.ssh/* && ls -ld ${HOME}/.ssh/ && ls -l ${HOME}/.ssh'
 
 alias samba_start='sudo cp /etc/samba/smb.conf.on /etc/samba/smb.conf && sudo service smbd restart'
