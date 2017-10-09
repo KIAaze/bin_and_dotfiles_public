@@ -1,16 +1,14 @@
 #!/bin/bash
 
-set -eux
+set -eu
 
 # Check if all parameters are present
 # If no, exit
 if [ $# -ne 2 ]
 then
-	echo
 	echo 'archives a directory as DIR_$(date +%Y%m%d_%H%M%S).tar.gz'
 	echo "usage :"
 	echo "$(basename $0) <0=archive in current dir / 1=archive in dirname DIR> <DIR>"
-        echo
         exit 1
 fi
 
