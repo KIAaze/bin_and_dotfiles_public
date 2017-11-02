@@ -337,3 +337,22 @@ print_duplicate_lines() {
 remove_duplicate_lines() {
   awk ' !x[$0]++' $1
 }
+
+rmdir() {
+  # rmdir wrapper to quickly deal with annoying .directory files
+  for i in "$@"
+  do
+    if ! /bin/rmdir "$i"
+    then
+      N=$(find "$i" | wc -l)
+      if test ${N} -eq 2
+      then
+        if test -f "$i/.directory"
+        then
+          rm -iv "$i/.directory"
+          /bin/rmdir "$i"
+        fi
+      fi
+    fi
+  done
+}
