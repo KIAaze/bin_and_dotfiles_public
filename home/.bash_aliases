@@ -216,3 +216,5 @@ alias grepNonAscii="grep --color='auto' --perl-regexp '[^\x00-\x7F]'"
 
 # give an error when certain Octave-only syntax is used.
 alias octave='octave --traditional'
+
+alias plasmashell-restart='killall plasmashell && kstart plasmashell'
