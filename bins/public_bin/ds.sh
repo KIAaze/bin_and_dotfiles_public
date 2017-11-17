@@ -1,6 +1,6 @@
 #!/bin/sh
 # source: https://superuser.com/questions/602818/how-to-get-the-actual-directory-size-out-of-du
-find ${1:-.} -type f -exec ls -lnq {} \+ | awk '
+find "${1:-.}" -type f -exec ls -lnq {} \+ | awk '
 BEGIN {sum=0} # initialization for clarity and safety
 function pp() {
   u="+Ki+Mi+Gi+Ti";

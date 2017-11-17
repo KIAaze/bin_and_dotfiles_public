@@ -7,20 +7,20 @@ set -eu
 DIR1=${1}
 DIR2=${2}
 
-S1=$(ds.sh ${DIR1})
-N1=$(find ${DIR1} | wc -l)
-N1_FILES=$(find ${DIR1} -type f | wc -l)
-N1_DIRS=$(find ${DIR1} -type d | wc -l)
+S1=$(ds.sh "${DIR1}")
+N1=$(find "${DIR1}" | wc -l)
+N1_FILES=$(find "${DIR1}" -type f | wc -l)
+N1_DIRS=$(find "${DIR1}" -type d | wc -l)
 echo "==> ${DIR1}"
 echo "Total size: ${S1}"
 echo "Number of files and directories: ${N1}"
 echo "Number of files: ${N1_FILES}"
 echo "Number of directories: ${N1_DIRS}"
 
-S2=$(ds.sh ${DIR2})
-N2=$(find ${DIR2} | wc -l)
-N2_FILES=$(find ${DIR2} -type f | wc -l)
-N2_DIRS=$(find ${DIR2} -type d | wc -l)
+S2=$(ds.sh "${DIR2}")
+N2=$(find "${DIR2}" | wc -l)
+N2_FILES=$(find "${DIR2}" -type f | wc -l)
+N2_DIRS=$(find "${DIR2}" -type d | wc -l)
 echo "==> ${DIR2}"
 echo "Total size: ${S2}"
 echo "Number of files and directories: ${N2}"
