@@ -12,4 +12,4 @@ MAIL=$1
 FILE=$2
 
 # decrypt with gpg -d ...
-gpg -c -e -r $MAIL $FILE
+gpg --symmetric --encrypt --recipient $MAIL $FILE

@@ -8,6 +8,9 @@ function set_HDMI_on()
 {
   pacmd set-card-profile 0 output:hdmi-stereo
   xrandr --output LVDS-1 --primary --mode 1366x768 --pos 1920x312 --rotate normal --output DP-1 --off --output HDMI-1 --mode 1920x1080i --pos 0x0 --rotate normal --output VGA-1 --off
+
+  # conf
+  #   xrandr --output LVDS-1 --primary --mode 1366x768 --pos 0x0 --rotate normal --output DP-1 --off --output HDMI-1 --mode 1024x768 --pos 1366x0 --rotate normal --output VGA-1 --off
 }
 
 function set_HDMI_off()
