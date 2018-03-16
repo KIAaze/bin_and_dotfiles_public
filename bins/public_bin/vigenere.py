@@ -8,7 +8,6 @@
 import sys
 import argparse
 
-
 def vigenere(decrypted_message, key, encrypt=True, start_chr=' ', end_chr='~',
              lower_case=False):
 
