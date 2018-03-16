@@ -2,8 +2,12 @@
 # -*- coding: utf-8 -*-
 
 '''
-Caesar cypher cracking script.
+Caesar cipher cracking script.
 The dictionary attack requires the aspell module from https://pypi.python.org/pypi/aspell-python-py3/1.15
+
+.. todo:: Combine with vigenere.py script.
+.. todo:: Create separate validation/cracking functions with scoring system. (use same postprocessing function for simple brute-force attack for example)
+.. todo:: Sub-arguments for dictionary attack like language, etc.
 '''
 
 import re
@@ -57,7 +61,7 @@ def bruteforce_caesar(message_in):
     message_out += '\n'
   return(message_out)
 
-def bruteforce_caesar_using_dictionary(message_in, verbosity=0, reverse_output=False):
+def bruteforce_caesar_using_dictionary(message_in, verbosity=0, reverse_output=False, select_max_score=False):
   import aspell
   import numpy
   spellchecker = aspell.Speller('lang', 'en')
@@ -94,46 +98,56 @@ def bruteforce_caesar_using_dictionary(message_in, verbosity=0, reverse_output=F
   #print(list(reversed(numpy.argsort(score_list))))
   #raise
   
-  # create final log output
-  if reverse_output:
-    sorted_key_list = numpy.argsort(score_list)
+  if not select_max_score:
+    # create final log output
+    if reverse_output:
+      sorted_key_list = numpy.argsort(score_list)
+    else:
+      sorted_key_list = reversed(numpy.argsort(score_list))
+    
+    summary = ''
+    for key in sorted_key_list:
+      summary += 80*'=' + '\n'
+      summary += 'key = {} -> score = {}/{}\n'.format(key, score_list[key], number_of_words[key])
+      summary += 80*'=' + '\n'
+      summary += message_out_list[key]
+      
+      if verbosity > 0:
+        summary += 40*'-' + '\n'
+        summary += 'Incorrect words:\n'
+        summary += 40*'-' + '\n'
+        for i in incorrect_words_list[key]:
+          summary += i + '\n'
+      
+      summary += '\n'
   else:
-    sorted_key_list = reversed(numpy.argsort(score_list))
+    sorted_key_list = list(reversed(numpy.argsort(score_list)))
+    key = sorted_key_list[0]
+    summary = message_out_list[key]
   
-  summary = ''
-  for key in sorted_key_list:
-    summary += 80*'=' + '\n'
-    summary += 'key = {} -> score = {}/{}\n'.format(key, score_list[key], number_of_words[key])
-    summary += 80*'=' + '\n'
-    summary += message_out_list[key]
-    
-    if verbosity > 0:
-      summary += 40*'-' + '\n'
-      summary += 'Incorrect words:\n'
-      summary += 40*'-' + '\n'
-      for i in incorrect_words_list[key]:
-        summary += i + '\n'
-    
-    summary += '\n'
   return(summary)
 
 def main():
   parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
     description=textwrap.dedent('''\
+...         Caesar cipher cracking script.
+...
 ...         Example usage:
 ...         --------------
 ...         echo "Hello world!" | %(prog)s --encrypt --key 4
 ...         %(prog)s --encrypt --key 4 infile.txt
 ...         %(prog)s --encrypt --key 4 infile.txt outfile.txt
+...         echo "Hello world!" | %(prog)s --encrypt --key $RANDOM | %(prog)s --dictionary --select-max-score
 ...         '''))
   parser.add_argument("-k", "--key", default=0, type=int)
   group = parser.add_mutually_exclusive_group(required=True)
   group.add_argument("-e", "--encrypt", action='store_true')
   group.add_argument("-d", "--decrypt", action='store_true')
   group.add_argument("-b", "--brute-force", action='store_true')
-  group.add_argument("-s", "--dictionary", action='store_true')
+  group.add_argument("-s", "--dictionary", action='store_true', help='Use dictionary attack ("-s" for "smart")')
   parser.add_argument('-v', '--verbose', action="count", dest="verbosity", default=0, help='verbosity level')
-  parser.add_argument('-r', '--reverse', action="store_true", help='reverse output order for dictionary attack')
+  parser.add_argument('-r', '--reverse', action="store_true", help='for dictionary attack: reverse output order')
+  parser.add_argument('-a', '--select-max-score', action="store_true", help='for dictionary attack: only print entry with maximum score ("-a" for "automatic")')
   parser.add_argument('infile', nargs='?', type=argparse.FileType('r'),
                       default=sys.stdin)
   parser.add_argument('outfile', nargs='?', type=argparse.FileType('w'),
@@ -144,7 +158,7 @@ def main():
   if args.brute_force:
     args.outfile.write(bruteforce_caesar(args.infile.read()))
   elif args.dictionary:
-    args.outfile.write(bruteforce_caesar_using_dictionary(args.infile.read(), verbosity=args.verbosity, reverse_output=args.reverse))
+    args.outfile.write(bruteforce_caesar_using_dictionary(args.infile.read(), verbosity=args.verbosity, reverse_output=args.reverse, select_max_score=args.select_max_score))
   else:
     args.outfile.write(caesar2(args.infile.read(), args.key, args.encrypt))
   
