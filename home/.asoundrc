@@ -1,0 +1,48 @@
+# cf: https://unix.stackexchange.com/questions/29185/how-to-check-why-sound-over-hdmi-doesnt-work
+#aplay -l
+#**** List of PLAYBACK Hardware Devices ****
+#card 0: SB [HDA ATI SB], device 0: ALC888 Analog [ALC888 Analog]
+#  Subdevices: 1/1
+#  Subdevice #0: subdevice #0
+#card 0: SB [HDA ATI SB], device 1: ALC888 Digital [ALC888 Digital]
+#  Subdevices: 1/1
+#  Subdevice #0: subdevice #0
+#card 1: HDMI [HDA ATI HDMI], device 3: HDMI 0 [HDMI 0]
+#  Subdevices: 1/1
+#  Subdevice #0: subdevice #0
+
+# aplay -D plug:digital file.wav
+# aplay -D plug:analog file.wav
+
+pcm.analog {
+        type hw
+        card 0
+        device 0 }
+
+pcm.digital {
+        type hw
+        card 0
+        device 1 }
+
+pcm.hdmi0 {
+        type hw
+        card 1
+        device 3 }
+
+# setting the default does not work for some reason...
+# TODO: fix this
+# cf: https://www.alsa-project.org/main/index.php/Setting_the_default_device
+# cf: https://wiki.archlinux.org/index.php/Advanced_Linux_Sound_Architecture#An_example_of_setting_default_device_using_.22defaults.22_node
+
+defaults.pcm.card 1
+defaults.ctl.card 1
+   
+pcm.!default {
+        type  plug
+        slave.pcm "hdmi0"
+}
+
+pcm.!default.type plug;
+pcm.default.slave.pcm.type hw;
+pcm.default.slave.pcm.card 1;
+pcm.default.slave.pcm.device 3;

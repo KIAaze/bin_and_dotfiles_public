@@ -1,0 +1,7 @@
+;; cf: https://stackoverflow.com/questions/42604456/festival-audio-device-problems-no-sound-output?rq=1
+
+(Parameter.set 'Audio_Required_Format 'aiff)
+(Parameter.set 'Audio_Method 'Audio_Command)
+;; (Parameter.set 'Audio_Command "paplay $FILE --client-name=Festival --stream-name=Speech")
+(Parameter.set 'Audio_Command "paplay --device=0 $FILE --client-name=Festival --stream-name=Speech")
+;; (Parameter.set 'Audio_Command "paplay --device=1 $FILE --client-name=Festival --stream-name=Speech")
