@@ -163,6 +163,19 @@ export defaultcolor="\[\033[m\]"
 # echo $TERM
 load_prompt()
 {
+  # Check if all parameters are present
+  # If no, exit
+  if [ $# -ne 1 ]
+  then
+    echo "usage :"
+    echo "load_prompt N"
+    echo "ex:"
+    echo "load_prompt 0"
+    echo "load_prompt 1"
+    echo "..."
+    return
+  fi
+
  if [ $1 -eq 0 ]
  then
     # non-anonymous 2-line prompt
@@ -210,6 +223,11 @@ load_prompt()
     # non-anonymous 1-line prompt
     PROMPT_COMMAND=pre_prompt_short
     PS1='\[\e[0;1;31;44m\][$newRET][\#][\u@\h][\w]\$ \[\e[m\] '
+  elif [ $1 -eq 5 ]
+  then
+    # anonymous basic $ prompt
+    PROMPT_COMMAND=pre_prompt_short
+    PS1="$ "
   else
     # anonymous 1-line prompt
     PROMPT_COMMAND=pre_prompt_short
