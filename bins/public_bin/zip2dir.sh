@@ -37,7 +37,7 @@ do
   then
     rm --verbose "${i}";
   else
-    echo "Remove ${1}? (y/n/a/q)"
+    echo "Remove ${i}? (y/n/a/q)"
     read ans
     case $ans in
       y) rm --verbose "${i}";;
