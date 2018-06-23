@@ -4,6 +4,7 @@
 --type-set=txt:ext:txt
 --type-set=bbl:ext:bbl
 --type-set=ctl:ext:ctl
+--type-set=sh:ext:sh,bash
 
 --nohtml
 --nobbl
