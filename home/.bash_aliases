@@ -129,15 +129,25 @@ alias cdtemp='cd $(mktemp -d )'
 alias bashclean='env --ignore-environment bash --noprofile --norc'
 alias bashcleansystem='env --ignore-environment bash --noprofile --rcfile /etc/profile'
 
-# start a clean zsh shell
+##### start a clean zsh shell
 # -f    equivalent to --no-rcs
 alias zshclean='env --ignore-environment zsh --no-rcs'
 
-# Fun with a personal quote file :)
-alias addquote='editor $QUOTEFILE && strfile $QUOTEFILE'
+##### Fun with a personal quote file :)
+alias addquote='editor ${QUOTEFILE} && strfile ${QUOTEFILE}'
 # TODO: todo files or use todo.sh
 
-alias fortune_custom='/usr/games/fortune -c 50% /usr/share/games/fortunes/ 50% $QUOTEFILE'
+##### alias to easily manage a did.txt file
+# based on https://theptrk.com/2018/07/11/did-txt-file/
+# http://learnvimscriptthehardway.stevelosh.com/chapters/29.html
+# The normal command simply takes a sequence of keys and pretends they were typed in normal mode. Seems simple enough.
+# G - to move you to the bottom of the file.
+# o - opens a line below the cursor and start Insert mode.
+# :r - Filename will insert the content into the current file
+# :! to run the shell commands like :!dir, :!ls
+alias did="vim +'normal Go' +'r!date' ${DID_FILE}"
+
+alias fortune_custom='/usr/games/fortune -c 50% /usr/share/games/fortunes/ 50% ${QUOTEFILE}'
 # hack para "fortunas" españolas :D (debería entregar un bug sobre el paquete) (con fortunes-fr, funciona simplemente con "fortune fr")
 alias fortune_es='dpkg -L fortunes-es | grep dat | xargs -I{} basename {} .dat | xargs fortune'
 

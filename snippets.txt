@@ -182,6 +182,13 @@ git patching:
 -python sys info: python -m sysconfig
 
 %%%%%%%%%%%%%%%%%%%%%%%%
+%rsync:
+# https://velenux.wordpress.com/2017/01/09/how-to-exclude-everything-except-a-specific-pattern-with-rsync/
+rsync -a --include="*/" --include="*your-pattern*" --exclude="*" /source/path/ /destination/path/
+rsync -avP --include="*/" --include="*your-pattern*" --exclude="*" /source/path/ /destination/path/
+rsync -navz --include="*/" --include="*.ctl" --include="*.sh" --exclude="*" /source/path/ /tmp/test
+
+%%%%%%%%%%%%%%%%%%%%%%%%
 %Kate:
 search and replace empty lines in KDE4 kate:
 \n+ -> \n
