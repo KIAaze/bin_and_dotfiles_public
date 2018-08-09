@@ -18,6 +18,8 @@
 # example to convert all symlinks in current dir to "text shortcuts":
 # symlink_to_shortcut.py -v -d . -i
 
+# TODO: merge with link_tool.py by adding it as a possible action? (or rename scripts to make finding them easier)
+
 import sys
 import os
 import argparse
@@ -59,7 +61,12 @@ def processFiles(arguments):
     link_destination = os.path.realpath(link_path)
     
     if arguments.in_place is None:
-      new_link_path = os.path.join(arguments.output_directory, os.path.relpath(link_path, start=arguments.tostrip))
+      if arguments.output_directory is None:
+        output_directory = tempfile.mkdtemp()
+        print('Output directory not specified. Outputting into {}'.format(output_directory))
+      else:
+        output_directory = arguments.output_directory
+      new_link_path = os.path.join(output_directory, os.path.relpath(link_path, start=arguments.tostrip))
     else:
       new_link_path = link_path
     
@@ -151,7 +158,7 @@ def processFiles(arguments):
 
 def get_argument_parser():
   # command-line option handling
-  parser = argparse.ArgumentParser(description = 'rename .prn files produced by BFDTD to NTFS compatible names (as well as human readable)', fromfile_prefix_chars='@')
+  parser = argparse.ArgumentParser(description = 'Convert symbolic links into text files or windows shortcuts (which can be copied to NTFS partitions).', fromfile_prefix_chars='@')
   
   parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Verbose: print names of files successfully renamed.")
   parser.add_argument("-n", "--no-act", action="store_true", dest="no_act", default=False, help="No Action: show what files would have been renamed.")
@@ -159,7 +166,7 @@ def get_argument_parser():
   parser.add_argument("-d", "--directory", action="append", dest="directory", help="Process this directory recursively. Multiple directories can be specified with -d DIR1 -d DIR2")
   parser.add_argument('files', action="store", nargs='*', help='input files')
 
-  parser.add_argument("--output-directory", default=tempfile.gettempdir() + os.sep + 'shortcuts', action="store", help="Optional output directory (should exist). If not specified, output will go into the same directory as original file.")
+  parser.add_argument("--output-directory", default=None, action="store", help="Optional output directory (should exist). If not specified, output will go into a temporary directory.")
   #parser.add_argument("--output-directory", default=os.curdir, action="store", help="Optional output directory (should exist). If not specified, output will go into the same directory as original file.")
   
   parser.add_argument("--action", action="store", choices=['create_shortcut_text_file','hardlink','create_shortcut'], default='create_shortcut_text_file', help="create_shortcut_text_file creates a text file containing the path linked to, hardlink uses the os.link() function, create_shortcut should create a Windows shortcut (not working yet)")
