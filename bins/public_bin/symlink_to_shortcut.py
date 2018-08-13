@@ -25,12 +25,23 @@ import os
 import argparse
 import tempfile
 
-# TODO: Check out distutils  create_shortcut(target, description, filename[, arguments[, workdir[, iconpath[, iconindex]]]]) for creating correct windows shortcuts.
-def create_shortcut_text_file(src,dst):
+# TODO: Check out distutils, create_shortcut(target, description, filename[, arguments[, workdir[, iconpath[, iconindex]]]]) for creating correct windows shortcuts.
+def create_shortcut_text_file(TARGET, LINK_NAME, use_tempfile=False):
   ''' Create a text file containing the text "Link to src" named dst. '''
-  with open(dst, 'w') as f:
-    f.write('Link to '+str(src)+'\n')
-  return
+  if use_tempfile:
+    f, fname = tempfile.mkstemp(dir=os.path.dirname(LINK_NAME))
+    os.close(f)
+  else:
+    if os.path.lexists(LINK_NAME):
+      raise Exception('Destination file exists: {}'.format(LINK_NAME))
+    fname = LINK_NAME
+  
+  with open(fname, 'w') as f:
+    f.write('Link to {}\n'.format(TARGET))
+  
+  print('Created new text shortcut: {} -> {}'.format(fname, TARGET))
+  
+  return(fname)
 
 def processFiles(arguments):
   # creating the following for processing:
@@ -39,7 +50,17 @@ def processFiles(arguments):
   #-new_link_path
   #-new_link_destination
   
+  # define a temporary output directory if none given
+  if arguments.output_directory is None:
+    output_directory = tempfile.mkdtemp()
+    print('Output directory not specified. Outputting into {}'.format(output_directory))
+  else:
+    output_directory = arguments.output_directory
+  
+  # define list of links
   link_path_list = []
+  
+  # add only symlinks
   for f in arguments.files:
     if os.path.islink(f):
       link_path_list.append(f)
@@ -55,39 +76,64 @@ def processFiles(arguments):
           if os.path.islink(p):
             link_path_list.append(p)
   
+  #  os.path.realpath(path): Return the canonical path of the specified filename, eliminating any symbolic links encountered in the path (if they are supported by the operating system).
+  #  os.path.relpath(path, start=os.curdir): Return a relative filepath to path either from the current directory or from an optional start directory. This is a path computation: the filesystem is not accessed to confirm the existence or nature of path or start.
+  #  os.readlink(path, *, dir_fd=None): Return a string representing the path to which the symbolic link points. The result may be either an absolute or relative pathname; if it is relative, it may be converted to an absolute pathname using os.path.join(os.path.dirname(path), result).
+  #  os.path.normpath(path): Normalize a pathname by collapsing redundant separators and up-level references so that A//B, A/B/, A/./B and A/foo/../B all become A/B. This string manipulation may change the meaning of a path that contains symbolic links. On Windows, it converts forward slashes to backward slashes. To normalize case, use normcase().
+        
   processing_tuples = []
   for link_path in link_path_list:
     orig_dir = os.path.dirname(os.path.normpath(link_path))
-    link_destination = os.path.realpath(link_path)
+    link_destination_readlink = os.readlink(link_path)
+    link_destination_realpath = os.path.realpath(link_path)
     
     if arguments.in_place is None:
-      if arguments.output_directory is None:
-        output_directory = tempfile.mkdtemp()
-        print('Output directory not specified. Outputting into {}'.format(output_directory))
-      else:
-        output_directory = arguments.output_directory
       new_link_path = os.path.join(output_directory, os.path.relpath(link_path, start=arguments.tostrip))
     else:
       new_link_path = link_path
     
     #print(os.path.relpath(link_destination, start=arguments.tostrip))
     #new_link_destination = arguments.output_directory + os.sep + os.path.relpath(link_destination, start=arguments.tostrip)
-    new_link_destination = os.path.relpath(link_destination, start=orig_dir)
-    processing_tuples.append((link_path, link_destination, new_link_path, new_link_destination))
+    if arguments.use_relative_path:
+      new_link_destination = os.path.relpath(link_destination_readlink, start=orig_dir)
+    else:
+      new_link_destination = link_destination_readlink
+    processing_tuples.append((link_path, link_destination_readlink, new_link_path, new_link_destination))
 
   for t in processing_tuples:
-    (link_path, link_destination, new_link_path, new_link_destination) = t
+    (link_path, link_destination_readlink, new_link_path, new_link_destination) = t
     if arguments.verbose:
       print('--------------------------------------------')
       print('arguments.action =', arguments.action)
       print('arguments.remove_source_files =', arguments.remove_source_files)
       print('link_path =', link_path)
-      print('link_destination =', link_destination)
+      print('link_destination_readlink =', link_destination_readlink)
       print('new_link_path =', new_link_path)
       print('new_link_destination =', new_link_destination)
     if os.path.lexists(link_path):
       #if os.path.lexists(new_link_path) and arguments.force:
       
+      if arguments.in_place:
+        use_tempfile = True
+      else:
+        use_tempfile = False
+        
+      # if (not os.path.lexists(new_link_path)): # or arguments.force: force disabled as if the destination file is a link, it might modify the contents of the file linked to!!!
+      if (not arguments.no_act):
+        # do the action
+        if arguments.action == 'create_shortcut_text_file':
+          LINK_NAME = create_shortcut_text_file(new_link_destination, new_link_path, use_tempfile=use_tempfile)
+        else:
+          print('action not recognized : action = ' + arguments.action,file=sys.stderr)
+          sys.exit(-1)
+          
+        # remove source file if requested
+        if arguments.remove_source_files:
+          os.remove(link_path)
+      # else:
+        # print('WARNING: Skipping', link_path,': destination file exists.', file=sys.stderr)
+      
+      # For in-place modification: If the new file creation was successful, remove the original file and rename the new file.
       if arguments.in_place:
         if arguments.in_place[0] is None:
           if (not arguments.no_act):
@@ -95,21 +141,8 @@ def processFiles(arguments):
         else:
           if (not arguments.no_act):
             os.rename(link_path, link_path + arguments.in_place[0])
+        os.rename(LINK_NAME, link_path)
       
-      if (not os.path.lexists(new_link_path)): # or arguments.force: force disabled as if the destination file is a link, it might modify the contents of the file linked to!!!
-        if (not arguments.no_act):
-          # do the action
-          if arguments.action == 'create_shortcut_text_file':
-            create_shortcut_text_file(new_link_destination, new_link_path)
-          else:
-            print('action not recognized : action = ' + arguments.action,file=sys.stderr)
-            sys.exit(-1)
-            
-          # remove source file if requested
-          if arguments.remove_source_files:
-            os.remove(link_path)
-      else:
-        print('WARNING: Skipping',link_path,': destination file exists.', file=sys.stderr)
     else:
       print('WARNING: Skipping',link_path,': Path does not exist or is not accessible.', file=sys.stderr)
 
@@ -166,6 +199,8 @@ def get_argument_parser():
   parser.add_argument("-d", "--directory", action="append", dest="directory", help="Process this directory recursively. Multiple directories can be specified with -d DIR1 -d DIR2")
   parser.add_argument('files', action="store", nargs='*', help='input files')
 
+  parser.add_argument("--use-relative-path", action="store_true", default=False, help="Redefine the link destination as a relative path.")
+
   parser.add_argument("--output-directory", default=None, action="store", help="Optional output directory (should exist). If not specified, output will go into a temporary directory.")
   #parser.add_argument("--output-directory", default=os.curdir, action="store", help="Optional output directory (should exist). If not specified, output will go into the same directory as original file.")
   
@@ -178,7 +213,7 @@ def get_argument_parser():
   # '' -> in_place=None
   # '-i' ->  in_place=[None]
   # '-i SUFFIX' ->  in_place=[SUFFIX]
-  parser.add_argument("-i", "--in-place", action='append', nargs='?', help="replace file in place (makes backup if extension supplied)",  metavar='SUFFIX')
+  parser.add_argument("-i", "--in-place", action='append', nargs='?', help="replace file in place (makes backup if extension supplied). Use '--' before input files if no suffix specified.",  metavar='SUFFIX')
 
   return parser
 
