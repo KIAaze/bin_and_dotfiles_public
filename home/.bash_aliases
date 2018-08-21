@@ -229,3 +229,6 @@ alias grepNonAscii="grep --color='auto' --perl-regexp '[^\x00-\x7F]'"
 alias octave='octave --traditional'
 
 alias plasmashell-restart='killall plasmashell && kstart plasmashell'
+
+# activate pymeep/pympb:
+alias activate_pymeep='export PATH=${HOME}/miniconda/bin:$PATH; source activate mp'
