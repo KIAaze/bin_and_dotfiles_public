@@ -98,13 +98,18 @@ def bin2txt(message):
   decodedMessage = ''
   
   message_lines = message.splitlines()
+  # print(message_lines)
+  # raise
   message_lines = message.split('\n')
   message_lines = message.split('\\n')
+
+  # print(message_lines)
+  # raise
   
   for line_idx, line in enumerate(message_lines):
-    #print((line_idx, line))
+    # print((line_idx, line))
     #continue
-    line_clean = line.replace('0b','').replace(' ','')
+    line_clean = line.replace('\n', '').replace('0b','').replace(' ','')
     
     line_split = [ line_clean[i:i+8] for i in range(0, len(line_clean), 8) ]
     
@@ -150,28 +155,30 @@ def main():
   parser.add_argument('--verbose', '-v', action='count', dest='verbosity', default=0)
   parser.add_argument('-c', '--combine-args', help='Combine all arguments into a single string.', action='store_true')
 
+  parser.add_argument('-i', '--infile', type=argparse.FileType('r'), help='Specify an input file.')
+
   parser_txt2dec = subparsers.add_parser('txt2dec', help=txt2dec.__doc__)
-  parser_txt2dec.add_argument('args', nargs='*', metavar='TXTSTR')
+  parser_txt2dec.add_argument('args', nargs='*', metavar='TXTSTR', help='Messages to decrypt.')
   parser_txt2dec.set_defaults(func=txt2dec)
 
   parser_dec2txt = subparsers.add_parser('dec2txt', help=dec2txt.__doc__)
-  parser_dec2txt.add_argument('args', nargs='*', metavar='DECSTR')
+  parser_dec2txt.add_argument('args', nargs='*', metavar='DECSTR', help='Messages to decrypt.')
   parser_dec2txt.set_defaults(func=dec2txt)
 
   parser_txt2bin = subparsers.add_parser('txt2bin', help=txt2bin.__doc__)
-  parser_txt2bin.add_argument('args', nargs='*', metavar='TXTSTR')
+  parser_txt2bin.add_argument('args', nargs='*', metavar='TXTSTR', help='Messages to decrypt.')
   parser_txt2bin.set_defaults(func=txt2bin)
 
   parser_bin2txt = subparsers.add_parser('bin2txt', help=bin2txt.__doc__)
-  parser_bin2txt.add_argument('args', nargs='*', metavar='BINSTR')
+  parser_bin2txt.add_argument('args', nargs='*', metavar='BINSTR', help='Messages to decrypt.')
   parser_bin2txt.set_defaults(func=bin2txt)
 
   parser_txt2hex = subparsers.add_parser('txt2hex', help=txt2hex.__doc__)
-  parser_txt2hex.add_argument('args', nargs='*', metavar='TXTSTR')
+  parser_txt2hex.add_argument('args', nargs='*', metavar='TXTSTR', help='Messages to decrypt.')
   parser_txt2hex.set_defaults(func=txt2hex)
 
   parser_hex2txt = subparsers.add_parser('hex2txt', help=hex2txt.__doc__)
-  parser_hex2txt.add_argument('args', nargs='*', metavar='HEXSTR')
+  parser_hex2txt.add_argument('args', nargs='*', metavar='HEXSTR', help='Messages to decrypt.')
   parser_hex2txt.set_defaults(func=hex2txt)
 
   allargs = parser.parse_args()
@@ -180,24 +187,42 @@ def main():
     print(allargs)
   
   if allargs.chosen_subcommand:
-    if len(allargs.args) == 0:
-      message = input("Enter string of letters or numbers to process: ")
-      message_list = [message]
-    elif allargs.combine_args:
-      message_list = [' '.join(allargs.args)]
-    else:
-      message_list = allargs.args
-  
-    if allargs.verbosity >= 3:
-      print('message_list = {}'.format(message_list))
 
-    for message in message_list:
+    if allargs.infile is None:
+      if len(allargs.args) == 0:
+        message = input("Enter string of letters or numbers to process: ")
+        message_list = [message]
+      elif allargs.combine_args:
+        message_list = [' '.join(allargs.args)]
+      else:
+        message_list = allargs.args
+    
+      if allargs.verbosity >= 3:
+        print('=============')
+        print('message_list:')
+        print('-------------')
+        for m in message_list:
+          print(m)
+          print('-------------')
+        print('=============')
+
+      for message in message_list:
+        if allargs.verbosity:
+          print('==> Processing {}'.format(message))
+        result = allargs.func(message)
+        if allargs.verbosity:
+          print("Conversion result:")
+        print(result)
+
+    else:
       if allargs.verbosity:
-        print('==> Processing {}'.format(message))
+        print('==> Processing {}'.format(allargs.infile.name))
+      message = allargs.infile.read()
       result = allargs.func(message)
       if allargs.verbosity:
         print("Conversion result:")
       print(result)
+  
   else:
     parser.print_help()
   
