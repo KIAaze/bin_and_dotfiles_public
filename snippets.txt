@@ -212,3 +212,13 @@ search and replace empty lines in KDE4 kate:
   cdata1 = get(dataObjs{1}, 'CData');
   cdata2 = get(dataObjs{2}, 'CData');
   imagesc(cdata2)
+
+# convenient sed/awk/cut tricks:
+# https://stackoverflow.com/questions/5237605/how-can-i-run-git-status-and-just-get-the-filenames
+git status --porcelain | sed s/^...//
+git status --porcelain | sed -e 's!.*/!!'
+git status --porcelain|awk '{if($1=="M") {print "basename " $2}}'|sh
+git status --porcelain|awk '{if($1=="M") {print "scp " $2 " account_name@server_ip:~/my_codebase/$(dirname " $2 ")/;"} }'|sh
+git status --porcelain | awk '/^ M/{ print $2 }'
+git status -s | cut -c4-
+# For someone who are not familiar with cut command, cut -c 4- means, take characters from fourth character.
