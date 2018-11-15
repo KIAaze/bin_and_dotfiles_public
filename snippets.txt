@@ -181,6 +181,10 @@ git patching:
 -record terminal sessions: man script (cf also python "pty" module)
 -python sys info: python -m sysconfig
 
+# print info about any current connections:
+netstat -nputw
+netstat --numeric --program --udp --tcp --raw
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %rsync:
 # https://velenux.wordpress.com/2017/01/09/how-to-exclude-everything-except-a-specific-pattern-with-rsync/
