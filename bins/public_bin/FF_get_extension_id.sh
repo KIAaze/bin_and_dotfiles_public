@@ -49,5 +49,5 @@ INSTALLDIR=/usr/lib/firefox-addons/extensions
 echo "Install to ${INSTALLDIR} ?"
 read ans
 case $ans in
-  y|Y|yes) sudo cp --interactive --verbose ${1} ${INSTALLDIR}/${ID}.xpi;;
+  y|Y|yes) echo "sudo cp --interactive --verbose ${1} ${INSTALLDIR}/${ID}.xpi"; sudo cp --interactive --verbose ${1} ${INSTALLDIR}/${ID}.xpi;;
 esac

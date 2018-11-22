@@ -11,11 +11,8 @@ def symlinkIntoChrome(file_to_link, profile_file = '~/.mozilla/firefox/profiles.
   profile_file = os.path.expanduser(profile_file)
   file_to_link = os.path.expanduser(file_to_link)
   
-  #print('LOLOL')
   config = configparser.ConfigParser()
-  #print(profile_file)
   if config.read(profile_file):
-    #print(config.sections())
     for sectionID in config.sections():
       if 'Path' in config[sectionID]:
         dstdir = os.path.join(os.path.dirname(profile_file), config[sectionID]['Path'], 'chrome')
