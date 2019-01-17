@@ -202,6 +202,9 @@ alias unset_locale='unset  LANGUAGE LC_ALL LC_MESSAGES LANG'
 
 # alias python3='python3 -W error' # unfortunately causes exit due to imp module deprecation...
 
+# alias check_proxies='echo -e "http_proxy=${http_proxy}\nhttps_proxy=${https_proxy}"'
+alias check_proxies='printenv | grep proxy'
+alias set_proxies='export http_proxy="http://localhost:8080"; export https_proxy="http://localhost:8080"'
 alias unset_proxies='unset http_proxy https_proxy'
 alias unset_python='unset PYTHONSTARTUP PYTHONPATH'
 
