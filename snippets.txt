@@ -185,6 +185,11 @@ git patching:
 netstat -nputw
 netstat --numeric --program --udp --tcp --raw
 
+# ack/grep: grep/ack -o with characters of context (not lines):
+#   https://stackoverflow.com/questions/8101540/grep-ack-o-with-characters-of-context-not-lines
+ack -i -o '.{0,10}fig.{0,10}' main.tex 
+grep -no '.\{0,10\}string.\{0,10\}' **/*.[ch]* main.tex
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %rsync:
 # https://velenux.wordpress.com/2017/01/09/how-to-exclude-everything-except-a-specific-pattern-with-rsync/
