@@ -74,7 +74,7 @@ function set_command_sound {
   export PLAY_COMMAND_SOUND=$1
 }
 
-play_command_sound()
+function play_command_sound()
 {
   if [ $PLAY_COMMAND_SOUND -eq 1 ]
   then
@@ -83,7 +83,10 @@ play_command_sound()
 }
 
 function pre_prompt_short {
+  disable_shell_debug
+  play_command_sound
   newRET=$(funny_face)
+  enable_shell_debug
 }
 
 function get_length()
@@ -91,15 +94,40 @@ function get_length()
   echo -n $1 | wc -m
 }
 
+function disable_shell_debug {
+#   echo "DISABLING SHELL DEBUG - START: $-"
+  # immediately disable debugging to echo the less number of line possible
+  case "$-" in
+    *v*x*) set +vx; _mlshdbg='vx' ;;
+    *v*) set +v; _mlshdbg='v' ;;
+    *x*) set +x; _mlshdbg='x' ;;
+    *) _mlshdbg='' ;;
+  esac;
+#   echo "DISABLING SHELL DEBUG - END: $-"
+}
+
+function enable_shell_debug {
+#   echo "ENABLING SHELL DEBUG - START: $-"
+  # restore shell debugging options if disabled
+  if [ -n "${_mlshdbg:-}" ]; then
+    set -$_mlshdbg;
+    unset _mlshdbg;
+  fi;
+#   echo "ENABLING SHELL DEBUG - END: $-"
+}
+
 # TODO: Improve by passing PROMPTBASE as argument or something like that.
 function pre_prompt {
+
+  disable_shell_debug
+  
   newRET=$(funny_face)
   newPWD=$(pwd | sed "s|${HOME}|~|")
   user=$(whoami)
   host=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
   datenow=$(date "+%a, %d %b %y")
 
-  # play_command_sound
+  play_command_sound
 
   if [ $ANONYMOUS -eq 0 ]
   then
@@ -141,6 +169,8 @@ function pre_prompt {
       let cutt=3-${fillsize}
       newPWD="...$(echo -n $PWD | sed --expression="s/\(^.\{$cutt\}\)\(.*\)/\2/")"
   fi
+  
+  enable_shell_debug
 }
 
 export black="\[\033[0;38;5;0m\]"
@@ -228,12 +258,18 @@ load_prompt()
     # anonymous basic $ prompt
     PROMPT_COMMAND=pre_prompt_short
     PS1="$ "
-  else
+  elif [ $1 -eq 6 ]
+  then
     # anonymous 1-line prompt
     PROMPT_COMMAND=pre_prompt_short
     PS1='\[\e[0;1;33;44m\][$newRET][\#][\w]\$ \[\e[m\] '
+  else
+    # default prompt
+    unset PROMPT_COMMAND
+    PS1="\s-\v\$ "
   fi
-  PS1="\$(play_command_sound)$PS1"
+#   PS1="\$(play_command_sound)$PS1"
+#   PS1="\$(disable_shell_debug)\$(play_command_sound)$PS1\$(enable_shell_debug)"
 }
 
 set_color_theme()
