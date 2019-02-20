@@ -12,3 +12,7 @@ cp --recursive --verbose /etc/apt/sources.list* ${DSTDIR}/etc.apt/
 apt-key exportall > ${DSTDIR}/Repo.keys
 
 apt-clone clone ${DSTDIR}/apt-clone-state-ubuntu-$(lsb_release -sr)-$(date +%F).tar.gz &> ${DSTDIR}/apt-clone.log
+
+# other config files
+cp --verbose /etc/grub.d/10_linux ${DSTDIR}/
+cp --verbose /etc/update-manager/release-upgrades ${DSTDIR}/
