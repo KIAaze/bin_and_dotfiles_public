@@ -83,9 +83,9 @@ function play_command_sound()
 }
 
 function pre_prompt_short {
+  newRET=$(funny_face)
   disable_shell_debug
   play_command_sound
-  newRET=$(funny_face)
   enable_shell_debug
 }
 
@@ -119,9 +119,10 @@ function enable_shell_debug {
 # TODO: Improve by passing PROMPTBASE as argument or something like that.
 function pre_prompt {
 
+  newRET=$(funny_face)
+  
   disable_shell_debug
   
-  newRET=$(funny_face)
   newPWD=$(pwd | sed "s|${HOME}|~|")
   user=$(whoami)
   host=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
