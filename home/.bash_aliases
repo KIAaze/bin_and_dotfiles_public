@@ -235,3 +235,6 @@ alias plasmashell-restart='killall plasmashell && kstart plasmashell'
 
 # activate pymeep/pympb:
 alias activate_pymeep='export PATH=${HOME}/miniconda/bin:$PATH; source activate mp'
+
+alias web-off='sudo ufw reject out 80 && sudo ufw reject out 443 && sudo ufw status'
+alias web-on='sudo ufw delete reject out 80 && sudo ufw delete reject out 443 && sudo ufw status'
