@@ -238,3 +238,5 @@ alias activate_pymeep='export PATH=${HOME}/miniconda/bin:$PATH; source activate 
 
 alias web-off='sudo ufw reject out 80 && sudo ufw reject out 443 && sudo ufw status'
 alias web-on='sudo ufw delete reject out 80 && sudo ufw delete reject out 443 && sudo ufw status'
+
+alias bb='pasuspender -- env PULSE_SERVER= bb'
