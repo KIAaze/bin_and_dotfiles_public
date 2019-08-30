@@ -10,6 +10,8 @@ then
         exit 0
 fi
 
+source ${HOME}/bin/public_bin/library/colors.sh
+
 # if diff --recursive "${1}" "${2}"
 # then
 #   echo rm --recursive "${2}"
@@ -19,21 +21,31 @@ fi
 
 if diff --recursive "${1}" "${2}"
 then
-  echo "diff test: PASSED"
+  echo -e "=====> diff test: ${green}PASSED${defaultcolor}"
 else
-  echo "diff test: FAILED"
+  echo -e "=====> diff test: ${red}FAILED${defaultcolor}"
+  exit 1
 fi
 
 if ds-diff.sh "${1}" "${2}"
 then
-  echo "ds-diff.sh test: PASSED"
+  echo -e "=====> ds-diff.sh test: ${green}PASSED${defaultcolor}"
 else
-  echo "ds-diff.sh test: FAILED"
+  echo -e "=====> ds-diff.sh test: ${red}FAILED${defaultcolor}"
+  exit 1
 fi
 
 if meld "${1}" "${2}"
 then
-  echo "meld test: PASSED"
+  echo -e "=====> meld test: ${green}PASSED${defaultcolor}"
 else
-  echo "meld test: FAILED"
+  echo -e "=====> meld test: ${red}FAILED${defaultcolor}"
+  exit 1
 fi
+
+echo "remove ${2}?"
+read ans
+case $ans in
+  y|Y|yes) rm --recursive "${2}";;
+  *) echo "Nothing done.";;
+esac

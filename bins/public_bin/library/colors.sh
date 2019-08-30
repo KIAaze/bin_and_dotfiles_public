@@ -1,0 +1,22 @@
+#!/bin/bash
+black="\033[0;38;5;0m"
+red="\033[0;38;5;1m"
+orange="\033[0;38;5;130m"
+green="\033[0;38;5;2m"
+yellow="\033[0;38;5;3m"
+blue="\033[0;38;5;4m"
+bblue="\033[0;38;5;12m"
+magenta="\033[0;38;5;55m"
+magenta2="\033[0;38;5;5m"
+cyan="\033[0;38;5;6m"
+white="\033[0;38;5;7m"
+coldblue="\033[0;38;5;33m"
+smoothblue="\033[0;38;5;111m"
+iceblue="\033[0;38;5;45m"
+turqoise="\033[0;38;5;50m"
+smoothgreen="\033[0;38;5;42m"
+brown="\033[0;38;5;3m"
+defaultcolor="\033[m"
+
+# example use:
+# echo -e "${red}red ${green}green ${blue}blue ${defaultcolor}"

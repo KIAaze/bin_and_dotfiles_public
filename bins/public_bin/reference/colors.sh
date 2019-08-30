@@ -26,7 +26,7 @@ echo -e "\e[1;4;34;45mBold colors? Colored text not ok. :(\e[m"
 echo -e "\033[1m BOLD"
 echo -e "\033[7m Background White Forground Black(reverse video)" 
 echo -e "\033[5m Blink"
- 
+
 echo -e "\033[0m Normal"
 
 echo  "30-37 Forground Color value as follows"
