@@ -342,15 +342,16 @@ rmdir() {
   # rmdir wrapper to quickly deal with annoying .directory files
   for i in "$@"
   do
-    if ! /bin/rmdir "$i"
+    if ! /bin/rmdir -- "$i"
     then
-      N=$(find "$i" | wc -l)
+#       N=$(find -- "$i" | wc -l)
+      N=$(find -- $(readlink -f -- "$i") | wc -l)
       if test ${N} -eq 2
       then
         if test -f "$i/.directory"
         then
           rm -iv "$i/.directory"
-          /bin/rmdir "$i"
+          /bin/rmdir -- "$i"
         fi
       fi
     fi
