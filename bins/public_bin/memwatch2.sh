@@ -9,6 +9,11 @@ echo "$0"
 echo "This shellscript will kill the most memory intensive user process if the free RAM goes beneath the value given in ~/bin/minmem.txt"
 echo
 
+# TODO: Merge memwatch2.sh and memwatch.sh
+# TODO: Allow specifying a list of processes that can be killed and/or create a wrapper for launching programs with a memory watch?
+# TODO: Specify min mem as percentage of available memory
+# TODO: Use default values.
+
 #example output of free
 #              total       used       free     shared    buffers     cached
 # Mem:        450300     420636      29664          0      25172     234092
