@@ -12,12 +12,11 @@ fi
 
 source ${HOME}/bin/public_bin/library/colors.sh
 
-# if diff --recursive "${1}" "${2}"
-# then
-#   echo rm --recursive "${2}"
-# else
-#   echo "ERROR: Directories are different"
-# fi
+if test $(stat --format="%i" "${1}") -eq $(stat --format="%i" "${2}")
+then
+  echo "ERROR/WARNING: Directories have the same inode!"
+  exit -1
+fi
 
 if diff --recursive "${1}" "${2}"
 then
