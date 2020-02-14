@@ -196,3 +196,14 @@ fi
 # Disallow write access to your terminal. (disabled by default, but just in case...)
 # causes error on login in KDE4 however ("error found when loading ~/.profile:\n\nstdin: is not a tty\n as a result the session will not be configured correctly.")
 #mesg n
+
+# a quick and dirty fix for yakuake’s “open new tab in same directory” issue
+# cf: https://acidbourbon.wordpress.com/2016/12/03/a-quick-and-dirty-fix-for-yakuakes-open-new-tab-in-same-directory-issue/
+if [ $(basename "/"$(ps -f -p $(cat /proc/$(echo $$)/stat | cut -d \  -f 4) | tail -1 | sed 's/^.* //')) == "yakuake" ]; then
+  # go to last active cwd
+  if [ -e /dev/shm/$USER-yakuake-cwd ]; then
+    cd "$(cat /dev/shm/$USER-yakuake-cwd)"
+  fi
+  # on each stroke of the return key, save cwd in a shared memory
+  export PS1=$PS1'$(pwd > /dev/shm/$USER-yakuake-cwd)'
+fi
