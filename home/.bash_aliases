@@ -212,7 +212,8 @@ alias dunnet='emacs -batch -l dunnet'
 
 alias time_plus='/usr/bin/time -f "RSS: %MkiB Time: %E"'
 
-alias dlmp3='~/bin/youtube-dl -x --audio-format=mp3'
+alias dlmp3='${HOME}/bin/youtube-dl -x --audio-format=mp3'
+alias youtube-dl-music='${HOME}/bin/youtube-dl --update; ${HOME}/bin/youtube-dl --output "${HOME}/Music/music/FromYoutube/%(title)s-%(id)s.%(ext)s" -x'
 
 # alias locateInAll='locate --database ${DBPATH}'
 alias locateInAll='locate --database $(ls -1 ~/*.db | tr "\n" ":")'
