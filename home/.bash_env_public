@@ -1,3 +1,2 @@
 export RSYNCDIR=${HOME}/rsync
-export SYNCSTICK=/media/$USER/MULTIBOOT
 export PROMPTSTYLE=3
