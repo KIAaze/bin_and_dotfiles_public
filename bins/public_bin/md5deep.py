@@ -34,7 +34,7 @@ def main():
     description=textwrap.dedent('''\
       Runs md5deep on two directories and compares the results.
 
-      Note: For simple duplicate file search, just use fdupes, fslint (or findup from the same package) or fslint-gui instead.
+      Note: For simple duplicate file search, just use fdupes, fslint (or findup from the same package) or fslint-gui instead. Although fslint(-gui) is currently broken for paths with spaces on Kubuntu 19.10. :(
 
       md5deep options:
         -r : recursive
