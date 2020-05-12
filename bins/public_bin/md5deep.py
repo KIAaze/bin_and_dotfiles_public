@@ -4,10 +4,8 @@
 import sys
 import os
 import argparse
+import textwrap
 
-# md5deep options:
-# -r : recursive
-# -o f : only process regular files
 def md5deep_and_strip(directory, file_abs, file_stripped):
   print( 'directory =', directory)
   
@@ -32,7 +30,24 @@ def md5deep_and_strip(directory, file_abs, file_stripped):
   return hashdata
 
 def main():
-  parser = argparse.ArgumentParser(description='Runs md5deep on two directories and compares the results.')
+  parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=textwrap.dedent('''\
+      Runs md5deep on two directories and compares the results.
+
+      Note: For simple duplicate file search, just use fdupes, fslint (or findup from the same package) or fslint-gui instead.
+
+      md5deep options:
+        -r : recursive
+        -o f : only process regular files
+
+      Direct md5deep usage: md5deep -r -o f DIRECTORY
+
+      TODO: Get rid of tempfiles, unless otherwise specified.
+      TODO: Just use meld for comparison?
+      TODO: GUI? fslint-gui mod?
+      TODO: Could be improved to only compare files with the same basepath, etc...
+      '''))
+
   parser.add_argument('DIR1')
   parser.add_argument('DIR2')
   parser.add_argument('-v', '--verbose', action="count", dest="verbosity", default=0, help='verbosity level')
@@ -50,6 +65,9 @@ def main():
   print(cmd)
   if( os.system(cmd) != 0 ):
     differences_found = True
+  else:
+    differences_found = False
+    
 
   hash_dict = dict()
   hash_dict_fullpath = dict()
