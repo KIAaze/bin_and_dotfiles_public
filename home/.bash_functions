@@ -345,7 +345,7 @@ rmdir() {
     if ! /bin/rmdir -- "$i"
     then
 #       N=$(find -- "$i" | wc -l)
-      N=$(find -- $(readlink -f -- "$i") | wc -l)
+      N=$(find -- "$(readlink -f -- "$i")" | wc -l)
       if test ${N} -eq 2
       then
         if test -f "$i/.directory"
