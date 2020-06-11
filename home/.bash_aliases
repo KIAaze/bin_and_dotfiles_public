@@ -232,7 +232,9 @@ alias grepNonAscii="grep --color='auto' --perl-regexp '[^\x00-\x7F]'"
 # give an error when certain Octave-only syntax is used.
 alias octave='octave --traditional'
 
-alias plasmashell-restart='killall plasmashell && kstart plasmashell'
+# https://it-db.com/how-to-restart-kde-plasma-shell-if-it-freezes/
+# kstart for kde < 5.10, else kstart5
+alias plasmashell-restart='killall plasmashell && kstart5 plasmashell'
 
 # activate pymeep/pympb:
 alias activate_pymeep='export PATH=${HOME}/miniconda/bin:$PATH; source activate mp'

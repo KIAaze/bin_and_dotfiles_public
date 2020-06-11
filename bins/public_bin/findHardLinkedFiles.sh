@@ -3,11 +3,15 @@
 # Searches for "hard linked duplicates" and then offers to delete them interactively.
 # Stops once there is only one file of each duplicate group left, even if it might still have hard-linked duplicates outside of the searched directory.
 #
+# Usage:
+#   findHardLinkedFiles.sh DIR REM
+#   if REM=1, interactively delete files, else just list them
+#
 # Example usage:
-# findHardLinkedFiles.sh .
-# findHardLinkedFiles.sh . 0
-# findHardLinkedFiles.sh . 1
-# findHardLinkedFiles.sh . 0 -maxdepth 3
+#   findHardLinkedFiles.sh .
+#   findHardLinkedFiles.sh . 0
+#   findHardLinkedFiles.sh . 1
+#   findHardLinkedFiles.sh . 0 -maxdepth 3
 
 DIR=${1:-.}
 shift
