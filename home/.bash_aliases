@@ -168,6 +168,8 @@ alias move_pictures='mv -iv *.gif *.png *.bmp *.jpg *.jpeg *.GIF *.PNG *.BMP *.J
 # Usage: ssh_tunnel $PORT $HOST
 alias ssh_tunnel='ssh -q -C2TnN -D'
 
+alias ssh_nostrict='ssh -o StrictHostKeyChecking=ask'
+
 # find all files with more than one hard link in the current directory and sort them by size
 # listing them in the form:
 # SIZE NLINKS INODE FILENAME
