@@ -5,6 +5,20 @@ set -eux
 
 DSTDIR=${1}
 
+mkdir --parents "${DSTDIR}"
+
+echo "Created using $(readlink -f ${0})" > ${DSTDIR}/README.txt
+
+SYSINFOFILE="${DSTDIR}/system-info.log"
+
+lsb_release -a &> "${SYSINFOFILE}"
+echo "-----" &>> "${SYSINFOFILE}"
+uname -a &>> "${SYSINFOFILE}"
+echo "-----" &>> "${SYSINFOFILE}"
+df -h &>> "${SYSINFOFILE}"
+echo "-----" &>> "${SYSINFOFILE}"
+sudo fdisk -l &>> "${SYSINFOFILE}"
+
 dpkg --list > ${DSTDIR}/dpkg.log
 dpkg --get-selections > ${DSTDIR}/Package.list
 mkdir --parents ${DSTDIR}/etc.apt/
@@ -16,3 +30,5 @@ apt-clone clone ${DSTDIR}/apt-clone-state-ubuntu-$(lsb_release -sr)-$(date +%F).
 # other config files
 cp --verbose /etc/grub.d/10_linux ${DSTDIR}/
 cp --verbose /etc/update-manager/release-upgrades ${DSTDIR}/
+
+echo SUCCESS

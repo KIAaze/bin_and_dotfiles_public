@@ -46,7 +46,8 @@ then
 	exit 2
 fi
 
-if [ $( git status | wc -l ) -ne 2 ]
+# cf: https://stackoverflow.com/questions/3878624/how-do-i-programmatically-determine-if-there-are-uncommitted-changes
+if [ $(git status --porcelain=v1 2>/dev/null | wc -l) -ne 0 ]
 then
   if [ $1 = "-f" ]
   then
