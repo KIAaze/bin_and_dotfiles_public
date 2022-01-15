@@ -22,9 +22,15 @@ echo "DST = ${DST}"
 
 proceed "with rsync?"
 rsync --archive --compress "${SRC}" "${DST}"
+
+proceed "with ds-diff.sh?"
+ds-diff.sh "${SRC}" "${DST}"
+
 proceed "with rsync --remove-source-files?"
 rsync --archive --compress --remove-source-files "${SRC}" "${DST}"
+
 proceed "with removeEmptyDirectories.py?"
 removeEmptyDirectories.py "${SRC}"
+
 proceed "with rmdir?"
 rmdir "${SRC}"
