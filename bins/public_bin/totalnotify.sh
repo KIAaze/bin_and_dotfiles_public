@@ -1,16 +1,5 @@
 #!/bin/bash
-# different notifying methods
-
-# remember to define the EMAIL environment variable in your dotfiles
-EMAIL="USER@FOOBAR"
-
-say_func()
-{
-  if which festival &> /dev/null; then
-    #echo $* | festival --tts
-    echo $* | padsp festival --tts
-  fi
-}
+#### Script to notify the user using different notifying methods.
 
 messagebox_func()
 {
@@ -49,17 +38,19 @@ notify_notifysend_func()
 
 mailme_func()
 {
-  if which mail &> /dev/null; then
-    echo "$@" | mail -s "$1" $EMAIL
+  if ! [ -z ${EMAIL+x} ]; then
+    if which mail &> /dev/null; then
+      echo "$@" | mail -s "$1" ${EMAIL}
+    fi
   fi
 }
 
 # choose which methods you prefer here
 echo "$*"
-say_func "$*" &
+say.sh "$*" &
 messagebox_func "$*" &
 #cowsay_func "$*" &
 #notify_knotify_func "$*" &
 #notify_zenity_func "$*" &
 notify_notifysend_func "$*" &
-#mailme_func "$*" &
+# mailme_func "$*" &
