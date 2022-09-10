@@ -92,6 +92,7 @@ git config push.default matching
 cd -
 
 # private configuration
+# TODO: Should be a separate setup script in the private repo?
 if [ -d $BIN_AND_DOTFILES_PRIVATE ]
 then
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/private_bin $HOME/bin
@@ -105,6 +106,7 @@ then
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/dotfiles/.mrconfig.rsync ${RSYNCDIR}
 
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/config $HOME/.ssh
+  safe_link_dir $BIN_AND_DOTFILES_PRIVATE/known_hosts $HOME/.ssh
 
   mkdir -p $HOME/.config/geany
   safe_link_dir $BIN_AND_DOTFILES_PRIVATE/home/.config/geany/keybindings.conf $HOME/.config/geany
