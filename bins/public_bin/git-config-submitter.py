@@ -34,6 +34,10 @@ def setCommiter(name, email):
 
     print('You may fix the identity used for the last commit with:')
     print('  git commit --amend --reset-author')
+    print('Or for the last N commits with:')
+    print('  git rebase HEAD~N -x "git commit --amend --reset-author --no-edit"')
+    print('And if you want it to be interactive:')
+    print('  git rebase -i HEAD~N -x "git commit --amend --reset-author --no-edit"')
   else:
     print('Nothing changed.')
 
