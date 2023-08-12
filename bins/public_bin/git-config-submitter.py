@@ -38,6 +38,8 @@ def setCommiter(name, email):
     print('  git rebase HEAD~N -x "git commit --amend --reset-author --no-edit"')
     print('And if you want it to be interactive:')
     print('  git rebase -i HEAD~N -x "git commit --amend --reset-author --no-edit"')
+    print('And edit commit messages:')
+    print('  git rebase -i HEAD~N -x "git commit --amend --reset-author"')
   else:
     print('Nothing changed.')
 
