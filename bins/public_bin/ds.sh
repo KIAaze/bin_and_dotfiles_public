@@ -1,5 +1,13 @@
 #!/bin/sh
 # source: https://superuser.com/questions/602818/how-to-get-the-actual-directory-size-out-of-du
+
+# ls options:
+#     -l     use a long listing format
+#     -n, --numeric-uid-gid
+#               like -l, but list numeric user and group IDs
+#     -q, --hide-control-chars
+#           print ? instead of nongraphic characters
+
 find "${1:-.}" -type f -exec ls -lnq {} \+ | awk '
 BEGIN {sum=0} # initialization for clarity and safety
 function pp() {
