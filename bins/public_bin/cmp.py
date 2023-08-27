@@ -23,7 +23,7 @@ def printList(L):
     print(f'N={len(L)}')
 
 def cmp(f1, f2, check=True, dryrun=False):
-    print(f'cmp {f1} {f2}')
+    print(f'cmp --silent {f1} {f2}')
     s1 = os.path.getsize(f1)
     s2 = os.path.getsize(f2)
     if s1 != s2:
@@ -33,9 +33,11 @@ def cmp(f1, f2, check=True, dryrun=False):
         # p = subprocess.run(['cmp', f1, f2], check=check)
 
         pv_process = subprocess.Popen(('pv', f1), stdout=subprocess.PIPE)
-        cmp_process = subprocess.run(('cmp', f2), stdin=pv_process.stdout, check=check)
+        cmp_process = subprocess.run(('cmp', '--silent', f2), stdin=pv_process.stdout, check=check)
         pv_process.wait()
 
+        if cmp_process.returncode != 0:
+            print(f'{f1} {f2} differ by content.')
         return cmp_process.returncode
     else:
         return 0
