@@ -30,8 +30,13 @@ def cmp(f1, f2, check=True, dryrun=False):
         print(f'{f1} {f2} differ by filesize.')
         return 1
     if not dryrun:
-        p = subprocess.run(['cmp', f1, f2], check=check)
-        return p.returncode
+        # p = subprocess.run(['cmp', f1, f2], check=check)
+
+        pv_process = subprocess.Popen(('pv', f1), stdout=subprocess.PIPE)
+        cmp_process = subprocess.run(('cmp', f2), stdin=pv_process.stdout, check=check)
+        pv_process.wait()
+
+        return cmp_process.returncode
     else:
         return 0
 
@@ -136,6 +141,7 @@ def cmp_recursive(dir1, dir2, check=True, dryrun=False):
     total_elapsed = (time.time() - total_start)
 
     print(f'=====> Total time: {datetime.timedelta(seconds=total_elapsed)}')
+    print(f'Finished on: {datetime.datetime.fromtimestamp(time.time())}')
 
     return Ndiffs
 
