@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# meant to be used in this way:
+# rsync_move.sh {/somewhere/mysrc,/else/mybackup}/mydir/
+# slashes will get added at the end of SRC and DST
+# DST will be created if missing
+# contents of SRC and DST will be compared before removal of files from SRC
+
 set -eux
 
 proceed()
@@ -14,6 +20,22 @@ proceed()
 
 SRC="${1}"
 DST="${2}"
+
+SRC="${SRC%/}/" # remove any trailing "/", then add it
+DST="${DST%/}/" # remove any trailing "/", then add it
+
+if ! test -d "${DST}"
+then
+  echo "Destination directory does not exist."
+  echo "DST = ${DST}"
+  echo "create? (y/n)"
+  read ans
+  case $ans in
+    y|Y|yes) mkdir --parents "${DST}";;
+    *) exit -1;;
+  esac
+fi
+
 test -d "${SRC}"
 test -d "${DST}"
 
