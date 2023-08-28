@@ -8,6 +8,7 @@ import argparse
 import subprocess
 import datetime
 import shlex
+import textwrap
 
 def getFiles(directory):
     files_in_dir = []
@@ -151,7 +152,35 @@ def cmp_recursive(dir1, dir2, check=True, dryrun=False, use_pv=False):
     return Ndiffs
 
 def main():
-    parser = argparse.ArgumentParser(description='Recursive version of cmp.')
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     description=textwrap.dedent('''\
+                                     Recursive version of cmp.
+                                     
+                                     You can just use "diff -rqs dir1 dir2", but this is if you want to make sure a byte-by-byte comparison is performed.
+                                     
+                                     It looks for all the common files between dir1 and dir2 and then runs cmp between them.
+                                     
+                                     For example, if the directory layout is:
+                                         dir1/a
+                                         dir1/b
+                                         dir1/d
+                                     
+                                         dir2/a
+                                         dir2/c
+                                         dir2/d
+                                     
+                                     It will run:
+                                        cmp dir1/a dir2/a
+                                        cmp dir1/d dir2/d
+                                     
+                                     Exit codes:
+                                        if --exit-on-first-diff is used:
+                                            0: if no differences
+                                            255: if differences found
+                                        else:
+                                            0: if no differences
+                                            N: The number of differences found.
+                                     '''))
     # parser.add_argument("-c", "--continue", action='store_true', help='Continue on errors.', dest='cont')
     parser.add_argument("-e", "--exit-on-first-diff", action='store_true', help='Exit on first diff or error.', dest='check')
     parser.add_argument("-n", "--dry-run", action='store_true', help='Perform a dry run, i.e. without actually running cmp.')
