@@ -7,6 +7,7 @@ import sys
 import argparse
 import subprocess
 import datetime
+import shlex
 
 def getFiles(directory):
     files_in_dir = []
@@ -22,19 +23,24 @@ def printList(L):
         print(i)
     print(f'N={len(L)}')
 
-def cmp(f1, f2, check=True, dryrun=False):
-    print(f'cmp --silent {f1} {f2}')
+def cmp(f1, f2, check=True, dryrun=False, use_pv=False):
     s1 = os.path.getsize(f1)
     s2 = os.path.getsize(f2)
     if s1 != s2:
         print(f'{f1} {f2} differ by filesize.')
         return 1
     if not dryrun:
-        # p = subprocess.run(['cmp', f1, f2], check=check)
-
-        pv_process = subprocess.Popen(('pv', f1), stdout=subprocess.PIPE)
-        cmp_process = subprocess.run(('cmp', '--silent', f2), stdin=pv_process.stdout, check=check)
-        pv_process.wait()
+        if not use_pv:
+            cmd = ['cmp', '--silent', f1, f2]
+            print(shlex.join(cmd))
+            cmp_process = subprocess.run(cmd, check=check)
+        else:
+            cmd0 = ('pv', f1)
+            cmd1 = ('cmp', '--silent', f2)
+            print(shlex.join(cmd0) + ' | ' + shlex.join(cmd1))
+            pv_process = subprocess.Popen(cmd0, stdout=subprocess.PIPE)
+            cmp_process = subprocess.run(cmd1, stdin=pv_process.stdout, check=check)
+            pv_process.wait()
 
         if cmp_process.returncode != 0:
             print(f'{f1} {f2} differ by content.')
@@ -49,7 +55,7 @@ def sizeof_fmt(num, suffix="B"):
         num /= 1024.0
     return f"{num:.1f}Yi{suffix}"
 
-def cmp_recursive(dir1, dir2, check=True, dryrun=False):
+def cmp_recursive(dir1, dir2, check=True, dryrun=False, use_pv=False):
 
     total_start = time.time()
 
@@ -109,8 +115,9 @@ def cmp_recursive(dir1, dir2, check=True, dryrun=False):
 
         print(f'--> {idx+1}/{N}: {base}, size: {sizeof_fmt(fsize)}')
 
+        ##### Run cmp
         t_start = time.time()
-        if cmp(f1, f2, check=check, dryrun=dryrun) != 0:
+        if cmp(f1, f2, check=check, dryrun=dryrun, use_pv=use_pv) != 0:
             Ndiffs += 1
             different_files.append(base)
         t_end = time.time()
@@ -130,12 +137,8 @@ def cmp_recursive(dir1, dir2, check=True, dryrun=False):
               f'time: {datetime.timedelta(seconds=elapsed)}, '
               f'total time: {datetime.timedelta(seconds=total_elapsed)}, '
               f'size (processed,remaining)/total: ({total_size_processed},{total_size_remaining})/{total_size_dir1}, '
-              # f'total size processed (bytes): {total_size_processed}/{total_size_dir1}, '
-              # f'size remaining (bytes): {total_size_remaining}/{total_size_dir1}, '
               f'rate: {60*60*rate_bytes_per_second/(2**30):.3f} GiB/h, '
               f'ETA: {datetime.timedelta(seconds=time_remaining)} -> {datetime.datetime.fromtimestamp(estimated_end_time)}')
-              # f'estimated time remaining: {datetime.timedelta(seconds=time_remaining)}, '
-              # f'estimated end time: {datetime.datetime.fromtimestamp(estimated_end_time)}')
 
     print(f'=====> Files that differ:')
     printList(different_files)
@@ -152,11 +155,12 @@ def main():
     # parser.add_argument("-c", "--continue", action='store_true', help='Continue on errors.', dest='cont')
     parser.add_argument("-e", "--exit-on-first-diff", action='store_true', help='Exit on first diff or error.', dest='check')
     parser.add_argument("-n", "--dry-run", action='store_true', help='Perform a dry run, i.e. without actually running cmp.')
+    parser.add_argument("-p", "--progress", action='store_true', help='Show progress of each cmp operation. It uses "pv" and might slow down the operation itself.')
     parser.add_argument("dir1")
     parser.add_argument("dir2")
     args = parser.parse_args()
 
-    Ndiffs = cmp_recursive(args.dir1, args.dir2, check=args.check, dryrun=args.dry_run)
+    Ndiffs = cmp_recursive(args.dir1, args.dir2, check=args.check, dryrun=args.dry_run, use_pv=args.progress)
     if Ndiffs == 0:
         sys.exit(0)
     else:
