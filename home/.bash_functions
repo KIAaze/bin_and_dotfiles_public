@@ -357,3 +357,7 @@ rmdir() {
     fi
   done
 }
+
+function wcd() {
+  cd "$(wslpath -u "${1}")"
+}
