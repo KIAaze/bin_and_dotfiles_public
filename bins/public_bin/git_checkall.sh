@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu
 
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
 # Check if all parameters are present
 # If no, exit
 if [ $# -eq 0 ]
@@ -10,8 +12,8 @@ else
   for i in "$@"
   do
     echo "=== remote=${i} ==="
-    git pull "${i}" master
-    git push "${i}" master
+    git pull "${i}" "${BRANCH}"
+    git push "${i}" "${BRANCH}"
     git status
   done
 fi
