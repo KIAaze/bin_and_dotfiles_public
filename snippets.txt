@@ -231,3 +231,19 @@ git status --porcelain|awk '{if($1=="M") {print "scp " $2 " account_name@server_
 git status --porcelain | awk '/^ M/{ print $2 }'
 git status -s | cut -c4-
 # For someone who are not familiar with cut command, cut -c 4- means, take characters from fourth character.
+
+##### unicode grepping:
+# https://stackoverflow.com/questions/3001177/how-do-i-grep-for-all-non-ascii-characters
+# https://unix.stackexchange.com/questions/523327/how-to-grep-characters-with-their-unicode-value
+# https://github.com/Genivia/ugrep
+
+### Grep for any unicode characters:
+grep --color='auto' -P -n "[\x80-\xFF]" main.bib
+grep --color='auto' -P -n "[^\x00-\x7F]" main.bib
+
+### Grep for specific unicode character based on UTF code:
+grep --color='auto' -n $'\u2212' main.bib
+
+### Print out unicode character based on UTF code:
+echo $'\u2212'
+echo $'\u16A0'
