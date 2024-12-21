@@ -43,7 +43,9 @@ then
   exit 0
 fi
 
-FLAGS="--daemon --vfs-cache-mode writes"
+#FLAGS="--daemon --vfs-cache-mode writes"
+# FLAGS="--daemon --vfs-cache-mode full"
+FLAGS="--daemon --vfs-cache-mode full --buffer-size=1G --vfs-read-ahead=21G"
 
 for REMOTE in "$@"
 do

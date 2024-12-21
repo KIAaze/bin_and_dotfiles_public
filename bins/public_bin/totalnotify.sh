@@ -47,7 +47,7 @@ mailme_func()
 
 # choose which methods you prefer here
 echo "$*"
-say.sh "$*" &
+# say.sh "$*" &
 messagebox_func "$*" &
 #cowsay_func "$*" &
 #notify_knotify_func "$*" &
