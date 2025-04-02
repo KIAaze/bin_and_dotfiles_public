@@ -6,11 +6,17 @@ then
 # presumably if both were running that's a problem
     if systemctl --user is-active --quiet pipewire
     then
-echo Pipewire is running
+      echo "Pipewire is running"
     fi
     if systemctl --user is-active --quiet pulseaudio
     then
-echo Pulseaudio is running
+      echo "Pulseaudio is running"
+    fi
+    if ! systemctl --user is-active --quiet pipewire && ! systemctl --user is-active --quiet pulseaudio
+    then
+      echo "Pipewire and pulseaudio systems not running."
+      echo "===> Processes using sound sockets: fuser -v /dev/snd/*"
+      fuser -v /dev/snd/*
     fi
     exit 0
 fi
