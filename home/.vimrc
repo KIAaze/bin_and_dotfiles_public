@@ -113,3 +113,6 @@ endif
 
 " for easier no-indent-pasting:
 set pastetoggle=<F10>
+
+" Show line endings ($ for \n and ^M for \r):
+set list
