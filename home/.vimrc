@@ -115,4 +115,4 @@ endif
 set pastetoggle=<F10>
 
 " Show line endings ($ for \n and ^M for \r):
-set list
+"set list
