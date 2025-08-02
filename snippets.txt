@@ -247,3 +247,6 @@ grep --color='auto' -n $'\u2212' main.bib
 ### Print out unicode character based on UTF code:
 echo $'\u2212'
 echo $'\u16A0'
+
+### Script auditing/checking:
+https://www.shellcheck.net/
