@@ -76,9 +76,9 @@ safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.vimrc $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.inputrc $HOME
 
 # bash->zsh transition work in progress
-safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.zshrc $HOME
-safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.zsh_prompt $HOME
-safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.zsh_profile $HOME
+# safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.zshrc $HOME
+# safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.zsh_prompt $HOME
+# safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.zsh_profile $HOME
 safe_link_dir $BIN_AND_DOTFILES_PUBLIC/home/.ackrc $HOME
 
 cd $BIN_AND_DOTFILES_PUBLIC
