@@ -7,8 +7,8 @@ if [ $# -lt 2 ]
 then
         echo "usage :"
         echo "`basename MOVE? $0` FILE/DIR"
-	echo "MOVE=0 => use cp -riv"
-	echo "MOVE=1 => use mv -iv"
+        echo "MOVE=0 => use cp -riv"
+        echo "MOVE=1 => use mv -iv"
         exit 0
 fi
 
