@@ -248,3 +248,11 @@ alias web-off='sudo ufw reject out 80 && sudo ufw reject out 443 && sudo ufw sta
 alias web-on='sudo ufw delete reject out 80 && sudo ufw delete reject out 443 && sudo ufw status'
 
 alias bb='pasuspender -- env PULSE_SERVER= bb'
+
+# SYNC OPTIONS (APPLY TO -S)
+# --sync
+# --refresh
+# --sysupgrade
+# alias upgrade_arch='sudo pacman -Syu'
+alias upgrade_arch='sudo pacman --sync --refresh --sysupgrade'
+alias upgrade_ubuntu='sudo apt update && sudo apt upgrade && sudo snap refresh'
