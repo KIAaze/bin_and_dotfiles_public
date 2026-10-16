@@ -135,4 +135,4 @@ source ${HOME}/.bash_env_private
 # https://medium.com/@swindlers-inc/prettifying-my-zsh-prompt-e1fe04848005
 # https://stackoverflow.com/questions/689765/how-can-i-change-the-color-of-my-prompt-in-zsh-different-from-normal-text
 autoload -U colors && colors
-PS1=$'%K{cyan}%F{black} \uF303 %2v %~%F{cyan}%K{yellow}\uE0B0%F{black}%1v%k%F{yellow}\uE0B0%f '
+PS1=$'%K{cyan}%F{black}\uF303[%n@%m] %~%F{cyan}%K{yellow}\uE0B0%F{black}%1v%k%F{yellow}\uE0B0%f '
