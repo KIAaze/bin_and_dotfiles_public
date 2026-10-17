@@ -45,7 +45,12 @@ fi
 
 #FLAGS="--daemon --vfs-cache-mode writes"
 # FLAGS="--daemon --vfs-cache-mode full"
-FLAGS="--daemon --vfs-cache-mode full --buffer-size=1G --vfs-read-ahead=21G"
+# FLAGS="--daemon --vfs-cache-mode full --buffer-size=1G --vfs-read-ahead=21G"
+# FLAGS="--daemon --vfs-cache-mode full --buffer-size=1G --vfs-read-ahead=21G -vvv"
+# FLAGS="--daemon --vfs-cache-mode full --buffer-size=1G --vfs-read-ahead=21G --log-level DEBUG --log-file ${HOME}/rclone.log"
+# FLAGS="--daemon --vfs-cache-mode full --buffer-size=1G --vfs-read-ahead=21G --log-level DEBUG --log-file ${HOME}/rclone.log"
+
+FLAGS="--daemon --vfs-cache-mode full --vfs-cache-max-size 5G --vfs-cache-min-free-space 2G --vfs-cache-max-age 1h --vfs-write-back 10s --buffer-size 32M --vfs-read-ahead 128M --transfers 4 --tpslimit 4 -vv --log-file ${HOME}/rclone-mount.log"
 
 for REMOTE in "$@"
 do
