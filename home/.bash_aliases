@@ -243,6 +243,7 @@ alias plasmashell-restart='killall plasmashell && kstart5 plasmashell'
 alias activate_pymeep='export PATH=${HOME}/miniconda/bin:$PATH; source activate mp'
 # python in the user environment instead of using apt installed packages:
 alias activate_python3_user='source ~/.venv/python3_user/bin/activate'
+alias activate_python3_user+system='source ~/.venv/python3_user+system/bin/activate'
 
 alias web-off='sudo ufw reject out 80 && sudo ufw reject out 443 && sudo ufw status'
 alias web-on='sudo ufw delete reject out 80 && sudo ufw delete reject out 443 && sudo ufw status'
